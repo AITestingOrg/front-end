@@ -12,6 +12,7 @@ export class TextBoxComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
+    this.value = 'hello'
   }
 
 }
