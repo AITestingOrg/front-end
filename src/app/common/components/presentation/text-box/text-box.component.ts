@@ -11,8 +11,6 @@ export class TextBoxComponent implements OnInit {
   private value: string
   constructor() { }
 
-  ngOnInit() {
-    this.value = 'hello'
-  }
+  ngOnInit() {}
 
 }

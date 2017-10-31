@@ -5,7 +5,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FeCommonModule } from './common/common.module';
 import { AppComponent } from './app.component';
 
-import { MatButtonModule, MatCheckboxModule} from '@angular/material';
+import { MatToolbarModule} from '@angular/material';
 
 @NgModule({
   declarations: [
@@ -14,7 +14,14 @@ import { MatButtonModule, MatCheckboxModule} from '@angular/material';
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
-    FeCommonModule
+    FeCommonModule,
+    MatToolbarModule
+  ],
+  exports: [
+    BrowserModule,
+    BrowserAnimationsModule,
+    FeCommonModule,
+    MatToolbarModule
   ],
   providers: [],
   bootstrap: [AppComponent]

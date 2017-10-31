@@ -7,6 +7,8 @@ import { Component, OnInit } from '@angular/core';
 })
 export class CheckBoxComponent implements OnInit {
 
+  label = 'Remember my credentials'
+
   constructor() { }
 
   ngOnInit() {
