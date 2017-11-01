@@ -1,4 +1,5 @@
 # FrontEnd
+![alt text](https://travis-ci.org/AITestingOrg/front-end.svg?branch=master "Build Status")
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 1.1.1.
 
