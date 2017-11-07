@@ -1,1 +1,17 @@
-.mat-icon { font-size: 48px}
+.mat-icon { 
+    font-size: 48px;
+    margin-left: -24px;
+}
+.mat-card-all {
+    padding-top: 10%;
+    padding-left: 10%;
+    padding-right: 10%;
+}
+
+.mat-card-buttons {
+    padding-bottom: 5%;
+}
+
+.mat-card-contents {
+    padding-bottom: 5%;
+}

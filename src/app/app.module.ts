@@ -1,11 +1,16 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-
+import { Routes, RouterModule } from '@angular/router';
 import { FeCommonModule } from './common/common.module';
 import { AppComponent } from './app.component';
+import { LoginComponent } from 'app/common/components/smart/login/login.component';
 
-import { MatToolbarModule} from '@angular/material';
+const routes:Routes = [ 
+    {path: '', redirectTo: 'login', pathMatch: 'full'},
+    {path: 'login', component: LoginComponent},
+    {path: 'dashboard', component: LoginComponent}
+]
 
 @NgModule({
   declarations: [
@@ -15,15 +20,8 @@ import { MatToolbarModule} from '@angular/material';
     BrowserModule,
     BrowserAnimationsModule,
     FeCommonModule,
-    MatToolbarModule
+    RouterModule.forRoot(routes)
   ],
-  exports: [
-    BrowserModule,
-    BrowserAnimationsModule,
-    FeCommonModule,
-    MatToolbarModule
-  ],
-  providers: [],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

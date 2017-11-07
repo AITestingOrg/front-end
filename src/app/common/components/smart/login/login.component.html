@@ -1,8 +1,15 @@
-<br/>
-<br/>
-<mat-icon>home</mat-icon>
-<app-text-box></app-text-box>
-<app-text-box></app-text-box>
-<app-check-box></app-check-box> <br/>
-<app-basic-button></app-basic-button>
-<app-raised-button></app-raised-button>
+<div class="mat-card-all">
+<mat-card>
+  <mat-icon>directions_car</mat-icon>
+  <h1>UltiCar</h1>
+  <div class="mat-card-contents">
+    <app-text-box input type="text" placeholder="Username" icon="person"></app-text-box>
+     <app-text-box input matInput type="text" placeholder="Password" [encryption]="true"></app-text-box><br/>
+     <app-check-box label="Remember my credentials" color="primary"></app-check-box>
+  </div>
+  <div class="mat-card-buttons">
+    <app-basic-button type="submit" label="Register" color="primary" (clickEvent)="register($event)"></app-basic-button>
+    <app-raised-button label="Sign in" color="primary" [disabled]="false" (clickEvent)="signIn($event)"></app-raised-button>
+  </div>
+</mat-card>
+</div>

@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input, Output, HostListener, EventEmitter } from '@angular/core';
+import { RouterModule, Routes} from '@angular/router';
 
 @Component({
   selector: 'app-raised-button',
@@ -7,11 +8,19 @@ import { Component, OnInit } from '@angular/core';
 })
 export class RaisedButtonComponent implements OnInit {
 
-  label = 'Sign In'
-  
-  constructor() { }
+  @Input() private label:string
+  @Input() private color:string
+  @Input() private disabled:string
+
+  @Output() public clickEvent:EventEmitter<any> = new EventEmitter();
+
+  constructor() { }  
 
   ngOnInit() {
+  }
+
+  click(event) {
+    this.clickEvent.emit(event);
   }
 
 }

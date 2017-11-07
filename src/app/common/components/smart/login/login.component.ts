@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
+import { Routes, RouterModule, Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -7,17 +8,19 @@ import { Component, OnInit } from '@angular/core';
 })
 export class LoginComponent implements OnInit {
 
-  constructor() { }
+  constructor(private router: Router) { }
+
+   @Input() private disabled:string
 
   ngOnInit() {
   }
 
-  loginUser(user, pass) {
-    console.log('clicked login');
+  signIn(event) {
+    console.log("Signed in: " + event);
   }
 
-  registerUser() {
-    console.log('clicked register');
+  register(event) {
+    console.log("Registered: " + event);
   }
-
+  
 }
