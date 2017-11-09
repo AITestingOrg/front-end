@@ -14,4 +14,8 @@ export class ToolbarComponent implements OnInit {
   ngOnInit() {
   }
 
+  goHome(event) {
+    console.log("Clicked home: " + event);
+  }
+
 }

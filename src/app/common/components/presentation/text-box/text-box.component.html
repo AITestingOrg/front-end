@@ -1,6 +1,6 @@
 <div class="form-template">
-  <mat-form-field [color]="warn">
-    <input matInput placeholder={{placeholder}} [type]="hide ? 'password' : 'text'">
+  <mat-form-field [color]="primary">
+    <input matInput placeholder={{placeholder}} [(ngModel)]="textboxValue" (ngModelChange)="onChange($event)" [type]="hide ? 'password' : 'text'">
     <mat-icon *ngIf="encryption" matSuffix (click)="hide = !hide">{{hide ? 'lock_outline' : 'lock_open'}}</mat-icon>
     <mat-icon *ngIf="icon" matSuffix>{{icon}}</mat-icon>
   </mat-form-field>

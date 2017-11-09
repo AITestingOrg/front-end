@@ -22,5 +22,17 @@ export class LoginComponent implements OnInit {
   register(event) {
     console.log("Registered: " + event);
   }
-  
+
+  rememberUser(event, checkboxValue) {
+    if(checkboxValue) {
+    console.log("Will remember.");
+    } else {
+      console.log("Will not remember.")
+    }
+  }
+
+  rememberUserValue = true;
+  usernameValue = "";
+  passwordValue = "";
+
 }

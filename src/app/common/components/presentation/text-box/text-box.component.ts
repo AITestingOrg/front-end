@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 
 @Component({
@@ -11,10 +11,16 @@ export class TextBoxComponent implements OnInit {
   @Input() private placeholder:string
   @Input() private encryption:string
   @Input() private icon:string
+  @Input() private textboxValue:string
   
-  private value: string
+  @Output() textboxChange:EventEmitter<String> = new EventEmitter<String>();
+
   constructor() { }
 
   ngOnInit() {}
+  
+  onChange(event) {
+    console.log(this.textboxValue);
+  }
 
 }

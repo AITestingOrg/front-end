@@ -1,1 +1,1 @@
-<mat-checkbox [color]="color">{{label}}</mat-checkbox>
+<mat-checkbox [color]="color" [(ngModel)]="checkboxValue" (ngModelChange)="onChange($event)">{{label}}</mat-checkbox>

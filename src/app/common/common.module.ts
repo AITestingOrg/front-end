@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { TextBoxComponent } from './components/presentation/text-box/text-box.component';
 import { LoginComponent } from './components/smart/login/login.component';
 import { CheckBoxComponent } from './components/presentation/check-box/check-box.component';
@@ -11,7 +12,7 @@ import { MatToolbarModule, MatCheckboxModule, MatButtonModule, MatFormFieldModul
 
 @NgModule({
   imports: [
-    CommonModule, MatToolbarModule, MatCheckboxModule, MatButtonModule, MatFormFieldModule, MatInputModule, MatIconModule, MatCardModule
+    CommonModule, MatToolbarModule, MatCheckboxModule, MatButtonModule, MatFormFieldModule, MatInputModule, MatIconModule, MatCardModule, FormsModule
   ],
   declarations: [TextBoxComponent, LoginComponent, CheckBoxComponent, ToolbarComponent, RaisedButtonComponent, BasicButtonComponent, IconButtonComponent],
   exports: [ToolbarComponent],
