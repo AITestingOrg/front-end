@@ -1,8 +1,14 @@
-<!--The whole content below can be removed with the new code.-->
-<div style="text-align:center">
-  <h1>
-    {{title}}!!
-  </h1>
-  <app-login></app-login>
-</div>
-
+<div class="page">
+  <app-toolbar title="UltiCar"></app-toolbar>
+  <div class="main">
+    <div class="navLinks">
+      <a [routerLink]="['']">Register</a>
+      <a [routerLink]="['/login']">Sign In</a>
+    </div>
+    <div id="routing">
+      <div class="container">
+        <router-outlet></router-outlet>
+      </div>
+    </div>
+  </div>
+  
