@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TextBoxComponent } from './components/presentation/text-box/text-box.component';
 import { LoginComponent } from './components/smart/login/login.component';
 import { CheckBoxComponent } from './components/presentation/check-box/check-box.component';
@@ -8,14 +8,16 @@ import { ToolbarComponent } from './components/presentation/toolbar/toolbar.comp
 import { RaisedButtonComponent } from './components/presentation/raised-button/raised-button.component';
 import { BasicButtonComponent } from './components/presentation/basic-button/basic-button.component';
 import { IconButtonComponent } from './components/presentation/icon-button/icon-button.component';
-import { MatToolbarModule, MatCheckboxModule, MatButtonModule, MatFormFieldModule, MatFormFieldControl, MatInputModule, MatIconModule, MatCardModule } from '@angular/material';
+import { GMapsDirectionsDirective } from './states/gmaps.directive';
+import { MatToolbarModule, MatCheckboxModule, MatButtonModule, MatFormFieldModule, MatFormFieldControl, MatInputModule, MatIconModule, MatCardModule, MatAutocompleteModule } from '@angular/material';
 
 @NgModule({
   imports: [
-    CommonModule, MatToolbarModule, MatCheckboxModule, MatButtonModule, MatFormFieldModule, MatInputModule, MatIconModule, MatCardModule, FormsModule
+    CommonModule, MatToolbarModule, MatCheckboxModule, MatButtonModule, MatFormFieldModule, MatInputModule, MatIconModule, MatCardModule, FormsModule, ReactiveFormsModule, MatAutocompleteModule
   ],
-  declarations: [TextBoxComponent, LoginComponent, CheckBoxComponent, ToolbarComponent, RaisedButtonComponent, BasicButtonComponent, IconButtonComponent],
-  exports: [ToolbarComponent],
+  declarations: [TextBoxComponent, LoginComponent, CheckBoxComponent, ToolbarComponent, RaisedButtonComponent, BasicButtonComponent, IconButtonComponent, GMapsDirectionsDirective],
+  exports: [ToolbarComponent, MatCardModule, RaisedButtonComponent, ReactiveFormsModule, MatAutocompleteModule, GMapsDirectionsDirective],
+
 })
 
 export class FeCommonModule { }
