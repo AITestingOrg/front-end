@@ -2,7 +2,6 @@ import { Component, OnInit, Input, ElementRef, NgZone, ViewChild } from '@angula
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { GMapsDirectionsDirective } from 'app/common/states/gmaps.directive';
 import { } from '@types/googlemaps';
-import { Address } from 'app/common/models/address';
 import { GoogleMapsAPIWrapper, MapsAPILoader } from '@agm/core';
 
 @Component({
@@ -14,7 +13,6 @@ export class TripPlannerComponent implements OnInit {
 
   title: string = 'Trip Planner';
 
-  @Input() private address: Address
   @Input() private latitude: number;
   @Input() private longitude: number;
   @Input() private zoom: number;
@@ -22,7 +20,6 @@ export class TripPlannerComponent implements OnInit {
   @Input() private destinationInput: FormControl;
   @Input() private destinationOutput: FormControl;
   @Input() private destination: any;
-  @Input() private iconurl: string;
   @Input() private estimatedTime: any;
   @Input() private estimatedDistance: any;
 
