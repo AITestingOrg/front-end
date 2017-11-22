@@ -112,7 +112,7 @@ export class TripPlannerComponent implements OnInit {
     this.estimatedDistance = this.service.estimatedDistance;
   }
 
-  setInitialCords() {
+  setInitialCords(): any {
     return new Promise((resolve, reject) => {
       if ('geolocation' in navigator) {
         navigator.geolocation.getCurrentPosition((position) => {
