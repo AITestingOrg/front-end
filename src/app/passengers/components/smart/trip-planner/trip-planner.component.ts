@@ -1,6 +1,5 @@
 import { Component, OnInit, Input, ElementRef, NgZone, ViewChild } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { GMapsDirectionsDirective } from 'app/common/states/gmaps.directive';
 import { GMapsDirectionsService } from 'app/common/states/gmaps.service';
 import { } from '@types/googlemaps';
 import { GoogleMapsAPIWrapper, MapsAPILoader } from '@agm/core';
@@ -30,7 +29,6 @@ export class TripPlannerComponent implements OnInit {
   @ViewChild("pickupOutput")
   public pickupOutputElementRef: ElementRef;
 
-  @ViewChild(GMapsDirectionsDirective) directive: GMapsDirectionsDirective;
   @ViewChild(GMapsDirectionsService) service: GMapsDirectionsService;
 
   constructor(
@@ -39,8 +37,6 @@ export class TripPlannerComponent implements OnInit {
     private gmapsApi: GoogleMapsAPIWrapper, 
     private _elementRef: ElementRef) {
   }
-    private gmapsApi: GoogleMapsAPIWrapper,
-  ) { }
 
   ngOnInit() {
     //Default Map View
@@ -85,24 +81,17 @@ export class TripPlannerComponent implements OnInit {
           return;
         }
         if (inputType === 'pickup') {
-          this.directive.origin = { longitude: place.geometry.location.lng(), latitude: place.geometry.location.lat() };
-          this.directive.originPlaceId = place.place_id;
           this.service.origin = { longitude: place.geometry.location.lng(), latitude: place.geometry.location.lat() };
           this.service.originPlaceId = place.place_id;
         } else {
-          this.directive.destination = { longitude: place.geometry.location.lng(), latitude: place.geometry.location.lat() };
-          this.directive.destinationPlaceId = place.place_id;
           this.service.destination = { longitude: place.geometry.location.lng(), latitude: place.geometry.location.lat() };
           this.service.destinationPlaceId = place.place_id;
         }
-        if (this.directive.directionsDisplay === undefined) {
         if (this.service.directionsDisplay === undefined) {
           this.mapsAPILoader.load().then(() => {
-            this.directive.directionsDisplay = new google.maps.DirectionsRenderer;
             this.service.directionsDisplay = new google.maps.DirectionsRenderer;
           });
         }
-        this.directive.updateDirections();
         this.service.updateDirections();
         this.zoom = 12;
       });
@@ -110,8 +99,6 @@ export class TripPlannerComponent implements OnInit {
   }
 
   getDistanceAndDuration() {
-    this.estimatedTime = this.directive.estimatedTime;
-    this.estimatedDistance = this.directive.estimatedDistance;
     this.estimatedTime = this.service.estimatedTime;
     this.estimatedDistance = this.service.estimatedDistance;
   }
