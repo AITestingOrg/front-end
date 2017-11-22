@@ -26,18 +26,18 @@ export class TripPlannerComponent implements OnInit {
   @Input() private initialLat: number;
   @Input() private initialLng: number;
 
-  @ViewChild("pickupInput")
+  @ViewChild('pickupInput')
   public pickupInputElementRef: ElementRef;
 
-  @ViewChild("pickupOutput")
+  @ViewChild('pickupOutput')
   public pickupOutputElementRef: ElementRef;
 
   @ViewChild(GMapsDirectionsService) service: GMapsDirectionsService;
 
   constructor(
-    private ngZone: NgZone, 
-    private mapsAPILoader: MapsAPILoader, 
-    private gmapsApi: GoogleMapsAPIWrapper, 
+    private ngZone: NgZone,
+    private mapsAPILoader: MapsAPILoader,
+    private gmapsApi: GoogleMapsAPIWrapper,
     private _elementRef: ElementRef) {
   }
 
@@ -58,17 +58,17 @@ export class TripPlannerComponent implements OnInit {
     this.destinationInput = new FormControl();
     this.destinationOutput = new FormControl();
 
-    //Update Map View
+    // Update Map View
     this.setCurrentPosition();
-    
-    //Load Autocomplete for Inputs
+
+    // Load Autocomplete for Inputs
     this.mapsAPILoader.load().then(() => {
-      let autocompleteInput = new google.maps.places.Autocomplete(this.pickupInputElementRef.nativeElement, {
-        types: ["address"]
+      const autocompleteInput = new google.maps.places.Autocomplete(this.pickupInputElementRef.nativeElement, {
+        types: ['address']
       });
 
-      let autocompleteOutput = new google.maps.places.Autocomplete(this.pickupOutputElementRef.nativeElement, {
-        types: ["address"]
+      const autocompleteOutput = new google.maps.places.Autocomplete(this.pickupOutputElementRef.nativeElement, {
+        types: ['address']
       });
       this.setupPlaceChangedListener(autocompleteInput, 'pickup');
       this.setupPlaceChangedListener(autocompleteOutput, 'destination');
@@ -76,7 +76,7 @@ export class TripPlannerComponent implements OnInit {
   }
 
   setCurrentPosition() {
-    if ("geolocation" in navigator) {
+    if ('geolocation' in navigator) {
       navigator.geolocation.getCurrentPosition((position) => {
         this.latitude = position.coords.latitude;
         this.longitude = position.coords.longitude;
@@ -85,9 +85,9 @@ export class TripPlannerComponent implements OnInit {
   }
 
   private setupPlaceChangedListener(autocomplete:any, inputType:string) {
-    autocomplete.addListener("place_changed", () => {
+    autocomplete.addListener('place_changed', () => {
       this.ngZone.run(() => {
-        let place: google.maps.places.PlaceResult = autocomplete.getPlace();
+        const place: google.maps.places.PlaceResult = autocomplete.getPlace();
         if (place.geometry === undefined) {
           return;
         }
