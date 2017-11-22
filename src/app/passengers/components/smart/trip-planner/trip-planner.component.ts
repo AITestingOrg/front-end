@@ -42,18 +42,16 @@ export class TripPlannerComponent implements OnInit {
   }
 
   ngOnInit() {
-    //Set Default Map View
-    this.setInitialLatitude().then(
-      () => this.setInitialLongitude().then(
-        () => {
-          this.latitude = this.initialLat;
-          this.longitude = this.initialLng;
-          this.zoom = 14;
-          console.log("set lat and lng")
-        },
-        )).catch((error) => {
-          console.log("error occurred");
-        });
+    // Set Default Map View
+    this.setInitialCords().then((cords) => {
+        this.latitude = cords.lat;
+        this.longitude = cords.lng;
+        this.zoom = 14;
+        console.log('set lat and lng')
+      })
+      .catch((error) => {
+        console.log(error);
+      });
 
     this.destinationInput = new FormControl();
     this.destinationOutput = new FormControl();
@@ -114,37 +112,15 @@ export class TripPlannerComponent implements OnInit {
     this.estimatedDistance = this.service.estimatedDistance;
   }
 
-  setInitialLatitude() {
-    var promise = new Promise((resolve, reject) => {
-      if ("geolocation" in navigator) {
+  setInitialCords() {
+    return new Promise((resolve, reject) => {
+      if ('geolocation' in navigator) {
         navigator.geolocation.getCurrentPosition((position) => {
-          this.initialLat = position.coords.latitude;
-          //resolve();
+          resolve({ lat: position.coords.latitude, lng: position.coords.longitude });
         });
-      } 
-      if (error) {
-        reject();
       } else {
-        resolve();
+        reject(new Error('No geolocation found in API.'))
       }
     });
-    return promise;
   }
-
-  setInitialLongitude() {
-    var promise = new Promise((resolve, reject) => {
-      if ("geolocation" in navigator) {
-        navigator.geolocation.getCurrentPosition((position) => {
-          this.initialLng = position.coords.longitude;
-        });
-      } 
-      if (error) {
-        reject();
-      } else {
-        resolve();
-      }
-    });
-    return promise;
-  }
-
 }
