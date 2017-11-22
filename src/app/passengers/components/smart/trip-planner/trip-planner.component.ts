@@ -3,6 +3,7 @@ import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { GMapsDirectionsService } from 'app/common/states/gmaps.service';
 import { } from '@types/googlemaps';
 import { GoogleMapsAPIWrapper, MapsAPILoader } from '@agm/core';
+import { error } from 'util';
 
 @Component({
   selector: 'app-trip-planner',
@@ -22,6 +23,8 @@ export class TripPlannerComponent implements OnInit {
   @Input() private destination: any;
   @Input() private estimatedTime: any;
   @Input() private estimatedDistance: any;
+  @Input() private initialLat: number;
+  @Input() private initialLng: number;
 
   @ViewChild("pickupInput")
   public pickupInputElementRef: ElementRef;
@@ -39,10 +42,18 @@ export class TripPlannerComponent implements OnInit {
   }
 
   ngOnInit() {
-    //Default Map View
-    this.latitude = 26.089595;
-    this.longitude = -80.366791;
-    this.zoom = 14;
+    //Set Default Map View
+    this.setInitialLatitude().then(
+      () => this.setInitialLongitude().then(
+        () => {
+          this.latitude = this.initialLat;
+          this.longitude = this.initialLng;
+          this.zoom = 14;
+          console.log("set lat and lng")
+        },
+        )).catch((error) => {
+          console.log("error occurred");
+        });
 
     this.destinationInput = new FormControl();
     this.destinationOutput = new FormControl();
@@ -103,8 +114,37 @@ export class TripPlannerComponent implements OnInit {
     this.estimatedDistance = this.service.estimatedDistance;
   }
 
-  onFindRideClick(event) {
-    console.log("Clicked find ride.");
+  setInitialLatitude() {
+    var promise = new Promise((resolve, reject) => {
+      if ("geolocation" in navigator) {
+        navigator.geolocation.getCurrentPosition((position) => {
+          this.initialLat = position.coords.latitude;
+          //resolve();
+        });
+      } 
+      if (error) {
+        reject();
+      } else {
+        resolve();
+      }
+    });
+    return promise;
+  }
+
+  setInitialLongitude() {
+    var promise = new Promise((resolve, reject) => {
+      if ("geolocation" in navigator) {
+        navigator.geolocation.getCurrentPosition((position) => {
+          this.initialLng = position.coords.longitude;
+        });
+      } 
+      if (error) {
+        reject();
+      } else {
+        resolve();
+      }
+    });
+    return promise;
   }
 
 }
