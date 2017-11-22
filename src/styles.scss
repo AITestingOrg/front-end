@@ -2,6 +2,10 @@
 
 @include mat-core();
 
+body {
+  margin: 0px;
+}
+
 $my-theme-primary: mat-palette($mat-cyan);
 $my-theme-accent: mat-palette($mat-teal);
 $my-theme-warn: mat-palette($mat-red);

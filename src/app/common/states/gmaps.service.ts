@@ -7,7 +7,7 @@ declare var google: any;
   selector: 'directions-service'
 })
 
-export class GMapsDirectionsDirective {
+export class GMapsDirectionsService {
 
   @Input() origin: any;
   @Input() destination: any;
@@ -22,6 +22,7 @@ export class GMapsDirectionsDirective {
 
   updateDirections() {
     this.gmapsApi.getNativeMap().then(map => {
+      //Prepare Map and Display Settings
       if (!this.originPlaceId || !this.destinationPlaceId) {
         return;
       }
@@ -40,13 +41,19 @@ export class GMapsDirectionsDirective {
         }
       });
 
+      //Update Display
       this.directionsDisplay.setDirections({ routes: [] });
+
+      //Determine Directions
+      //Request
       directionsService.route({
         origin: { placeId: this.originPlaceId },
         destination: { placeId: this.destinationPlaceId },
         avoidHighways: true,
         travelMode: google.maps.DirectionsTravelMode.DRIVING
-      }, function (response: any, status: any) {
+      }, 
+      //Response
+      function (response: any, status: any) {
         if (status === 'OK') {
           service.directionsDisplay.setDirections(response);
           map.setZoom(30);
