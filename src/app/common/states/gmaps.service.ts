@@ -22,15 +22,15 @@ export class GMapsDirectionsService {
 
   updateDirections() {
     this.gmapsApi.getNativeMap().then(map => {
-      //Prepare Map and Display Settings
+      // Prepare Map and Display Settings
       if (!this.originPlaceId || !this.destinationPlaceId) {
         return;
       }
 
-      var directionsService = new google.maps.DirectionsService;
-      var service = this;
-      var origin = new google.maps.LatLng({ lat: this.origin.latitude, lng: this.origin.longitude });
-      var destination = new google.maps.LatLng({ lat: this.destination.latitude, lng: this.destination.longitude });
+      const directionsService = new google.maps.DirectionsService;
+      const service = this;
+      const origin = new google.maps.LatLng({ lat: this.origin.latitude, lng: this.origin.longitude });
+      const destination = new google.maps.LatLng({ lat: this.destination.latitude, lng: this.destination.longitude });
 
       this.directionsDisplay.setMap(map);
       this.directionsDisplay.setOptions({
@@ -41,23 +41,23 @@ export class GMapsDirectionsService {
         }
       });
 
-      //Update Display
+      // Update Display
       this.directionsDisplay.setDirections({ routes: [] });
 
-      //Determine Directions
-      //Request
+      // Determine Directions
+      // Request
       directionsService.route({
         origin: { placeId: this.originPlaceId },
         destination: { placeId: this.destinationPlaceId },
         avoidHighways: true,
         travelMode: google.maps.DirectionsTravelMode.DRIVING
-      }, 
-      //Response
+      },
+      // Response
       function (response: any, status: any) {
         if (status === 'OK') {
           service.directionsDisplay.setDirections(response);
           map.setZoom(30);
-          var point = response.routes[0].legs[0];
+          const point = response.routes[0].legs[0];
           service.estimatedTime = point.duration.text;
           service.estimatedDistance = point.distance.text;
           console.log('Estimated travel time: ' + point.duration.text + ' (' + point.distance.text + ')');
@@ -65,7 +65,6 @@ export class GMapsDirectionsService {
           console.log('Directions request failed due to ' + status);
         }
       });
-      
     });
   }
 
