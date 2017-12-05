@@ -1,0 +1,50 @@
+.page{
+    background: white;
+    width: 100%;
+    height: 1080px;
+  }
+
+.title{
+    color: green;
+    text-decoration: underline;
+}
+p{
+    padding-top: 300px; 
+    padding-bottom: 200px;
+}
+
+.container{
+    display: flex;
+    flex-direction: column;
+    min-width: 300px;
+}
+
+.driversTable{
+    flex: 1 1 auto;
+    overflow: auto;
+    max-height: 500px;
+}
+
+.driverList-header-row, .driverList-row{
+    display: flex;
+    border-bottom: 1px solid #ccc;
+    align-items: center;
+    height:32px;
+    padding: 0 8px;
+}
+
+.driverList-cell{
+    flex: 1;
+    font-size: 13px;
+    color: rgba(0,0,0,0.87)
+}
+
+.driverList-header-cell{
+    flex: 1;
+    font-size: 12px;
+    font-weight: bold;
+    color: rgba(0,0,0,0.54);
+}
+
+
+

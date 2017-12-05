@@ -14,6 +14,7 @@ import { GMapsDirectionsService} from './states/gmaps.service';
 import { MatToolbarModule, MatCheckboxModule, MatButtonModule, MatFormFieldModule, MatFormFieldControl, MatInputModule, MatIconModule, MatCardModule, MatAutocompleteModule } from '@angular/material';
 import { HeaderComponent } from './components/presentation/header/header.component';
 
+
 @NgModule({
   imports: [
     CommonModule, 
@@ -30,8 +31,7 @@ import { HeaderComponent } from './components/presentation/header/header.compone
     AgmCoreModule, 
     RouterModule
   ],
-  declarations: [
-    TextBoxComponent, 
+  declarations: [  TextBoxComponent, 
     LoginComponent, 
     CheckBoxComponent, 
     ToolbarComponent, 
@@ -39,17 +39,12 @@ import { HeaderComponent } from './components/presentation/header/header.compone
     BasicButtonComponent, 
     IconButtonComponent, 
     GMapsDirectionsService, 
-    HeaderComponent
-  ],
-  exports: [
-    ToolbarComponent, 
-    MatCardModule, 
-    RaisedButtonComponent, 
+    HeaderComponent],
+  exports: [ToolbarComponent, RaisedButtonComponent, 
     ReactiveFormsModule, 
     MatAutocompleteModule, 
     GMapsDirectionsService, 
-    HeaderComponent
-  ],
+    HeaderComponent],
+ 
 })
-
 export class FeCommonModule { }

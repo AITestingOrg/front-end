@@ -1,4 +1,5 @@
 import { Component, OnInit, Input, ElementRef, NgZone, ViewChild } from '@angular/core';
+import {Routes, Router, RouterModule} from '@angular/router';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { GMapsDirectionsService } from 'app/common/states/gmaps.service';
 import { } from '@types/googlemaps';
@@ -41,7 +42,10 @@ export class TripPlannerComponent implements OnInit {
     private _elementRef: ElementRef) {
   }
 
-  ngOnInit() {
+  ngOnInit() 
+  
+  {
+
     // Set Default Map View
     this.setInitialCords().then((cords) => {
         this.latitude = cords.lat;
@@ -82,6 +86,10 @@ export class TripPlannerComponent implements OnInit {
     }
   }
 
+  driverList(event)
+  {
+    console.log("Driver list:"+ event);
+  }
   private setupPlaceChangedListener(autocomplete:any, inputType:string) {
     autocomplete.addListener('place_changed', () => {
       this.ngZone.run(() => {

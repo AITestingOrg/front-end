@@ -1,5 +1,16 @@
 <div class="page">
   <app-toolbar title="UltiCar"></app-toolbar>
   <div class="main">
-  <app-header></app-header>
+    <div class="navLinks">
+      <a [routerLink]="['']">Register</a>
+      <a [routerLink]="['/login']">Sign In</a>
+      <a [routerLink]="['/drivers']">Driver List</a>
+      <a [routerLink] = "['/trip-planner']">Plan a Trip</a>
+    </div>
+    <div id="routing">
+      <div class="container">
+        <router-outlet></router-outlet>
+      </div>
+    </div>
+  </div>
   
