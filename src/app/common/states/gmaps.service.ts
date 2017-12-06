@@ -1,5 +1,6 @@
 import { GoogleMapsAPIWrapper } from '@agm/core';
 import { Directive, Input, Output } from '@angular/core';
+import { Http } from '@angular/http';
 
 declare var google: any;
 
@@ -18,7 +19,9 @@ export class GMapsDirectionsService {
   @Input() estimatedTime: any;
   @Input() estimatedDistance: any;
 
-  constructor(private gmapsApi: GoogleMapsAPIWrapper) { }
+  constructor(
+    private gmapsApi: GoogleMapsAPIWrapper,
+    private http: Http) { }
 
   updateDirections() {
     this.gmapsApi.getNativeMap().then(map => {
@@ -71,4 +74,14 @@ export class GMapsDirectionsService {
   private getcomputeDistance(origin: any, destination: any) {
     return (google.maps.geometry.spherical.computeDistanceBetween(origin, destination) / 1000).toFixed(2);
   }
+
+  getLocation(term:string) {
+    return this.http.get('http://maps.google.com/maps/api/geocode/json?address=' + term + 'CA&sensor=false')
+    .toPromise()
+    .then((response) => Promise.resolve(response.json()))
+    .catch((error) => Promise.resolve(error.json()));
+
+  }
+
+
 }

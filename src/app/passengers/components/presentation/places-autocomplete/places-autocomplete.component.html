@@ -1,0 +1,20 @@
+<div class="testing-counter">
+  <p>Testing</p>
+  <button (click)="increment()">+</button>
+  <button (click)="decrement()">-</button>
+  <button (click)="reset()">Reset Counter</button>
+  <h3>{{counter | async}}</h3>
+</div>
+
+<div class="container">
+  <p>Autocomplete Component</p>
+  <p>Lat: {{location.latitude}} Lng: {{location.longitude}}</p>
+  <mat-form-field> 
+      <input matInput type="text" placeholder="You autocomplete me" [formControl]="myControl" [matAutocomplete]="auto"> 
+      <mat-autocomplete #auto="matAutocomplete"> 
+        <mat-option *ngFor="let option of filteredOptions | async" [value]="option"> 
+          <span mat-highlight-text="searchText" mat-highlight-flags="^i">{{option}}</span> 
+        </mat-option> 
+      </mat-autocomplete> 
+    </mat-form-field> 
+</div>

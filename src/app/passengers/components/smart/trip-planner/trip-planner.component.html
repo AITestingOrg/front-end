@@ -5,11 +5,21 @@
       <directions-service></directions-service>
     </agm-map>
   </div>
+  <div class="inprogress">
+    <app-text-box placeholder="Enter your pickup location." 
+    icon="my_location" 
+    ngDefaultControl 
+    [(ngModel)]="pickupTextboxValue"
+    (ngModelChange)="selectOrigin($event)">
+    </app-text-box>
+    <app-text-box placeholder="Enter your destination." icon="place">
+    </app-text-box>
+  </div>
   <div class="trip-inputs">
     <input placeholder="Enter your pickup location." autocorrect="off" autocapitalize="off" spellcheck="off" type="text" class="form-control"
       #pickupInput [formControl]="destinationInput" size="55">
     <input placeholder="Enter your destination." autocorrect="off" autocapitalize="off" spellcheck="off" type="text" class="form-control"
       #pickupOutput [formControl]="destinationOutput" size="55">
   </div>
-  <app-raised-button label="Find Your Ride" color="primary"></app-raised-button>
+  <app-raised-button label="Find Your Ride" color="primary" (click)="findLocation($event)"></app-raised-button>
 </mat-card>
