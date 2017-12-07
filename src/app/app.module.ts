@@ -9,7 +9,6 @@ import { TripPlannerComponent } from 'app/passengers/components/smart/trip-plann
 import { AgmCoreModule, GoogleMapsAPIWrapper } from '@agm/core';
 import { PlacesAutocompleteComponent } from 'app/passengers/components/presentation/places-autocomplete/places-autocomplete.component';
 import { StoreModule, Store } from '@ngrx/store';
-import { counterReducer } from 'app/common/states/reducers/counter.reducer';
 import { MatFormFieldModule, MatInputModule } from '@angular/material';
 import { GMapsDirectionsService } from 'app/common/states/gmaps.service';
 import { HttpModule } from '@angular/http';
@@ -34,7 +33,6 @@ const routes:Routes = [
       libraries: ['places']
     }),
     StoreModule.forRoot({
-      counter: counterReducer
     }),
     MatFormFieldModule,
     MatInputModule,

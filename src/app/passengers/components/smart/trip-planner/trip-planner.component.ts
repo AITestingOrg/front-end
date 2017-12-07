@@ -1,13 +1,14 @@
 import { Component, OnInit, Input, ElementRef, NgZone, ViewChild } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { error } from 'util';
+import { GoogleMapsAPIWrapper, MapsAPILoader } from '@agm/core';
 import { GMapsDirectionsService } from 'app/common/states/gmaps.service';
 import { } from '@types/googlemaps';
-import { GoogleMapsAPIWrapper, MapsAPILoader } from '@agm/core';
-import { error } from 'util';
-import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
+import { Store } from '@ngrx/store';
+import { SELECT_ORIGIN, SELECT_DESTINATION, PLAN_ROUTE } from 'app/common/states/reducers/trip-planner.reducer';
 import { Route } from 'app/common/models/route';
-import { SELECT_ORIGIN, SELECT_DESTINATION, PLAN_ROUTE } from 'app/common/states/reducers/trip-router.reducer';
+import { Location } from 'app/common/models/location';
 
 interface AppState {
   tripplanner: Route;
@@ -25,19 +26,20 @@ export class TripPlannerComponent implements OnInit {
   @Input() private latitude: number;
   @Input() private longitude: number;
   @Input() private zoom: number;
-  @Input() private origin: any;
-  @Input() private destinationInput: FormControl;
-  @Input() private destinationOutput: FormControl;
-  @Input() private destination: any;
-  @Input() private estimatedTime: any;
-  @Input() private estimatedDistance: any;
-  @Input() private initialLat: number;
-  @Input() private initialLng: number;
   @Input() private pickupTextboxValue: any;
   @Input() private destinationTextboxValue: any;
+  @Input() private destinationInput: FormControl;
+  @Input() private destinationOutput: FormControl;
+  private estimatedTime: any;
+  private estimatedDistance: any;
   private geocoder: any;
+  directionsDisplay: any;
+  originLatitude: Observable<number>;
+  originLongitude: Observable<number>;
+  origin: Location;
 
   tripplanner: Observable<Route>;
+  testlocation: Observable<any>;
 
   @ViewChild('pickupInput')
   public pickupInputElementRef: ElementRef;
@@ -53,24 +55,24 @@ export class TripPlannerComponent implements OnInit {
     private mapsAPILoader: MapsAPILoader,
     private gmapsApi: GoogleMapsAPIWrapper,
     private _elementRef: ElementRef,
-    private gmapsservice: GMapsDirectionsService
+    //private gmapsservice: GMapsDirectionsService
   ) {
       this.tripplanner = this.store.select<Route>(AppState => AppState.tripplanner);
   }
 
   ngOnInit() {
+ 
     // Set Default Map View
     this.setInitialCords().then((cords) => {
         this.latitude = cords.lat;
         this.longitude = cords.lng;
         this.zoom = 14;
-        console.log('set lat and lng')
       })
       .catch((error) => {
         console.log(error);
       });
 
-    this.destinationInput = new FormControl();
+    this.destinationInput = new FormControl(); 
     this.destinationOutput = new FormControl();
 
     // Update Map View
@@ -97,6 +99,14 @@ export class TripPlannerComponent implements OnInit {
       this.setupPlaceChangedListener(autocompleteInput2, 'pickup');
       this.setupPlaceChangedListener(autocompleteOutput2, 'destination');
     });
+  }
+
+  onPickupTextChange(event) {
+    this.store.dispatch({ type: SELECT_ORIGIN }); 
+  }
+
+  onDestinationTextChange(event) {
+    this.store.dispatch({ type: SELECT_DESTINATION });
   }
 
   setCurrentPosition() {
@@ -150,58 +160,24 @@ export class TripPlannerComponent implements OnInit {
     });
   }
 
-  getLatandLong(callback, address) {
-    address = address || '416 Sailboat Circle';
-    this.geocoder = new google.maps.Geocoder();
-    if (this.geocoder) {
-      this.geocoder.geolocation({
-        'address': address
-      },
-        function (results, status) {
-          if (status == google.maps.GeocoderStatus.OK) {
-            callback(results[0]);
-          }
-        })
-    }
-  }
+  onFindRideClick(event) {
+    var pickupAddress = this.pickupTextboxValue;
+    var destinationAddress = this.destinationTextboxValue;
+    //this.origin = this.service.getGeocodeFromAddress(pickupAddress, this.geocoder);
+    //this.destination = this.service.getGeocodeFromAddress(destinationAddress, this.geocoder);
+    this.service.getGeocodeFromAddress(pickupAddress, this.geocoder);
+    this.service.getGeocodeFromAddress(destinationAddress, this.geocoder);
 
-  selectOrigin(event) {
-    console.log("Selected origin");
-    //Save origin input as place id
-    this.service.origin;
-    this.pickupTextboxValue;
-    this.store.dispatch({ type: SELECT_ORIGIN });
-  }
-
-  selectDestination() {
-    //Save destination as place id
-    //Route trip with service
-    this.store.dispatch({ type: SELECT_DESTINATION });
-  }
-
-  planRoute() {
+    //Use Service to Plan Route
     this.store.dispatch({ type: PLAN_ROUTE });
   }
 
-  showResult(result) {
-    console.log("Lat: " + result.geometry.location.lat() + " Lng: " + result.geometry.location.lng());
+  //To-Do: Disable "Find Ride" until inputs are validated
+  validateInputs() {
+    if (this.pickupTextboxValue != null && this.destinationTextboxValue != null) {
+      return true;
+    }
+   return false;
   }
-
-  onFindRideClick(event) {
-    var address = this.pickupTextboxValue;
-    this.getLatandLong(this.showResult, address);
-  }
-
-  location : string;
-  result : any;
-
-  findLocation(): void {
-    this.location = this.pickupTextboxValue;
-    this.gmapsservice.getLocation(this.location)
-        .then((response) => 
-        this.result = response.results[0])
-        .catch((error) => 
-        console.error(error));
-}
   
 }

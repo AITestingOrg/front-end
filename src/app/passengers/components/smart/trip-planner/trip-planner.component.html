@@ -10,9 +10,14 @@
     icon="my_location" 
     ngDefaultControl 
     [(ngModel)]="pickupTextboxValue"
-    (ngModelChange)="selectOrigin($event)">
+    (ngModelChange)="onPickupTextChange($event)">
     </app-text-box>
-    <app-text-box placeholder="Enter your destination." icon="place">
+    <p>{{originLatitude}}</p>
+    <app-text-box placeholder="Enter your destination." 
+    icon="place"
+    ngDefaultControl 
+    [(ngModel)]="destinationTextboxValue"
+    (ngModelChange)="onDestinationTextChange($event)">>
     </app-text-box>
   </div>
   <div class="trip-inputs">
@@ -21,5 +26,5 @@
     <input placeholder="Enter your destination." autocorrect="off" autocapitalize="off" spellcheck="off" type="text" class="form-control"
       #pickupOutput [formControl]="destinationOutput" size="55">
   </div>
-  <app-raised-button label="Find Your Ride" color="primary" (click)="findLocation($event)"></app-raised-button>
+  <app-raised-button label="Find Your Ride" color="primary" (click)="onFindRideClick($event)"></app-raised-button>
 </mat-card>
