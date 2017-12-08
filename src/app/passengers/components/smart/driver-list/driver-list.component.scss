@@ -12,12 +12,48 @@ p{
     padding-top: 300px; 
     padding-bottom: 200px;
 }
-
+agm-map {
+    padding-top: 50px;
+    height: 500px;
+    width: 100%;
+  }
+  
 .container{
     display: flex;
     flex-direction: column;
     min-width: 300px;
+    max-height: 500px;
 }
+.mat-table{
+    overflow: auto;
+    max-height: 500px;
+}
+.fancy {
+    line-height: 0.5;
+    text-align: center;
+  }
+.fancy span {
+    display: inline-block;
+    position: relative;  
+  }
+  .fancy span:before,
+  .fancy span:after {
+    content: "";
+    position: absolute;
+    height: 5px;
+    border-bottom: 1px solid white;
+    border-top: 1px solid white;
+    top: 0;
+    width: 600px;
+  }
+  .fancy span:before {
+    right: 100%;
+    margin-right: 15px;
+  }
+  .fancy span:after {
+    left: 100%;
+    margin-left: 15px;
+  }
 
 .driversTable{
     flex: 1 1 auto;
