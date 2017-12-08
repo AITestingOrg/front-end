@@ -6,13 +6,11 @@ import { GMapsDirectionsService } from 'app/common/states/gmaps.service';
 import { } from '@types/googlemaps';
 import { Observable } from 'rxjs/Observable';
 import { Store } from '@ngrx/store';
-import { SELECT_ORIGIN, SELECT_DESTINATION, PLAN_ROUTE } from 'app/common/states/reducers/trip-planner.reducer';
+import * as MapActions from 'app/common/states/actions/map.action';
+import * as MapReducer from 'app/common/states/reducers/map.reducer';
+import { Map } from 'app/common/models/map';
 import { Route } from 'app/common/models/route';
 import { Location } from 'app/common/models/location';
-
-interface AppState {
-  tripplanner: Route;
-}
 
 @Component({
   selector: 'app-trip-planner',
@@ -50,14 +48,13 @@ export class TripPlannerComponent implements OnInit {
   @ViewChild(GMapsDirectionsService) service: GMapsDirectionsService;
 
   constructor(
-    private store: Store<AppState>,
+    private store: Store<MapReducer.State>,
     private ngZone: NgZone,
     private mapsAPILoader: MapsAPILoader,
     private gmapsApi: GoogleMapsAPIWrapper,
     private _elementRef: ElementRef,
     //private gmapsservice: GMapsDirectionsService
   ) {
-      this.tripplanner = this.store.select<Route>(AppState => AppState.tripplanner);
   }
 
   ngOnInit() {
@@ -101,13 +98,9 @@ export class TripPlannerComponent implements OnInit {
     });
   }
 
-  onPickupTextChange(event) {
-    this.store.dispatch({ type: SELECT_ORIGIN }); 
-  }
+  onPickupTextChange(event) {}
 
-  onDestinationTextChange(event) {
-    this.store.dispatch({ type: SELECT_DESTINATION });
-  }
+  onDestinationTextChange(event) {}
 
   setCurrentPosition() {
     if ('geolocation' in navigator) {
@@ -163,13 +156,15 @@ export class TripPlannerComponent implements OnInit {
   onFindRideClick(event) {
     var pickupAddress = this.pickupTextboxValue;
     var destinationAddress = this.destinationTextboxValue;
-    //this.origin = this.service.getGeocodeFromAddress(pickupAddress, this.geocoder);
-    //this.destination = this.service.getGeocodeFromAddress(destinationAddress, this.geocoder);
     this.service.getGeocodeFromAddress(pickupAddress, this.geocoder);
     this.service.getGeocodeFromAddress(destinationAddress, this.geocoder);
-
+    //TODO:
     //Use Service to Plan Route
-    this.store.dispatch({ type: PLAN_ROUTE });
+    //this.origin = this.service.getGeocodeFromAddress(pickupAddress, this.geocoder);
+    //this.destination = this.service.getGeocodeFromAddress(destinationAddress, this.geocoder);
+    //Dispatch Action
+    let map = new Map(this.origin);
+    this.store.dispatch(new MapActions.AddLocation(map));
   }
 
   //To-Do: Disable "Find Ride" until inputs are validated

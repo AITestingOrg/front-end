@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Route } from 'app/common/models/route';
 import { Store } from '@ngrx/store';
-import * as RouteObj from 'app/common/states/actions/app.action';
+import * as RouteObj from 'app/common/states/actions/map.action';
 
 interface AppState {
   route: Route;
@@ -21,7 +21,4 @@ export class AppComponent {
     this.route = store.select('route');
   }
 
-  setOrigin() {
-    this.store.dispatch(new RouteObj.DetermineRoute());
-  }
 }
