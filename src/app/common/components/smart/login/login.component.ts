@@ -23,6 +23,10 @@ export class LoginComponent implements OnInit {
     console.log("Registered: " + event);
   }
 
+  tripPlan(event) {
+    console.log("Plan trip: " + event);
+  }
+
   rememberUser(event, checkboxValue) {
     if(checkboxValue) {
     console.log("Will remember.");

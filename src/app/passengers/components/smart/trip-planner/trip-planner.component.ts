@@ -1,4 +1,5 @@
 import { Component, OnInit, Input, ElementRef, NgZone, ViewChild } from '@angular/core';
+import {Routes, Router, RouterModule} from '@angular/router';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { GMapsDirectionsService } from 'app/common/states/gmaps.service';
 import { } from '@types/googlemaps';
@@ -26,6 +27,8 @@ export class TripPlannerComponent implements OnInit {
   @Input() private initialLat: number;
   @Input() private initialLng: number;
 
+
+
   @ViewChild('pickupInput')
   public pickupInputElementRef: ElementRef;
 
@@ -38,10 +41,14 @@ export class TripPlannerComponent implements OnInit {
     private ngZone: NgZone,
     private mapsAPILoader: MapsAPILoader,
     private gmapsApi: GoogleMapsAPIWrapper,
+    private router: Router,
     private _elementRef: ElementRef) {
   }
 
-  ngOnInit() {
+  ngOnInit() 
+  
+  {
+
     // Set Default Map View
     this.setInitialCords().then((cords) => {
         this.latitude = cords.lat;
@@ -82,6 +89,12 @@ export class TripPlannerComponent implements OnInit {
     }
   }
 
+  drivers(event)
+  {
+    console.log("Driver list:"+ event);
+    this.router.navigateByUrl('/drivers');
+
+  }
   private setupPlaceChangedListener(autocomplete:any, inputType:string) {
     autocomplete.addListener('place_changed', () => {
       this.ngZone.run(() => {
