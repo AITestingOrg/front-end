@@ -27,6 +27,8 @@ export class TripPlannerComponent implements OnInit {
   @Input() private initialLat: number;
   @Input() private initialLng: number;
 
+
+
   @ViewChild('pickupInput')
   public pickupInputElementRef: ElementRef;
 
@@ -39,6 +41,7 @@ export class TripPlannerComponent implements OnInit {
     private ngZone: NgZone,
     private mapsAPILoader: MapsAPILoader,
     private gmapsApi: GoogleMapsAPIWrapper,
+    private router: Router,
     private _elementRef: ElementRef) {
   }
 
@@ -86,9 +89,11 @@ export class TripPlannerComponent implements OnInit {
     }
   }
 
-  driverList(event)
+  drivers(event)
   {
     console.log("Driver list:"+ event);
+    this.router.navigateByUrl('/drivers');
+
   }
   private setupPlaceChangedListener(autocomplete:any, inputType:string) {
     autocomplete.addListener('place_changed', () => {

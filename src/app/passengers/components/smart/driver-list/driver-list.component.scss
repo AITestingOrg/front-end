@@ -5,79 +5,28 @@
   }
 
 .title{
-    color: green;
-    text-decoration: underline;
+    color:#00BCD4  ;
+    text-align: left;
+    text-indent: 25px;
 }
 
 agm-map {
-  
     height: 500px;
     width: 100%;
   }
   
 .container{
-    display: flex;
+    display:flex;
     flex-direction: column;
     min-width: 300px;
     max-height: 500px;
+    column-rule-style: dotted;
 }
 .mat-table{
     overflow: auto;
     max-height: 500px;
 }
-.fancy {
-    line-height: 0.5;
-    text-align: center;
-  }
-.fancy span {
-    display: inline-block;
-    position: relative;  
-  }
-  .fancy span:before,
-  .fancy span:after {
-    content: "";
-    position: absolute;
-    height: 5px;
-    border-bottom: 1px solid white;
-    border-top: 1px solid white;
-    top: 0;
-    width: 600px;
-  }
-  .fancy span:before {
-    right: 100%;
-    margin-right: 15px;
-  }
-  .fancy span:after {
-    left: 100%;
-    margin-left: 15px;
-  }
 
-.driversTable{
-    flex: 1 1 auto;
-    overflow: auto;
-    max-height: 500px;
-}
-
-.driverList-header-row, .driverList-row{
-    display: flex;
-    border-bottom: 1px solid #ccc;
-    align-items: center;
-    height:32px;
-    padding: 0 8px;
-}
-
-.driverList-cell{
-    flex: 1;
-    font-size: 13px;
-    color: rgba(0,0,0,0.87)
-}
-
-.driverList-header-cell{
-    flex: 1;
-    font-size: 12px;
-    font-weight: bold;
-    color: rgba(0,0,0,0.54);
-}
 
 
 
