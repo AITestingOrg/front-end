@@ -1,4 +1,5 @@
 import { Component, OnInit, Input, ElementRef, NgZone, ViewChild } from '@angular/core';
+import {Routes, Router, RouterModule} from '@angular/router';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { GMapsDirectionsService } from 'app/common/services/gmaps.service';
 import { APIGatewayService } from 'app/common/services/api-gateway.service';
@@ -43,7 +44,8 @@ export class TripPlannerComponent implements OnInit {
     private mapsAPILoader: MapsAPILoader,
     private gmapsApi: GoogleMapsAPIWrapper,
     private _elementRef: ElementRef,
-    private apiGatewayService: APIGatewayService) {
+    private apiGatewayService: APIGatewayService,
+    private router: Router) {
   }
 
   ngOnInit() {
@@ -79,6 +81,7 @@ export class TripPlannerComponent implements OnInit {
 
   onFindRideClick(event) {
     this.apiGatewayService.getDirections(this.pickupTextboxValue, this.destinationTextboxValue, this.directionsDisplay);
+    this.router.navigateByUrl('/pick-driver');
   }
 
   onPickupTextChange(event) {}

@@ -11,7 +11,7 @@ import { RaisedButtonComponent } from './components/presentation/raised-button/r
 import { BasicButtonComponent } from './components/presentation/basic-button/basic-button.component';
 import { IconButtonComponent } from './components/presentation/icon-button/icon-button.component';
 import { GMapsDirectionsService} from './services/gmaps.service';
-import { MatToolbarModule, MatCheckboxModule, MatButtonModule, MatFormFieldModule, MatFormFieldControl, MatInputModule, MatIconModule, MatCardModule, MatAutocompleteModule } from '@angular/material';
+import { MatToolbarModule, MatCheckboxModule, MatButtonModule, MatFormFieldModule, MatFormFieldControl, MatInputModule, MatIconModule, MatCardModule, MatAutocompleteModule, MatTableModule} from '@angular/material';
 import { HeaderComponent } from './components/presentation/header/header.component';
 
 @NgModule({
@@ -28,9 +28,10 @@ import { HeaderComponent } from './components/presentation/header/header.compone
     ReactiveFormsModule, 
     MatAutocompleteModule, 
     AgmCoreModule, 
-    RouterModule
+    RouterModule, 
+    MatTableModule
   ],
-  declarations: [
+  declarations: [  
     TextBoxComponent, 
     LoginComponent, 
     CheckBoxComponent, 
@@ -43,14 +44,15 @@ import { HeaderComponent } from './components/presentation/header/header.compone
   ],
   exports: [
     ToolbarComponent, 
-    MatCardModule, 
     RaisedButtonComponent, 
     ReactiveFormsModule, 
     MatAutocompleteModule, 
     GMapsDirectionsService, 
     HeaderComponent,
     TextBoxComponent,
-    FormsModule
+    FormsModule,
+    MatCardModule,
+    MatTableModule
   ],
 })
 
