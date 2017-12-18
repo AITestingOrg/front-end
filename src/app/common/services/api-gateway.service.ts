@@ -5,7 +5,8 @@ import { Http } from '@angular/http';
 export class APIGatewayService { 
  
   private http:Http; 
-  private apiUrl = "http://10.55.13.61:8081/api/"; 
+  private apiUrl = "http://10.55.13.61:8082/api/"; 
+  private availableDriversList:any;
  
   constructor(http:Http) { 
     this.http = http; 
@@ -34,5 +35,24 @@ export class APIGatewayService {
       console.log(result); 
     }) 
   } 
- 
+
+  // Driver Management
+
+  getAvailableDrivers(origin:string) {
+    let getUrl = this.apiUrl.concat("drivers");    
+    let promise = new Promise((resolve, reject) => {
+      this.http.get(getUrl).toPromise().then(
+        result => {
+          this.availableDriversList = result.json();
+          console.log(this.availableDriversList);
+          resolve(result.json());
+        },
+        message => {
+          reject(message);
+        }
+      );
+    });
+    return promise;
+  }
+
 } 

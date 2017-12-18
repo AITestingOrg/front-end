@@ -6,6 +6,7 @@ import { DataSource } from '@angular/cdk/table';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/of';
+import { APIGatewayService } from 'app/common/services/api-gateway.service';
 
 
 @Component({
@@ -16,19 +17,45 @@ import 'rxjs/add/observable/of';
 export class DriverListComponent{
 
   displayedColumns = ['id', 'name', 'time', 'rating'];
-  dataSource = new MatTableDataSource<Element>(ELEMENT_DATA);
-  //dataSource: MockDataSource | null;
+  drivers = new Array<DriverData>();  
+  dataSource = new MatTableDataSource(this.drivers);
 
+  constructor(private apiGatewayService:APIGatewayService) {}
 
   ngOnInit() {
- 
+    this.apiGatewayService.getAvailableDrivers("416 Sailboat Circle").then(result => {
+      console.log(result);
+      this.fillTableWithDriverData(result);
+    });
+    console.log("Results from getAvailableDrivers in DL Component");
   } 
+
+  fillTableWithDriverData(result) {
+    DRIVER_NAMES = [];
+    result.map(x => {
+      DRIVER_NAMES.push(x.fname);
+      DRIVER_IDS.push(x.id);
+      DRIVER_RATINGS.push(x.rating);
+      DRIVER_TIMES.push(x.distanceSeconds);
+    })
+  }
 }
 
-export interface Element{
-  id:string;
-  name:string;
-  time:string;
-  rating:string;
-}
-const ELEMENT_DATA: Element[] = [{id:'1', name:'Patrick Alt',time:':58',rating:'3/5'},{id:'2', name:'Madeline Helmstadter',time:'1:02',rating:'4/5'},{id:'3', name:'Jose Perez Clark',time:'1:15',rating:'3/5'},{id:'4', name:'Sandra Hurtado',time:'1:20',rating:'3/5'}];
+var DRIVER_NAMES = [];
+var DRIVER_TIMES = [];
+var DRIVER_IDS = [];
+var DRIVER_RATINGS = [];
+
+  class DriverData {
+    name:string;
+    id:string;
+    minutesAway:string;
+    rank:string;
+
+    constructor(name:string, id:string, minutesAway:string, rank:string) {
+      this.name = name;
+      this.id = id;
+      this.minutesAway = minutesAway;
+      this.rank = this.rank;
+    }
+  }
