@@ -10,7 +10,7 @@ import { ToolbarComponent } from './components/presentation/toolbar/toolbar.comp
 import { RaisedButtonComponent } from './components/presentation/raised-button/raised-button.component';
 import { BasicButtonComponent } from './components/presentation/basic-button/basic-button.component';
 import { IconButtonComponent } from './components/presentation/icon-button/icon-button.component';
-import { GMapsDirectionsService} from './states/gmaps.service';
+import { GMapsDirectionsService} from './services/gmaps.service';
 import { MatToolbarModule, MatCheckboxModule, MatButtonModule, MatFormFieldModule, MatFormFieldControl, MatInputModule, MatIconModule, MatCardModule, MatAutocompleteModule } from '@angular/material';
 import { HeaderComponent } from './components/presentation/header/header.component';
 
@@ -48,7 +48,9 @@ import { HeaderComponent } from './components/presentation/header/header.compone
     ReactiveFormsModule, 
     MatAutocompleteModule, 
     GMapsDirectionsService, 
-    HeaderComponent
+    HeaderComponent,
+    TextBoxComponent,
+    FormsModule
   ],
 })
 

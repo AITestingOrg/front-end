@@ -1,6 +1,7 @@
 import { Component, OnInit, Input, ElementRef, NgZone, ViewChild } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { GMapsDirectionsService } from 'app/common/states/gmaps.service';
+import { GMapsDirectionsService } from 'app/common/services/gmaps.service';
+import { APIGatewayService } from 'app/common/services/api-gateway.service';
 import { } from '@types/googlemaps';
 import { GoogleMapsAPIWrapper, MapsAPILoader } from '@agm/core';
 import { error } from 'util';
@@ -25,6 +26,9 @@ export class TripPlannerComponent implements OnInit {
   @Input() private estimatedDistance: any;
   @Input() private initialLat: number;
   @Input() private initialLng: number;
+  @Input() private pickupTextboxValue: any;
+  @Input() private destinationTextboxValue: any;
+  private directionsDisplay;
 
   @ViewChild('pickupInput')
   public pickupInputElementRef: ElementRef;
@@ -38,7 +42,8 @@ export class TripPlannerComponent implements OnInit {
     private ngZone: NgZone,
     private mapsAPILoader: MapsAPILoader,
     private gmapsApi: GoogleMapsAPIWrapper,
-    private _elementRef: ElementRef) {
+    private _elementRef: ElementRef,
+    private apiGatewayService: APIGatewayService) {
   }
 
   ngOnInit() {
@@ -71,6 +76,14 @@ export class TripPlannerComponent implements OnInit {
       this.setupPlaceChangedListener(autocompleteOutput, 'destination');
     });
   }
+
+  onFindRideClick(event) {
+    this.apiGatewayService.getDirections(this.pickupTextboxValue, this.destinationTextboxValue, this.directionsDisplay);
+  }
+
+  onPickupTextChange(event) {}
+  
+  onDestinationTextChange(event) {}
 
   setCurrentPosition() {
     if ('geolocation' in navigator) {
