@@ -47,7 +47,6 @@ export class TripPlannerComponent implements OnInit {
         this.latitude = cords.lat;
         this.longitude = cords.lng;
         this.zoom = 14;
-        console.log('set lat and lng')
       })
       .catch((error) => {
         console.log(error);

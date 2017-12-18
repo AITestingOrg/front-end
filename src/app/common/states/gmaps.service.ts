@@ -60,7 +60,6 @@ export class GMapsDirectionsService {
           const point = response.routes[0].legs[0];
           service.estimatedTime = point.duration.text;
           service.estimatedDistance = point.distance.text;
-          console.log('Estimated travel time: ' + point.duration.text + ' (' + point.distance.text + ')');
         } else {
           console.log('Directions request failed due to ' + status);
         }

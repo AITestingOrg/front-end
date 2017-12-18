@@ -20,7 +20,6 @@ export class TextBoxComponent implements OnInit {
   ngOnInit() {}
   
   onChange(event) {
-    console.log(this.textboxValue);
   }
 
 }
