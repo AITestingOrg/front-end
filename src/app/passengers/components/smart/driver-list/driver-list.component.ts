@@ -1,8 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { CdkTableModule} from '@angular/cdk/table';
-import { MatTableModule} from '@angular/material/table';
 import { MatTableDataSource } from '@angular/material';
-import { DataSource } from '@angular/cdk/table';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/of';
@@ -17,27 +14,40 @@ import { APIGatewayService } from 'app/common/services/api-gateway.service';
 export class DriverListComponent{
 
   displayedColumns = ['id', 'name', 'time', 'rating'];
-  drivers = new Array<DriverData>();  
-  dataSource = new MatTableDataSource(this.drivers);
+  dataSource: MatTableDataSource<DriverData>;
 
-  constructor(private apiGatewayService:APIGatewayService) {}
+  constructor(private apiGatewayService:APIGatewayService) {
+    var drivers = new Array<DriverData>();  
+    this.dataSource = new MatTableDataSource(drivers);
+  }
 
   ngOnInit() {
-    this.apiGatewayService.getAvailableDrivers("416 Sailboat Circle").then(result => {
+    this.apiGatewayService.getAvailableDrivers().then(result => {
+      console.log("Before filling table, result: ");
       console.log(result);
       this.fillTableWithDriverData(result);
     });
-    console.log("Results from getAvailableDrivers in DL Component");
   } 
 
   fillTableWithDriverData(result) {
+    //Reset Driver Data Arrays
     DRIVER_NAMES = [];
+    DRIVER_IDS = [];
+    DRIVER_RATINGS = [];
+    DRIVER_TIMES = [];
+    //Map Values of Result to DriverData Fields
     result.map(x => {
       DRIVER_NAMES.push(x.fname);
       DRIVER_IDS.push(x.id);
       DRIVER_RATINGS.push(x.rating);
       DRIVER_TIMES.push(x.distanceSeconds);
     })
+    //Fill Table's Data Source with Mapping Results
+    var drivers = new Array<DriverData>();
+    for (let i = 0; i < DRIVER_NAMES.length; i++) {
+      drivers.push(new DriverData(DRIVER_NAMES[i], DRIVER_IDS[i], DRIVER_TIMES[i], DRIVER_RATINGS[i]));
+    }
+    this.dataSource = new MatTableDataSource(drivers);
   }
 }
 

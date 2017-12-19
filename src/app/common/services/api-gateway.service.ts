@@ -5,7 +5,8 @@ import { Http } from '@angular/http';
 export class APIGatewayService { 
  
   private http:Http; 
-  private apiUrl = "http://10.55.13.61:8082/api/"; 
+  private driverApiUrl = "http://localhost:8082/api/"
+  private tripApiUrl = "http://localhost:8081/api/"; 
   private availableDriversList:any;
  
   constructor(http:Http) { 
@@ -15,7 +16,7 @@ export class APIGatewayService {
   // Trip Management  
  
   getDirections(originAddress:string, destinationAddress:string, directionsDisplay:any) { 
-    let postUrl = this.apiUrl.concat("trips/directions"); 
+    let postUrl = this.tripApiUrl.concat("trips/directions"); 
     this.http.post(postUrl, { 
       "origin": originAddress, 
       "destination": destinationAddress 
@@ -29,7 +30,7 @@ export class APIGatewayService {
   } 
    
   getTrip(passenger:string, driver:string, car:string, originAddress:string, destinationAddress:string) { 
-    let postUrl = this.apiUrl.concat(passenger, "/", driver, "/", car, "/", originAddress, "/", destinationAddress); 
+    let postUrl = this.tripApiUrl.concat(passenger, "/", driver, "/", car, "/", originAddress, "/", destinationAddress); 
     this.http.post(postUrl, {}).subscribe(result => { 
       console.log("Result of getTrip: ");
       console.log(result); 
@@ -38,8 +39,8 @@ export class APIGatewayService {
 
   // Driver Management
 
-  getAvailableDrivers(origin:string) {
-    let getUrl = this.apiUrl.concat("drivers");    
+  getAvailableDrivers() {
+    let getUrl = this.driverApiUrl.concat("drivers");    
     let promise = new Promise((resolve, reject) => {
       this.http.get(getUrl).toPromise().then(
         result => {
