@@ -1,4 +1,4 @@
-import { GoogleMapsAPIWrapper } from '@agm/core';
+import { GoogleMapsAPIWrapper, LatLng } from '@agm/core';
 import { Directive, Input, Output } from '@angular/core';
 
 declare var google: any;
@@ -11,8 +11,6 @@ export class GMapsDirectionsService {
 
   @Input() origin: any;
   @Input() destination: any;
-  @Input() originPlaceId: any;
-  @Input() destinationPlaceId: any;
   @Input() waypoints: any;
   @Input() directionsDisplay: any;
   @Input() estimatedTime: any;
@@ -20,18 +18,13 @@ export class GMapsDirectionsService {
 
   constructor(private gmapsApi: GoogleMapsAPIWrapper) { }
 
-  updateDirections() {
+  updateDirections(originLocation:LatLng, destinationLocation:LatLng, directionsDisplay:any) {
     this.gmapsApi.getNativeMap().then(map => {
       // Prepare Map and Display Settings
-      if (!this.originPlaceId || !this.destinationPlaceId) {
-        return;
-      }
-
       const directionsService = new google.maps.DirectionsService;
       const service = this;
-      const origin = new google.maps.LatLng({ lat: this.origin.latitude, lng: this.origin.longitude });
-      const destination = new google.maps.LatLng({ lat: this.destination.latitude, lng: this.destination.longitude });
-
+      const origin = new google.maps.LatLng(originLocation); 
+      const destination = new google.maps.LatLng(destinationLocation);
       this.directionsDisplay.setMap(map);
       this.directionsDisplay.setOptions({
         polylineOptions: {
@@ -47,8 +40,8 @@ export class GMapsDirectionsService {
       // Determine Directions
       // Request
       directionsService.route({
-        origin: { placeId: this.originPlaceId },
-        destination: { placeId: this.destinationPlaceId },
+        origin: origin,
+        destination: destination,
         avoidHighways: true,
         travelMode: google.maps.DirectionsTravelMode.DRIVING
       },
@@ -70,4 +63,5 @@ export class GMapsDirectionsService {
   private getcomputeDistance(origin: any, destination: any) {
     return (google.maps.geometry.spherical.computeDistanceBetween(origin, destination) / 1000).toFixed(2);
   }
+
 }

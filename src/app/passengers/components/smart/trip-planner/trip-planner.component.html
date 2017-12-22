@@ -19,12 +19,8 @@
     (ngModelChange)="onDestinationTextChange($event)">>
     </app-text-box>
   </div>
-
-  <div class="trip-inputs">
-    <input placeholder="Enter your pickup location." autocorrect="off" autocapitalize="off" spellcheck="off" type="text" class="form-control"
-      #pickupInput [formControl]="destinationInput" size="55">
-    <input placeholder="Enter your destination." autocorrect="off" autocapitalize="off" spellcheck="off" type="text" class="form-control"
-      #pickupOutput [formControl]="destinationOutput" size="55">
-  </div>
-  <app-raised-button label="Find Your Ride" color="primary" (click)="onFindRideClick($event)"></app-raised-button>
+  <app-raised-button label="Confirm Route" color="primary" (click)="onConfirmClick($event)"></app-raised-button>
+  <br/>
+  <br/>
+  <app-raised-button label="Find Your Ride" color="primary" (click)="onFindRideClick($event)"></app-raised-button>  
 </mat-card>

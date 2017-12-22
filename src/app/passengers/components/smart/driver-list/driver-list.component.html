@@ -1,24 +1,24 @@
-<div class = page>
-<div class = "container mat-elevation-z8">
-  <agm-map>  
-  </agm-map>
-</div>
-<h3 class= "title"><span>Available Drivers: </span></h3>
- <mat-table #table [dataSource] = "dataSource">
-    <ng-container matColumnDef = "id">
-        <mat-header-cell *matHeaderCellDef> ID </mat-header-cell>>
-        <mat-cell *matCellDef = "let row">{{row.id}} </mat-cell>
+<div class=p age>
+  <mat-card>
+  <h1 class="title">
+    <span>Available Drivers</span>
+  </h1>
+  <mat-table #table [dataSource]="dataSource">
+    <!-- ID Column -->
+    <ng-container matColumnDef="id">
+      <mat-header-cell *matHeaderCellDef> ID </mat-header-cell>>
+      <mat-cell *matCellDef="let row">{{row.id}} </mat-cell>
     </ng-container>
 
- <!-- Name Column -->
+    <!-- Name Column -->
     <ng-container matColumnDef="name">
       <mat-header-cell *matHeaderCellDef> Name </mat-header-cell>
-      <mat-cell *matCellDef="let row"> {{row.name}} </mat-cell>
+      <mat-cell *matCellDef="let row">{{row.name}}</mat-cell>
     </ng-container>
 
     <!-- Weight Column -->
-    <ng-container matColumnDef="time">
-      <mat-header-cell *matHeaderCellDef> Time </mat-header-cell>
+    <ng-container matColumnDef="distance">
+      <mat-header-cell *matHeaderCellDef> Distance </mat-header-cell>
       <mat-cell *matCellDef="let row"> {{row.time}} </mat-cell>
     </ng-container>
 
@@ -28,7 +28,10 @@
       <mat-cell *matCellDef="let row"> {{row.rating}} </mat-cell>
     </ng-container>
 
-    <mat-header-row *matHeaderRowDef= "displayedColumns"></mat-header-row>
-    <mat-row *matRowDef="let row; columns:  displayedColumns;"></mat-row>
+    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: displayedColumns;" (click)="selectDriver(event, row)"></mat-row>
   </mat-table>
+  <br/><br/>
+  <p>Select a driver from the list above in order to continue.</p>  
+</mat-card>
 </div>

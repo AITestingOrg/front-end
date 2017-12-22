@@ -24,7 +24,6 @@ export class LoginComponent implements OnInit {
   }
 
   register(event) {
-    console.log("Registered: " + event);
   }
 
   rememberUserValue = true;

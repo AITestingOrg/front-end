@@ -4,7 +4,9 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/of';
 import { APIGatewayService } from 'app/common/services/api-gateway.service';
-
+import { Router } from '@angular/router';
+import { MessageService } from 'app/common/services/message.service';
+import { Subscription } from 'rxjs/Subscription';
 
 @Component({
   selector: 'app-driver-list',
@@ -12,49 +14,66 @@ import { APIGatewayService } from 'app/common/services/api-gateway.service';
   styleUrls: ['./driver-list.component.scss']
 })
 export class DriverListComponent{
+  message: any;
+  subscription: Subscription;
 
-  displayedColumns = ['id', 'name', 'time', 'rating'];
-  dataSource: MatTableDataSource<DriverData>;
+  displayedColumns = ['id', 'name', 'distance', 'rating'];
+  dataSource: MatTableDataSource<DriverData>; 
 
-  constructor(private apiGatewayService:APIGatewayService) {
-    var drivers = new Array<DriverData>();  
-    this.dataSource = new MatTableDataSource(drivers);
+  constructor(
+    private apiGatewayService:APIGatewayService, 
+    private router:Router,
+    private messageService:MessageService) 
+    {
+    var drivers = new Array<DriverData>();
+    this.dataSource = new MatTableDataSource<DriverData>(drivers);
+    this.subscription = this.messageService.getMessageTest().subscribe(message => {
+      this.message = message;
+    })
   }
 
   ngOnInit() {
-    this.apiGatewayService.getAvailableDrivers().then(result => {
-      console.log("Before filling table, result: ");
-      console.log(result);
-      this.fillTableWithDriverData(result);
-    });
+    this.apiGatewayService.getAvailableDrivers().then(result => { 
+      this.fillTableWithDriverData(result); 
+    }); 
   } 
 
-  fillTableWithDriverData(result) {
-    //Reset Driver Data Arrays
-    DRIVER_NAMES = [];
-    DRIVER_IDS = [];
-    DRIVER_RATINGS = [];
-    DRIVER_TIMES = [];
-    //Map Values of Result to DriverData Fields
-    result.map(x => {
-      DRIVER_NAMES.push(x.fname);
-      DRIVER_IDS.push(x.id);
-      DRIVER_RATINGS.push(x.rating);
-      DRIVER_TIMES.push(x.distanceSeconds);
-    })
-    //Fill Table's Data Source with Mapping Results
-    var drivers = new Array<DriverData>();
-    for (let i = 0; i < DRIVER_NAMES.length; i++) {
-      drivers.push(new DriverData(DRIVER_NAMES[i], DRIVER_IDS[i], DRIVER_TIMES[i], DRIVER_RATINGS[i]));
-    }
-    this.dataSource = new MatTableDataSource(drivers);
+  fillTableWithDriverData(result) { 
+    //Reset Driver Data Arrays 
+    driverNames = []; 
+    driverIds = []; 
+    driverRatings = []; 
+    driverDistances = []; 
+    //Map Values of Result to DriverData Fields 
+    result.map(x => { 
+      driverNames.push(x.fname); 
+      driverIds.push(x.id); 
+      driverRatings.push(x.rating); 
+      driverDistances.push(x.distance); 
+    }) 
+    //Fill Table's Data Source with Mapping Results 
+    var drivers = new Array<DriverData>(); 
+    for (let i = 0; i < driverNames.length; i++) { 
+      drivers.push(new DriverData(driverNames[i], driverIds[i], driverDistances[i], driverRatings[i])); 
+    } 
+    this.dataSource = new MatTableDataSource(drivers); 
+  } 
+
+  selectDriver(event, driver) {
+    this.router.navigateByUrl('/trip-confirmation');
+    // var driverName = driver.name;
+    // var driverId = driver.id;
+    // var driverDistance = driver.minutesAway;
+    // var driverRank = driver.rank;
+    // this.messageService.sendMessageTest("The selected driver was: " + driverName);
   }
+
 }
 
-var DRIVER_NAMES = [];
-var DRIVER_TIMES = [];
-var DRIVER_IDS = [];
-var DRIVER_RATINGS = [];
+var driverNames = [];
+var driverDistances = [];
+var driverIds = [];
+var driverRatings = [];
 
   class DriverData {
     name:string;

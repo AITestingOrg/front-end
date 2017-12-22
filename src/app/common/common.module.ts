@@ -13,6 +13,7 @@ import { IconButtonComponent } from './components/presentation/icon-button/icon-
 import { GMapsDirectionsService} from './services/gmaps.service';
 import { MatToolbarModule, MatCheckboxModule, MatButtonModule, MatFormFieldModule, MatFormFieldControl, MatInputModule, MatIconModule, MatCardModule, MatAutocompleteModule, MatTableModule} from '@angular/material';
 import { HeaderComponent } from './components/presentation/header/header.component';
+import { TripConfirmationComponent } from './components/smart/trip-confirmation/trip-confirmation.component';
 
 @NgModule({
   imports: [
@@ -40,7 +41,7 @@ import { HeaderComponent } from './components/presentation/header/header.compone
     BasicButtonComponent, 
     IconButtonComponent, 
     GMapsDirectionsService, 
-    HeaderComponent
+    HeaderComponent, TripConfirmationComponent
   ],
   exports: [
     ToolbarComponent, 
@@ -52,7 +53,8 @@ import { HeaderComponent } from './components/presentation/header/header.compone
     TextBoxComponent,
     FormsModule,
     MatCardModule,
-    MatTableModule
+    MatTableModule,
+    MatButtonModule
   ],
 })
 
