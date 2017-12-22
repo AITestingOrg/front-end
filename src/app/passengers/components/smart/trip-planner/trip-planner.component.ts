@@ -1,9 +1,12 @@
 import { Component, OnInit, Input, ElementRef, NgZone, ViewChild } from '@angular/core';
+import { Routes, Router, RouterModule } from '@angular/router';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { GMapsDirectionsService } from 'app/common/states/gmaps.service';
+import { GMapsDirectionsService } from 'app/common/services/gmaps.service';
+import { APIGatewayService } from 'app/common/services/api-gateway.service';
 import { } from '@types/googlemaps';
 import { GoogleMapsAPIWrapper, MapsAPILoader } from '@agm/core';
 import { error } from 'util';
+import { MessageService } from 'app/common/services/message.service';
 
 @Component({
   selector: 'app-trip-planner',
@@ -17,28 +20,26 @@ export class TripPlannerComponent implements OnInit {
   @Input() private latitude: number;
   @Input() private longitude: number;
   @Input() private zoom: number;
-  @Input() private origin: any;
-  @Input() private destinationInput: FormControl;
-  @Input() private destinationOutput: FormControl;
-  @Input() private destination: any;
-  @Input() private estimatedTime: any;
-  @Input() private estimatedDistance: any;
-  @Input() private initialLat: number;
-  @Input() private initialLng: number;
-
-  @ViewChild('pickupInput')
-  public pickupInputElementRef: ElementRef;
-
-  @ViewChild('pickupOutput')
-  public pickupOutputElementRef: ElementRef;
+  @Input() private pickupTextboxValue : any;
+  @Input() private destinationTextboxValue: any;
+  private destinationInput: FormControl;
+  private destinationOutput: FormControl;
+  private estimatedTime: any;
+  private estimatedDistance: any;
+  private directionsDisplay: any;
+  private message: String;
+  private originLocation:any;
+  private destinationLocation:any;
 
   @ViewChild(GMapsDirectionsService) service: GMapsDirectionsService;
 
   constructor(
-    private ngZone: NgZone,
     private mapsAPILoader: MapsAPILoader,
     private gmapsApi: GoogleMapsAPIWrapper,
-    private _elementRef: ElementRef) {
+    private _elementRef: ElementRef,
+    private apiGatewayService: APIGatewayService,
+    private messageService: MessageService,
+    private router: Router) {
   }
 
   ngOnInit() {
@@ -47,31 +48,36 @@ export class TripPlannerComponent implements OnInit {
         this.latitude = cords.lat;
         this.longitude = cords.lng;
         this.zoom = 14;
-        console.log('set lat and lng')
       })
       .catch((error) => {
         console.log(error);
       });
-
     this.destinationInput = new FormControl();
     this.destinationOutput = new FormControl();
 
     // Update Map View
     this.setCurrentPosition();
 
-    // Load Autocomplete for Inputs
     this.mapsAPILoader.load().then(() => {
-      const autocompleteInput = new google.maps.places.Autocomplete(this.pickupInputElementRef.nativeElement, {
-        types: ['address']
-      });
-
-      const autocompleteOutput = new google.maps.places.Autocomplete(this.pickupOutputElementRef.nativeElement, {
-        types: ['address']
-      });
-      this.setupPlaceChangedListener(autocompleteInput, 'pickup');
-      this.setupPlaceChangedListener(autocompleteOutput, 'destination');
+      this.service.directionsDisplay = new google.maps.DirectionsRenderer;
     });
   }
+
+  onConfirmClick(event) {
+    this.originLocation = this.apiGatewayService.getLatLng(this.pickupTextboxValue);
+    this.destinationLocation = this.apiGatewayService.getLatLng(this.destinationTextboxValue);
+    Promise.all([this.originLocation, this.destinationLocation]).then(values => {
+      this.service.updateDirections(values[0], values[1], this.service.directionsDisplay);      
+    })
+  }
+
+  onFindRideClick(event) {
+    this.router.navigateByUrl('/pick-driver');
+  }
+
+  onPickupTextChange(event) {}
+  
+  onDestinationTextChange(event) {}
 
   setCurrentPosition() {
     if ('geolocation' in navigator) {
@@ -80,31 +86,6 @@ export class TripPlannerComponent implements OnInit {
         this.longitude = position.coords.longitude;
       });
     }
-  }
-
-  private setupPlaceChangedListener(autocomplete:any, inputType:string) {
-    autocomplete.addListener('place_changed', () => {
-      this.ngZone.run(() => {
-        const place: google.maps.places.PlaceResult = autocomplete.getPlace();
-        if (place.geometry === undefined) {
-          return;
-        }
-        if (inputType === 'pickup') {
-          this.service.origin = { longitude: place.geometry.location.lng(), latitude: place.geometry.location.lat() };
-          this.service.originPlaceId = place.place_id;
-        } else {
-          this.service.destination = { longitude: place.geometry.location.lng(), latitude: place.geometry.location.lat() };
-          this.service.destinationPlaceId = place.place_id;
-        }
-        if (this.service.directionsDisplay === undefined) {
-          this.mapsAPILoader.load().then(() => {
-            this.service.directionsDisplay = new google.maps.DirectionsRenderer;
-          });
-        }
-        this.service.updateDirections();
-        this.zoom = 12;
-      });
-    });
   }
 
   getDistanceAndDuration() {

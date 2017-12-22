@@ -1,0 +1,18 @@
+<mat-card>
+  <h1>Trip Confirmation</h1>
+  <p>Please review the details of your trip, and then press confirm below.</p>
+  <p>{{message}}</p>
+  <!--template for confirmation screen--> 
+  <mat-card class="details">
+    <p>{{message}}</p>
+    <h3>Trip Details</h3>
+    <li>Driver: </li>
+    <li>Origin: </li>
+    <li>Destination: </li>
+    <li>Duration: </li>
+    <li>Cost: </li>
+  </mat-card>
+  <br/>
+  <br/>
+  <app-raised-button label="CONFIRM" color="primary" (click)="confirm($event)"></app-raised-button>
+</mat-card>

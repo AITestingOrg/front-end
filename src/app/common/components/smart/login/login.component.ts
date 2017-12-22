@@ -8,7 +8,11 @@ import { Routes, RouterModule, Router } from '@angular/router';
 })
 export class LoginComponent implements OnInit {
 
-  constructor(private router: Router) { }
+  private router : Router;
+
+  constructor(router: Router) { 
+    this.router = router;
+  }
 
    @Input() private disabled:string
 
@@ -16,19 +20,10 @@ export class LoginComponent implements OnInit {
   }
 
   signIn(event) {
-    console.log("Signed in: " + event);
+    this.router.navigateByUrl('/dashboard');
   }
 
   register(event) {
-    console.log("Registered: " + event);
-  }
-
-  rememberUser(event, checkboxValue) {
-    if(checkboxValue) {
-    console.log("Will remember.");
-    } else {
-      console.log("Will not remember.")
-    }
   }
 
   rememberUserValue = true;

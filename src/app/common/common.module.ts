@@ -10,9 +10,10 @@ import { ToolbarComponent } from './components/presentation/toolbar/toolbar.comp
 import { RaisedButtonComponent } from './components/presentation/raised-button/raised-button.component';
 import { BasicButtonComponent } from './components/presentation/basic-button/basic-button.component';
 import { IconButtonComponent } from './components/presentation/icon-button/icon-button.component';
-import { GMapsDirectionsService} from './states/gmaps.service';
-import { MatToolbarModule, MatCheckboxModule, MatButtonModule, MatFormFieldModule, MatFormFieldControl, MatInputModule, MatIconModule, MatCardModule, MatAutocompleteModule } from '@angular/material';
+import { GMapsDirectionsService} from './services/gmaps.service';
+import { MatToolbarModule, MatCheckboxModule, MatButtonModule, MatFormFieldModule, MatFormFieldControl, MatInputModule, MatIconModule, MatCardModule, MatAutocompleteModule, MatTableModule} from '@angular/material';
 import { HeaderComponent } from './components/presentation/header/header.component';
+import { TripConfirmationComponent } from './components/smart/trip-confirmation/trip-confirmation.component';
 
 @NgModule({
   imports: [
@@ -28,9 +29,10 @@ import { HeaderComponent } from './components/presentation/header/header.compone
     ReactiveFormsModule, 
     MatAutocompleteModule, 
     AgmCoreModule, 
-    RouterModule
+    RouterModule, 
+    MatTableModule
   ],
-  declarations: [
+  declarations: [  
     TextBoxComponent, 
     LoginComponent, 
     CheckBoxComponent, 
@@ -39,16 +41,20 @@ import { HeaderComponent } from './components/presentation/header/header.compone
     BasicButtonComponent, 
     IconButtonComponent, 
     GMapsDirectionsService, 
-    HeaderComponent
+    HeaderComponent, TripConfirmationComponent
   ],
   exports: [
     ToolbarComponent, 
-    MatCardModule, 
     RaisedButtonComponent, 
     ReactiveFormsModule, 
     MatAutocompleteModule, 
     GMapsDirectionsService, 
-    HeaderComponent
+    HeaderComponent,
+    TextBoxComponent,
+    FormsModule,
+    MatCardModule,
+    MatTableModule,
+    MatButtonModule
   ],
 })
 

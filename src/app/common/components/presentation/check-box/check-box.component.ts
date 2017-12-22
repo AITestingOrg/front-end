@@ -20,7 +20,6 @@ export class CheckBoxComponent implements OnInit {
 
   onChange(newValue) {
     this.checkboxValue = newValue;
-    console.log("The checkbox value is: " + newValue);
     this.checkboxChange.emit(newValue);
   }
 

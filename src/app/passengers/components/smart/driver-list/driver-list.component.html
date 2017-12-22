@@ -1,0 +1,37 @@
+<div class=p age>
+  <mat-card>
+  <h1 class="title">
+    <span>Available Drivers</span>
+  </h1>
+  <mat-table #table [dataSource]="dataSource">
+    <!-- ID Column -->
+    <ng-container matColumnDef="id">
+      <mat-header-cell *matHeaderCellDef> ID </mat-header-cell>>
+      <mat-cell *matCellDef="let row">{{row.id}} </mat-cell>
+    </ng-container>
+
+    <!-- Name Column -->
+    <ng-container matColumnDef="name">
+      <mat-header-cell *matHeaderCellDef> Name </mat-header-cell>
+      <mat-cell *matCellDef="let row">{{row.name}}</mat-cell>
+    </ng-container>
+
+    <!-- Weight Column -->
+    <ng-container matColumnDef="distance">
+      <mat-header-cell *matHeaderCellDef> Distance </mat-header-cell>
+      <mat-cell *matCellDef="let row"> {{row.time}} </mat-cell>
+    </ng-container>
+
+    <!-- Color Column -->
+    <ng-container matColumnDef="rating">
+      <mat-header-cell *matHeaderCellDef> Rating </mat-header-cell>
+      <mat-cell *matCellDef="let row"> {{row.rating}} </mat-cell>
+    </ng-container>
+
+    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: displayedColumns;" (click)="selectDriver(event, row)"></mat-row>
+  </mat-table>
+  <br/><br/>
+  <p>Select a driver from the list above in order to continue.</p>  
+</mat-card>
+</div>
