@@ -1,51 +1,77 @@
 import { Injectable } from '@angular/core'; 
 import { Http } from '@angular/http'; 
+import { Subject } from 'rxjs/Subject';
  
 @Injectable() 
 export class APIGatewayService { 
  
   private http:Http; 
-  private driverApiUrl = "http://localhost:8082/api/"
-  private tripApiUrl = "http://localhost:8081/api/"; 
+  private apiUrl = "http://10.55.13.61:8082/api/";
+  private driverApiUrl = "http://10.55.13.61:8082/api/drivers/";
+  private tripApiUrl = "http://10.55.13.61:8081/api/trips/"; 
   private availableDriversList:any;
+  private latlng:any;
+  private trip:any;
+  private results:any;
  
   constructor(http:Http) { 
     this.http = http; 
+    this.results = [];
    } 
  
   // Trip Management  
- 
-  getDirections(originAddress:string, destinationAddress:string, directionsDisplay:any) { 
-    let postUrl = this.tripApiUrl.concat("trips/directions"); 
-    this.http.post(postUrl, { 
-      "origin": originAddress, 
-      "destination": destinationAddress 
-    }).subscribe(result => { 
-      let body = result.json(); 
-      //directionsDisplay.set(body["routes"]); 
-      console.log("Result of getDirections: ");
-      console.log(body); 
-      return result; 
-    }) 
-  } 
-   
-  getTrip(passenger:string, driver:string, car:string, originAddress:string, destinationAddress:string) { 
-    let postUrl = this.tripApiUrl.concat(passenger, "/", driver, "/", car, "/", originAddress, "/", destinationAddress); 
-    this.http.post(postUrl, {}).subscribe(result => { 
-      console.log("Result of getTrip: ");
-      console.log(result); 
-    }) 
-  } 
+  getLatLng(address:string) {
+    let postUrl = this.tripApiUrl.concat("getlatlng");
+    let promise = new Promise((resolve, reject) => {
+      this.http.post(postUrl, {
+        "address": address
+      }).toPromise().then(
+        result => {
+          this.latlng = result.json();
+          resolve(result.json());
+        },
+        message => {
+          reject(message);
+        }
+      );
+    });
+    return promise;
+  }
+
+  getTrip(driverName:string) {
+    let postUrl = this.driverApiUrl.concat("");    
+    let promise = new Promise((resolve, reject) => {
+      this.http.post(postUrl, {
+        "driverName":driverName
+      }).toPromise().then(
+        result => {
+          this.trip = result.json();
+          resolve(result.json());
+        },
+        message => {
+          reject(message);
+        }
+      );
+    });
+    return promise;
+  }
 
   // Driver Management
+  addDriver() {
+    let postUrl = this.driverApiUrl.concat();
+    this.http.post(postUrl, {
+      "fname": "Cage",
+      "lname": "The",
+      "id": "Elephant"
+    })
+  }
 
   getAvailableDrivers() {
-    let getUrl = this.driverApiUrl.concat("drivers");    
+    let getUrl = this.driverApiUrl.concat("available-drivers");    
     let promise = new Promise((resolve, reject) => {
       this.http.get(getUrl).toPromise().then(
         result => {
           this.availableDriversList = result.json();
-          console.log(this.availableDriversList);
           resolve(result.json());
         },
         message => {

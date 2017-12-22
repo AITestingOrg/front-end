@@ -4,6 +4,7 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { HttpModule } from '@angular/http';
 import { FeCommonModule } from './common/common.module';
+import { PassengersModule } from 'app/passengers/passengers.module';
 import { AppComponent } from './app.component';
 import { LoginComponent } from 'app/common/components/smart/login/login.component';
 import { DriverListComponent } from 'app/passengers/components/smart/driver-list/driver-list.component';
@@ -12,12 +13,17 @@ import { AgmCoreModule, GoogleMapsAPIWrapper } from '@agm/core';
 import { APIGatewayService } from 'app/common/services/api-gateway.service';
 import { MatTableModule } from '@angular/material';
 import { CdkTableModule } from '@angular/cdk/table';
+import { TripConfirmationComponent } from 'app/common/components/smart/trip-confirmation/trip-confirmation.component';
+import { MessageService } from 'app/common/services/message.service';
+import { TempComponent } from 'app/passengers/components/presentation/temp/temp.component';
 
 const routes:Routes = [ 
     {path: '', redirectTo: 'login', pathMatch: 'full'},
     {path: 'login', component: LoginComponent},
     {path: 'dashboard', component: TripPlannerComponent},
     {path: 'pick-driver', component: DriverListComponent},
+    {path: 'trip-confirmation', component: TripConfirmationComponent},
+    {path: 'temp', component: TempComponent}
 ]
 
 @NgModule({
@@ -34,10 +40,11 @@ const routes:Routes = [
       apiKey: 'AIzaSyDPs_IyBxZNsYKEh8JplMe8a91URajuqic',
       libraries: ['places']
     }),
-    HttpModule
+    HttpModule,
+    PassengersModule
   ],
   providers: [
-    GoogleMapsAPIWrapper, APIGatewayService
+    GoogleMapsAPIWrapper, APIGatewayService, MessageService
   ],
   bootstrap: [AppComponent]
 })
