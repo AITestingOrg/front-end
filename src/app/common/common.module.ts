@@ -48,7 +48,9 @@ import { HeaderComponent } from './components/presentation/header/header.compone
     ReactiveFormsModule, 
     MatAutocompleteModule, 
     GMapsDirectionsService, 
-    HeaderComponent
+    HeaderComponent,
+    TextBoxComponent,
+    FormsModule
   ],
 })
 

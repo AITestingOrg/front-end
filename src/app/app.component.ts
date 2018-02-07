@@ -1,4 +1,12 @@
 import { Component } from '@angular/core';
+import { Observable } from 'rxjs/Observable';
+import { Route } from 'app/common/models/route';
+import { Store } from '@ngrx/store';
+import * as RouteObj from 'app/common/states/actions/map.action';
+
+interface AppState {
+  route: Route;
+}
 
 @Component({
   selector: 'app-root',
@@ -7,4 +15,10 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'UltiCar';
+  route: Observable<Route>;
+
+  constructor(private store: Store<AppState>) {
+    this.route = store.select('route');
+  }
+
 }

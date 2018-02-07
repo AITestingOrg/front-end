@@ -16,7 +16,7 @@ export class LoginComponent implements OnInit {
   }
 
   signIn(event) {
-    console.log("Signed in: " + event);
+    this.router.navigateByUrl('/dashboard');
   }
 
   register(event) {

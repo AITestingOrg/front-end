@@ -1,0 +1,11 @@
+<div class="container">
+  <p>Autocomplete Component</p>
+  <mat-form-field> 
+      <input matInput type="text" placeholder="You autocomplete me" [formControl]="myControl" [matAutocomplete]="auto"> 
+      <mat-autocomplete #auto="matAutocomplete"> 
+        <mat-option *ngFor="let option of filteredOptions | async" [value]="option"> 
+          <span mat-highlight-text="searchText" mat-highlight-flags="^i">{{option}}</span> 
+        </mat-option> 
+      </mat-autocomplete> 
+    </mat-form-field> 
+</div>

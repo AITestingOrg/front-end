@@ -7,6 +7,11 @@ import { AppComponent } from './app.component';
 import { LoginComponent } from 'app/common/components/smart/login/login.component';
 import { TripPlannerComponent } from 'app/passengers/components/smart/trip-planner/trip-planner.component';
 import { AgmCoreModule, GoogleMapsAPIWrapper } from '@agm/core';
+import { PlacesAutocompleteComponent } from 'app/passengers/components/presentation/places-autocomplete/places-autocomplete.component';
+import { StoreModule, Store } from '@ngrx/store';
+import { MatFormFieldModule, MatInputModule } from '@angular/material';
+import { GMapsDirectionsService } from 'app/common/states/gmaps.service';
+import { HttpModule } from '@angular/http';
 
 const routes:Routes = [ 
     {path: '', redirectTo: 'login', pathMatch: 'full'},
@@ -16,7 +21,7 @@ const routes:Routes = [
 
 @NgModule({
   declarations: [
-    AppComponent, TripPlannerComponent    
+    AppComponent, TripPlannerComponent, PlacesAutocompleteComponent    
   ],
   imports: [
     BrowserModule,
@@ -26,10 +31,15 @@ const routes:Routes = [
     AgmCoreModule.forRoot({
       apiKey: 'AIzaSyDPs_IyBxZNsYKEh8JplMe8a91URajuqic',
       libraries: ['places']
-    })
+    }),
+    StoreModule.forRoot({
+    }),
+    MatFormFieldModule,
+    MatInputModule,
+    HttpModule
   ],
   providers: [
-    GoogleMapsAPIWrapper
+    GoogleMapsAPIWrapper, GMapsDirectionsService
   ],
   bootstrap: [AppComponent]
 })

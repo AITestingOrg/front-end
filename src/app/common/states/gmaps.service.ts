@@ -1,5 +1,8 @@
-import { GoogleMapsAPIWrapper } from '@agm/core';
+import { GoogleMapsAPIWrapper, MapsAPILoader } from '@agm/core';
 import { Directive, Input, Output } from '@angular/core';
+import { Http } from '@angular/http';
+import { Observable } from 'rxjs/Observable';
+import { Location } from 'app/common/models/location'
 
 declare var google: any;
 
@@ -18,7 +21,9 @@ export class GMapsDirectionsService {
   @Input() estimatedTime: any;
   @Input() estimatedDistance: any;
 
-  constructor(private gmapsApi: GoogleMapsAPIWrapper) { }
+  constructor(
+    private gmapsApi: GoogleMapsAPIWrapper,
+    private http: Http) { }
 
   updateDirections() {
     this.gmapsApi.getNativeMap().then(map => {
@@ -71,4 +76,52 @@ export class GMapsDirectionsService {
   private getcomputeDistance(origin: any, destination: any) {
     return (google.maps.geometry.spherical.computeDistanceBetween(origin, destination) / 1000).toFixed(2);
   }
+
+  getLocation(address: string, geocoder: any): Observable<any> {
+    console.log('Getting address: ', address);
+    return Observable.create(observer => {
+        geocoder.geocode({
+            'address': address
+        }, (results, status) => {
+            if (status == google.maps.GeocoderStatus.OK) {
+                observer.next(results[0].geometry.location);
+                observer.complete();
+            } else {
+                console.log('Error: ', results, ' & Status: ', status);
+                observer.error();
+            }
+        });
+    });
+}
+
+getGeocodeFromAddress(address, geocoder) {
+  address = address || '416 Sailboat Circle';
+  geocoder = new google.maps.Geocoder();
+ if (geocoder) {
+   geocoder.geocode({
+     'address': address
+   },
+     function (results, status) {
+       if (status == google.maps.GeocoderStatus.OK) {
+         //this.getLocationFromResult(results[0]); //*
+         let result = results[0];
+         let lat = result.geometry.location.lat();
+         let lng = result.geometry.location.lng();
+         let id = result.place_id;
+         let address = result.formatted_address;
+         let resultLocation = new Location(lat, lng, address, id);
+         console.log("Location is: " + resultLocation.formatted_address + " with ID: " + resultLocation.place_id);
+       }
+     })
+ }
+}
+
+getLocationFromGeocode(result) {
+  let lat = result.geometry.location.lat();
+  let lng = result.geometry.location.lng();
+  let id = result.place_id;
+  let address = result.formatted_address;
+  return new Location(lat, lng, address, id);
+}
+
 }
