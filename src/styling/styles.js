@@ -3,8 +3,8 @@ const palette = {
   offWhite: "#ded0dd",
   gray: "#DCDCE3",
   darkGray: '#bbb',
-  purple: "#cc33ff",
-  lightPurple: "#d670e3",
+  purple: "#509e2f",
+  lightPurple: "#ED8B00",
   darkBlue: "#4756B5",
   black: "#31323B"
 };

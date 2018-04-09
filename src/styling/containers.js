@@ -27,5 +27,11 @@ const Flex2 = styled.div`
   flex:2;
 `;
 
+const AppContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+`;
 
-export { Card, FlexBox, Flex1, Flex2, Flex50 }
+export { Card, FlexBox, Flex1, Flex2, Flex50, AppContainer }

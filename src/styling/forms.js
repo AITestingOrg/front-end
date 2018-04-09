@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import {colors, spacing, fontSizing} from './styles';
+import { Link } from 'react-router-dom';
 
 const Input = styled.input`
   background-color: #fff;
@@ -37,7 +38,24 @@ const InputSmall = styled.input`
   transition: all 400ms ease;
 `;
 
-const Button = styled.button`
+const ButtonLink = styled(Link)`
+  border: none;
+  border-radius: 0px;
+  font-size: ${fontSizing.small};
+  padding: ${spacing.small} ${spacing.normal};
+  font-weight:light;
+  font-family: 'Open Sans', sans-serif;
+  color: ${colors.titleTextColor};
+  background-color: ${colors.buttonBackgroundColor};
+  cursor: pointer;
+  transition: all 0.25s ease;
+  text-decoration:none;
+  &:hover {
+    background-color:${colors.buttonBackgroundColorHover};
+  }
+`;
+
+const ButtonLarge = styled.button`
   width:100%;
   border: none;
   border-radius: 0px;
@@ -53,7 +71,7 @@ const Button = styled.button`
   }
 `;
 
-const ButtonSmall = styled.button`
+const Button = styled.button`
   border: none;
   border-radius: 0px;
   font-size: ${fontSizing.normal};
@@ -69,4 +87,4 @@ const ButtonSmall = styled.button`
   }
 `;
 
-export { Input, InputSmall, Button, ButtonSmall };
+export { Input, InputSmall, Button, ButtonLarge, ButtonLink };
