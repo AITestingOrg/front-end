@@ -9,6 +9,9 @@ import * as MapReducer from 'app/common/states/reducers/map.reducer';
 import { Map } from 'app/common/models/map';
 import { Route } from 'app/common/models/route';
 import { Location } from 'app/common/models/location';
+// noinspection ES6UnusedImports
+import {} from '@types/googlemaps';
+import DirectionsRenderer = google.maps.DirectionsRenderer;
 
 @Component({
   selector: 'app-trip-planner',
@@ -123,7 +126,7 @@ export class TripPlannerComponent implements OnInit {
         }
         if (this.service.directionsDisplay === undefined) {
           this.mapsAPILoader.load().then(() => {
-            this.service.directionsDisplay = new google.maps.DirectionsRenderer;
+            this.service.directionsDisplay = new DirectionsRenderer;
           });
         }
         this.service.updateDirections();
