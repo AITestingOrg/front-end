@@ -11,6 +11,7 @@ import * as MapReducer from 'app/common/states/reducers/map.reducer';
 import {Map} from 'app/common/models/map';
 import {Route} from 'app/common/models/route';
 import {Location} from 'app/common/models/location';
+import {userInfo} from 'os';
 
 @Component({
   selector: 'app-trip-planner',
@@ -118,7 +119,7 @@ export class TripPlannerComponent implements OnInit {
   private setupPriceChangedObserver() {
     // Setup Notification server-side event code
     const EventSource = window['EventSource'];
-    const notificationEvents = new EventSource('http://localhost:8000/test.php');
+    const notificationEvents = new EventSource(`http://localhost:32700/events?stream=${this.userId()}`);
     notificationEvents.onopen = _ => {
       console.log('SSE Connection opened');
     };
@@ -129,17 +130,21 @@ export class TripPlannerComponent implements OnInit {
         console.log('SSE Connection failed')
       };
 
-      notificationEvents.addEventListener('price_update', e => {
+      notificationEvents.onmessage = e => {
         const data = JSON.parse(e.data);
         const price: number = Number.parseFloat(data.price);
         const priceString: string = price.toLocaleString('en-US', {style: 'currency', currency: 'USD' });
         console.log(priceString);
 
         obs.next(priceString);
-      });
+      };
 
       return { unsubscribe() { notificationEvents.close(); }};
     });
+  }
+
+  private userId() {
+    throw new Error("not implemented");
   }
 
   private setupPlaceChangedListener(autocomplete: any, inputType: string) {
