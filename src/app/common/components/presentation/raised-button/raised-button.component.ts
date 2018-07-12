@@ -8,13 +8,13 @@ import { RouterModule, Routes} from '@angular/router';
 })
 export class RaisedButtonComponent implements OnInit {
 
-  @Input() private label:string
-  @Input() private color:string
-  @Input() private disabled:string
+  @Input() private label: string;
+  @Input() private color: string;
+  @Input() private disabled: string;
 
-  @Output() public clickEvent:EventEmitter<any> = new EventEmitter();
+  @Output() public clickEvent: EventEmitter<any> = new EventEmitter();
 
-  constructor() { }  
+  constructor() { }
 
   ngOnInit() {
   }

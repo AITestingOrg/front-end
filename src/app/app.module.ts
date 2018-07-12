@@ -10,18 +10,18 @@ import { AgmCoreModule, GoogleMapsAPIWrapper } from '@agm/core';
 import { PlacesAutocompleteComponent } from 'app/passengers/components/presentation/places-autocomplete/places-autocomplete.component';
 import { StoreModule, Store } from '@ngrx/store';
 import { MatFormFieldModule, MatInputModule } from '@angular/material';
-import { GMapsDirectionsService } from 'app/common/states/gmaps.service';
+import { GMapsDirectionsServiceDirective } from 'app/common/states/gmaps.service';
 import { HttpModule } from '@angular/http';
 
-const routes:Routes = [ 
+const routes: Routes = [
     {path: '', redirectTo: 'login', pathMatch: 'full'},
     {path: 'login', component: LoginComponent},
     {path: 'dashboard', component: TripPlannerComponent}
-]
+];
 
 @NgModule({
   declarations: [
-    AppComponent, TripPlannerComponent, PlacesAutocompleteComponent    
+    AppComponent, TripPlannerComponent, PlacesAutocompleteComponent
   ],
   imports: [
     BrowserModule,
@@ -39,7 +39,7 @@ const routes:Routes = [
     HttpModule
   ],
   providers: [
-    GoogleMapsAPIWrapper, GMapsDirectionsService
+    GoogleMapsAPIWrapper, GMapsDirectionsServiceDirective
   ],
   bootstrap: [AppComponent]
 })
