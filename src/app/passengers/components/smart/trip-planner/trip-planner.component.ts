@@ -1,16 +1,16 @@
-import { Component, OnInit, Input, ElementRef, NgZone, ViewChild } from '@angular/core';
-import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { error } from 'util';
-import { GoogleMapsAPIWrapper, MapsAPILoader } from '@agm/core';
-import { GMapsDirectionsService } from 'app/common/states/gmaps.service';
-import { } from '@types/googlemaps';
-import { Observable } from 'rxjs/Observable';
-import { Store } from '@ngrx/store';
+import {Component, OnInit, Input, ElementRef, NgZone, ViewChild} from '@angular/core';
+import {FormControl, ReactiveFormsModule} from '@angular/forms';
+import {error} from 'util';
+import {GoogleMapsAPIWrapper, MapsAPILoader} from '@agm/core';
+import {GMapsDirectionsService} from 'app/common/states/gmaps.service';
+import {} from '@types/googlemaps';
+import {Observable} from 'rxjs/Observable';
+import {Store} from '@ngrx/store';
 import * as MapActions from 'app/common/states/actions/map.action';
 import * as MapReducer from 'app/common/states/reducers/map.reducer';
-import { Map } from 'app/common/models/map';
-import { Route } from 'app/common/models/route';
-import { Location } from 'app/common/models/location';
+import {Map} from 'app/common/models/map';
+import {Route} from 'app/common/models/route';
+import {Location} from 'app/common/models/location';
 
 @Component({
   selector: 'app-trip-planner',
@@ -18,7 +18,6 @@ import { Location } from 'app/common/models/location';
   styleUrls: ['./trip-planner.component.scss']
 })
 export class TripPlannerComponent implements OnInit {
-
   title: string = 'Trip Planner';
 
   @Input() private latitude: number;
@@ -30,6 +29,7 @@ export class TripPlannerComponent implements OnInit {
   @Input() private destinationOutput: FormControl;
   private estimatedTime: any;
   private estimatedDistance: any;
+  estimatedPrice: Observable<string>;
   private geocoder: any;
   directionsDisplay: any;
   originLatitude: Observable<number>;
@@ -58,18 +58,18 @@ export class TripPlannerComponent implements OnInit {
   }
 
   ngOnInit() {
- 
+
     // Set Default Map View
     this.setInitialCords().then((cords) => {
-        this.latitude = cords.lat;
-        this.longitude = cords.lng;
-        this.zoom = 14;
-      })
+      this.latitude = cords.lat;
+      this.longitude = cords.lng;
+      this.zoom = 14;
+    })
       .catch((error) => {
         console.log(error);
       });
 
-    this.destinationInput = new FormControl(); 
+    this.destinationInput = new FormControl();
     this.destinationOutput = new FormControl();
 
     // Update Map View
@@ -96,11 +96,15 @@ export class TripPlannerComponent implements OnInit {
       this.setupPlaceChangedListener(autocompleteInput2, 'pickup');
       this.setupPlaceChangedListener(autocompleteOutput2, 'destination');
     });
+
+    this.setupPriceChangedObserver();
   }
 
-  onPickupTextChange(event) {}
+  onPickupTextChange(event) {
+  }
 
-  onDestinationTextChange(event) {}
+  onDestinationTextChange(event) {
+  }
 
   setCurrentPosition() {
     if ('geolocation' in navigator) {
@@ -111,7 +115,34 @@ export class TripPlannerComponent implements OnInit {
     }
   }
 
-  private setupPlaceChangedListener(autocomplete:any, inputType:string) {
+  private setupPriceChangedObserver() {
+    // Setup Notification server-side event code
+    const EventSource = window['EventSource'];
+    const notificationEvents = new EventSource('http://localhost:8000/test.php');
+    notificationEvents.onopen = _ => {
+      console.log('SSE Connection opened');
+    };
+
+    this.estimatedPrice = new Observable((obs) => {
+      notificationEvents.onerror = _ => {
+        obs.error();
+        console.log('SSE Connection failed')
+      };
+
+      notificationEvents.addEventListener('price_update', e => {
+        const data = JSON.parse(e.data);
+        const price: number = Number.parseFloat(data.price);
+        const priceString: string = price.toLocaleString('en-US', {style: 'currency', currency: 'USD' });
+        console.log(priceString);
+
+        obs.next(priceString);
+      });
+
+      return { unsubscribe() { notificationEvents.close(); }};
+    });
+  }
+
+  private setupPlaceChangedListener(autocomplete: any, inputType: string) {
     autocomplete.addListener('place_changed', () => {
       this.ngZone.run(() => {
         const place: google.maps.places.PlaceResult = autocomplete.getPlace();
@@ -119,10 +150,10 @@ export class TripPlannerComponent implements OnInit {
           return;
         }
         if (inputType === 'pickup') {
-          this.service.origin = { longitude: place.geometry.location.lng(), latitude: place.geometry.location.lat() };
+          this.service.origin = {longitude: place.geometry.location.lng(), latitude: place.geometry.location.lat()};
           this.service.originPlaceId = place.place_id;
         } else {
-          this.service.destination = { longitude: place.geometry.location.lng(), latitude: place.geometry.location.lat() };
+          this.service.destination = {longitude: place.geometry.location.lng(), latitude: place.geometry.location.lat()};
           this.service.destinationPlaceId = place.place_id;
         }
         if (this.service.directionsDisplay === undefined) {
@@ -145,7 +176,7 @@ export class TripPlannerComponent implements OnInit {
     return new Promise((resolve, reject) => {
       if ('geolocation' in navigator) {
         navigator.geolocation.getCurrentPosition((position) => {
-          resolve({ lat: position.coords.latitude, lng: position.coords.longitude });
+          resolve({lat: position.coords.latitude, lng: position.coords.longitude});
         });
       } else {
         reject(new Error('No geolocation found in API.'))
@@ -167,12 +198,16 @@ export class TripPlannerComponent implements OnInit {
     this.store.dispatch(new MapActions.AddLocation(map));
   }
 
+  isPriceEstimateAvailable() {
+    return this.estimatedPrice !== null;
+  }
+
   //To-Do: Disable "Find Ride" until inputs are validated
   validateInputs() {
     if (this.pickupTextboxValue != null && this.destinationTextboxValue != null) {
       return true;
     }
-   return false;
+    return false;
   }
-  
+
 }
