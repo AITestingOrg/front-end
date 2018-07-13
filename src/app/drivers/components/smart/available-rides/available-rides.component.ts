@@ -11,16 +11,24 @@ import * as MapReducer from 'app/common/states/reducers/map.reducer';
 import { Map } from 'app/common/models/map';
 import { Route } from 'app/common/models/route';
 import { Location } from 'app/common/models/location';
-import { Router } from '@angular/router';
+import { Ride } from 'app/common/models/ride';
 
 @Component({
-  selector: 'app-trip-planner',
-  templateUrl: './trip-planner.component.html',
-  styleUrls: ['./trip-planner.component.scss']
+  selector: 'app-available-rides',
+  templateUrl: './available-rides.component.html',
+  styleUrls: ['./available-rides.component.scss']
 })
-export class TripPlannerComponent implements OnInit {
+export class AvailableRidesComponent implements OnInit {
 
-  title: string = 'Trip Planner';
+  title: string = 'Available Rides';
+
+  private rides = [
+    {firstName: "Tariq", lastName: "King", pickupAddress: "2250 N Commerce Pkwy, Weston, FL 33326", destinationAddress: "11200 SW 8th St, Miami, FL 33199"},
+    {firstName: "Peter", lastName: "Clarke", pickupAddress: "11200 SW 8th St, Miami, FL 33199", destinationAddress: "2250 N Commerce Pkwy, Weston, FL 33326"},
+    {firstName: "Madeline", lastName: "Helmstadter", pickupAddress: "2250 N Commerce Pkwy, Weston, FL 33326", destinationAddress: "Atlanta, GA"},
+    {firstName: "Patrick", lastName: "Alt", pickupAddress: "2250 N Commerce Pkwy, Weston, FL 33326", destinationAddress: "14838 Pines Boulevard, Pembroke Pines, FL 33027"},
+    {firstName: "Justin", lastName: "Phillips", pickupAddress: "2250 N Commerce Pkwy, Weston, FL 33326", destinationAddress: "Stuttgart, Germany"},
+  ];
 
   @Input() private latitude: number;
   @Input() private longitude: number;
@@ -49,7 +57,6 @@ export class TripPlannerComponent implements OnInit {
   @ViewChild(GMapsDirectionsService) service: GMapsDirectionsService;
 
   constructor(
-    private router: Router,
     private store: Store<MapReducer.State>,
     private ngZone: NgZone,
     private mapsAPILoader: MapsAPILoader,
@@ -167,7 +174,6 @@ export class TripPlannerComponent implements OnInit {
     //Dispatch Action
     let map = new Map(this.origin);
     this.store.dispatch(new MapActions.AddLocation(map));
-    this.router.navigate(['/trip-created'],  { queryParams: { pickupAddress: this.pickupTextboxValue, destinationAddress: this.destinationTextboxValue } });
   }
 
   //To-Do: Disable "Find Ride" until inputs are validated

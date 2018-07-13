@@ -1,0 +1,14 @@
+<mat-card>
+  <h1>{{ title }}</h1>
+  <div class="container">
+  <div class="inprogress" style="text-align:left;">
+    <table border="1">
+    <tr *ngFor="let ride of rides; trackBy: trackByRide; let isOdd=odd">
+      <td>{{ride.firstName}}</td><td>{{ride.lastName}}</td><td>{{ride.pickupAddress}}</td><td>{{ride.destinationAddress}}</td>
+      <td><app-raised-button label="Start this ride" color="primary" (click)="onSelectRide($event)"></app-raised-button></td>
+    </tr>
+    </table>
+  </div>
+  </div>
+  
+</mat-card>

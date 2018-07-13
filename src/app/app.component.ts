@@ -14,7 +14,7 @@ interface AppState {
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  title = 'UltiCar';
+  title = 'RideShare';
   route: Observable<Route>;
 
   constructor(private store: Store<AppState>) {

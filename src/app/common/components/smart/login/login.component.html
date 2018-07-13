@@ -1,10 +1,10 @@
 <div class="mat-card-all">
 <mat-card>
   <mat-icon>directions_car</mat-icon>
-  <h1>UltiCar</h1>
+  <h1>RideShare</h1>
   <div class="mat-card-inputs">
-    <app-text-box input type="text" placeholder="Username" icon="person" [(textboxValue)]="usernameValue"></app-text-box>
-     <app-text-box input matInput type="text" placeholder="Password" [encryption]="true" [(textboxValue)]="passwordValue"></app-text-box><br/>
+    <app-text-box input type="text" placeholder="Username" id="username" icon="person" [(textboxValue)]="usernameValue2" (textboxChange)="usernameChange($event)" ></app-text-box>
+     <app-text-box input matInput type="text" placeholder="Password" id="password" [encryption]="true" [(textboxValue)]="passwordValue2" (textboxChange)="passwordChange($event)"></app-text-box><br/>
      <app-check-box label="Remember my credentials" color="primary" [(checkboxValue)]="rememberUserValue"></app-check-box>
   </div>
   <div class="mat-card-sign-in">

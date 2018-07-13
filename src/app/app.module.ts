@@ -12,16 +12,23 @@ import { StoreModule, Store } from '@ngrx/store';
 import { MatFormFieldModule, MatInputModule } from '@angular/material';
 import { GMapsDirectionsService } from 'app/common/states/gmaps.service';
 import { HttpModule } from '@angular/http';
+import { LoginAuthenticationService } from 'app/services/login-authentication.service';
+import { HttpClientModule } from '@angular/common/http';
+import { AvailableRidesComponent } from './drivers/components/smart/available-rides/available-rides.component';
+import { AvailableRidesService } from 'app/services/available-rides.service';
+import { TripCreatedComponent } from './passengers/components/smart/trip-created/trip-created/trip-created.component';
 
 const routes:Routes = [ 
     {path: '', redirectTo: 'login', pathMatch: 'full'},
     {path: 'login', component: LoginComponent},
-    {path: 'dashboard', component: TripPlannerComponent}
+    {path: 'dashboard', component: TripPlannerComponent},
+    {path: 'driver-dashboard', component: AvailableRidesComponent},
+    {path: 'trip-created', component: TripCreatedComponent}
 ]
 
 @NgModule({
   declarations: [
-    AppComponent, TripPlannerComponent, PlacesAutocompleteComponent    
+    AppComponent, TripPlannerComponent, PlacesAutocompleteComponent, AvailableRidesComponent, TripCreatedComponent
   ],
   imports: [
     BrowserModule,
@@ -29,17 +36,18 @@ const routes:Routes = [
     FeCommonModule,
     RouterModule.forRoot(routes),
     AgmCoreModule.forRoot({
-      apiKey: 'AIzaSyDPs_IyBxZNsYKEh8JplMe8a91URajuqic',
+      apiKey: 'AIzaSyA-A_VJjmiAKM-xwZpv7RdxDKkV5hzMh4Y',
       libraries: ['places']
     }),
     StoreModule.forRoot({
     }),
     MatFormFieldModule,
     MatInputModule,
+    HttpClientModule,
     HttpModule
   ],
   providers: [
-    GoogleMapsAPIWrapper, GMapsDirectionsService
+    GoogleMapsAPIWrapper, GMapsDirectionsService, LoginAuthenticationService, AvailableRidesService
   ],
   bootstrap: [AppComponent]
 })

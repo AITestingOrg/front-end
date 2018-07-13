@@ -13,13 +13,15 @@ export class TextBoxComponent implements OnInit {
   @Input() private icon:string
   @Input() private textboxValue:string
   
-  @Output() textboxChange:EventEmitter<String> = new EventEmitter<String>();
+  @Output() textboxChange:EventEmitter<any> = new EventEmitter();
 
   constructor() { }
 
   ngOnInit() {}
   
   onChange(event) {
+    this.textboxChange.emit(event);
+    console.log(event.key);
   }
-
+  
 }
