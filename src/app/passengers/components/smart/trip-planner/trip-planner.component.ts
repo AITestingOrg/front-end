@@ -3,6 +3,7 @@ import {FormControl, ReactiveFormsModule} from '@angular/forms';
 import {error} from 'util';
 import {GoogleMapsAPIWrapper, MapsAPILoader} from '@agm/core';
 import {GMapsDirectionsService} from 'app/common/states/gmaps.service';
+import {NotificationService} from 'app/common/states/notification.service';
 import {} from '@types/googlemaps';
 import {Observable} from 'rxjs/Observable';
 import {Store} from '@ngrx/store';
@@ -11,7 +12,6 @@ import * as MapReducer from 'app/common/states/reducers/map.reducer';
 import {Map} from 'app/common/models/map';
 import {Route} from 'app/common/models/route';
 import {Location} from 'app/common/models/location';
-import {userInfo} from 'os';
 
 @Component({
   selector: 'app-trip-planner',
@@ -54,6 +54,7 @@ export class TripPlannerComponent implements OnInit {
     private mapsAPILoader: MapsAPILoader,
     private gmapsApi: GoogleMapsAPIWrapper,
     private _elementRef: ElementRef,
+    private notificationService: NotificationService
     //private gmapsservice: GMapsDirectionsService
   ) {
   }
@@ -98,7 +99,7 @@ export class TripPlannerComponent implements OnInit {
       this.setupPlaceChangedListener(autocompleteOutput2, 'destination');
     });
 
-    this.setupPriceChangedObserver();
+    this.estimatedPrice = this.notificationService.getCurrentPriceEstimate();
   }
 
   onPickupTextChange(event) {
@@ -116,36 +117,7 @@ export class TripPlannerComponent implements OnInit {
     }
   }
 
-  private setupPriceChangedObserver() {
-    // Setup Notification server-side event code
-    const EventSource = window['EventSource'];
-    const notificationEvents = new EventSource(`http://localhost:32700/events?stream=${this.userId()}`);
-    notificationEvents.onopen = _ => {
-      console.log('SSE Connection opened');
-    };
 
-    this.estimatedPrice = new Observable((obs) => {
-      notificationEvents.onerror = _ => {
-        obs.error();
-        console.log('SSE Connection failed')
-      };
-
-      notificationEvents.onmessage = e => {
-        const data = JSON.parse(e.data);
-        const price: number = Number.parseFloat(data.price);
-        const priceString: string = price.toLocaleString('en-US', {style: 'currency', currency: 'USD' });
-        console.log(priceString);
-
-        obs.next(priceString);
-      };
-
-      return { unsubscribe() { notificationEvents.close(); }};
-    });
-  }
-
-  private userId() {
-    throw new Error("not implemented");
-  }
 
   private setupPlaceChangedListener(autocomplete: any, inputType: string) {
     autocomplete.addListener('place_changed', () => {

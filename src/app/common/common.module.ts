@@ -13,45 +13,48 @@ import { IconButtonComponent } from './components/presentation/icon-button/icon-
 import { GMapsDirectionsService} from './states/gmaps.service';
 import { MatToolbarModule, MatCheckboxModule, MatButtonModule, MatFormFieldModule, MatFormFieldControl, MatInputModule, MatIconModule, MatCardModule, MatAutocompleteModule } from '@angular/material';
 import { HeaderComponent } from './components/presentation/header/header.component';
+import {NotificationService} from './states/notification.service';
+import {EventSourceService} from './states/event-source.service';
 
 @NgModule({
   imports: [
-    CommonModule, 
-    MatToolbarModule, 
-    MatCheckboxModule, 
-    MatButtonModule, 
-    MatFormFieldModule, 
-    MatInputModule, 
-    MatIconModule, 
-    MatCardModule, 
-    FormsModule, 
-    ReactiveFormsModule, 
-    MatAutocompleteModule, 
-    AgmCoreModule, 
+    CommonModule,
+    MatToolbarModule,
+    MatCheckboxModule,
+    MatButtonModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatIconModule,
+    MatCardModule,
+    FormsModule,
+    ReactiveFormsModule,
+    MatAutocompleteModule,
+    AgmCoreModule,
     RouterModule
   ],
   declarations: [
-    TextBoxComponent, 
-    LoginComponent, 
-    CheckBoxComponent, 
-    ToolbarComponent, 
-    RaisedButtonComponent, 
-    BasicButtonComponent, 
-    IconButtonComponent, 
-    GMapsDirectionsService, 
+    TextBoxComponent,
+    LoginComponent,
+    CheckBoxComponent,
+    ToolbarComponent,
+    RaisedButtonComponent,
+    BasicButtonComponent,
+    IconButtonComponent,
+    GMapsDirectionsService,
     HeaderComponent
   ],
   exports: [
-    ToolbarComponent, 
-    MatCardModule, 
-    RaisedButtonComponent, 
-    ReactiveFormsModule, 
-    MatAutocompleteModule, 
-    GMapsDirectionsService, 
+    ToolbarComponent,
+    MatCardModule,
+    RaisedButtonComponent,
+    ReactiveFormsModule,
+    MatAutocompleteModule,
+    GMapsDirectionsService,
     HeaderComponent,
     TextBoxComponent,
     FormsModule
   ],
 })
 
-export class FeCommonModule { }
+export class FeCommonModule {
+}

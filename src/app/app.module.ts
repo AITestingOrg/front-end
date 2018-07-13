@@ -12,16 +12,18 @@ import { StoreModule, Store } from '@ngrx/store';
 import { MatFormFieldModule, MatInputModule } from '@angular/material';
 import { GMapsDirectionsService } from 'app/common/states/gmaps.service';
 import { HttpModule } from '@angular/http';
+import { NotificationService } from 'app/common/states/notification.service';
+import {EventSourceService} from 'app/common/states/event-source.service';
 
-const routes:Routes = [ 
+const routes:Routes = [
     {path: '', redirectTo: 'login', pathMatch: 'full'},
     {path: 'login', component: LoginComponent},
     {path: 'dashboard', component: TripPlannerComponent}
-]
+];
 
 @NgModule({
   declarations: [
-    AppComponent, TripPlannerComponent, PlacesAutocompleteComponent    
+    AppComponent, TripPlannerComponent, PlacesAutocompleteComponent
   ],
   imports: [
     BrowserModule,
@@ -39,7 +41,7 @@ const routes:Routes = [
     HttpModule
   ],
   providers: [
-    GoogleMapsAPIWrapper, GMapsDirectionsService
+    GoogleMapsAPIWrapper, GMapsDirectionsService, NotificationService, EventSourceService
   ],
   bootstrap: [AppComponent]
 })
