@@ -13,6 +13,7 @@ import { IconButtonComponent } from './components/presentation/icon-button/icon-
 import { GMapsDirectionsService} from './states/gmaps.service';
 import { MatToolbarModule, MatCheckboxModule, MatButtonModule, MatFormFieldModule, MatFormFieldControl, MatInputModule, MatIconModule, MatCardModule, MatAutocompleteModule } from '@angular/material';
 import { HeaderComponent } from './components/presentation/header/header.component';
+import { GetEstimateButtonComponent } from './components/presentation/get-estimate-button/get-estimate-button.component';
 
 @NgModule({
   imports: [
@@ -39,11 +40,12 @@ import { HeaderComponent } from './components/presentation/header/header.compone
     BasicButtonComponent, 
     IconButtonComponent, 
     GMapsDirectionsService, 
-    HeaderComponent
+    HeaderComponent, GetEstimateButtonComponent
   ],
   exports: [
     ToolbarComponent, 
-    MatCardModule, 
+    MatCardModule,
+    GetEstimateButtonComponent,
     RaisedButtonComponent, 
     ReactiveFormsModule, 
     MatAutocompleteModule, 

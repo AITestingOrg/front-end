@@ -11,6 +11,9 @@ import * as MapReducer from 'app/common/states/reducers/map.reducer';
 import { Map } from 'app/common/models/map';
 import { Route } from 'app/common/models/route';
 import { Location } from 'app/common/models/location';
+import { HttpHeaders, HttpClient, HttpParams } from '@angular/common/http';
+import 'rxjs/add/operator/toPromise';
+import { HttpClientModule } from '@angular/common/http';
 
 @Component({
   selector: 'app-trip-planner',
@@ -18,7 +21,7 @@ import { Location } from 'app/common/models/location';
   styleUrls: ['./trip-planner.component.scss']
 })
 export class TripPlannerComponent implements OnInit {
-
+  
   title: string = 'Trip Planner';
 
   @Input() private latitude: number;
@@ -53,12 +56,13 @@ export class TripPlannerComponent implements OnInit {
     private mapsAPILoader: MapsAPILoader,
     private gmapsApi: GoogleMapsAPIWrapper,
     private _elementRef: ElementRef,
+    private http : HttpClient,
     //private gmapsservice: GMapsDirectionsService
   ) {
   }
 
   ngOnInit() {
- 
+
     // Set Default Map View
     this.setInitialCords().then((cords) => {
         this.latitude = cords.lat;
@@ -69,7 +73,7 @@ export class TripPlannerComponent implements OnInit {
         console.log(error);
       });
 
-    this.destinationInput = new FormControl(); 
+    this.destinationInput = new FormControl();
     this.destinationOutput = new FormControl();
 
     // Update Map View
@@ -167,6 +171,46 @@ export class TripPlannerComponent implements OnInit {
     this.store.dispatch(new MapActions.AddLocation(map));
   }
 
+  getTripEstimate(event){
+    var res;
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/x-www-form-urlencoded',
+      'Authorization': 'Basic ' + btoa('front-end:front-end')
+    });
+    const data = "grant_type=password&scope=webclient&username=passenger&password=password";
+    const options = {
+      headers,
+      withCredentials: true
+    }; 
+   this.http.post('http://localhost:32883/auth/oauth/token', data, options).subscribe(res => {
+     if(res){
+       console.log(JSON.stringify(res))
+       localStorage.setItem("accessToken", JSON.stringify(res))
+     }
+   })
+   // Request to communicate with calculation service via JWT token
+   const token = localStorage.getItem("accessToken");
+   const resHeaders = new HttpHeaders({
+    'Content-Type': 'text/plain',
+    'Authorization': 'Bearer ' + token
+   })
+   console.log("token "+token)
+
+   const resOptions = {
+     resHeaders,
+     withCredentials: true
+   };
+
+   const inputElem = JSON.stringify({
+      "origin": this.pickupInputElementRef.nativeElement.value,
+      "destination": this.pickupOutputElementRef.nativeElement.value
+      //"userId": "560c62f4-8612-11e8-adc0-fa7ae01bbebc",
+    })
+    console.log(inputElem)
+
+   this.http.post<string>('http://localhost:32884/api/v1/cost',inputElem, resOptions).subscribe()
+}
+
   //To-Do: Disable "Find Ride" until inputs are validated
   validateInputs() {
     if (this.pickupTextboxValue != null && this.destinationTextboxValue != null) {
@@ -174,5 +218,5 @@ export class TripPlannerComponent implements OnInit {
     }
    return false;
   }
-  
+
 }

@@ -6,16 +6,16 @@
     </agm-map>
   </div>
   <div class="inprogress">
-    <app-text-box placeholder="Enter your pickup location." 
-    icon="my_location" 
-    ngDefaultControl 
+    <app-text-box placeholder="Enter your pickup location."
+    icon="my_location"
+    ngDefaultControl
     [(ngModel)]="pickupTextboxValue"
     (ngModelChange)="onPickupTextChange($event)">
     </app-text-box>
     <p>{{originLatitude}}</p>
-    <app-text-box placeholder="Enter your destination." 
+    <app-text-box placeholder="Enter your destination."
     icon="place"
-    ngDefaultControl 
+    ngDefaultControl
     [(ngModel)]="destinationTextboxValue"
     (ngModelChange)="onDestinationTextChange($event)">>
     </app-text-box>
@@ -26,5 +26,6 @@
     <input placeholder="Enter your destination." autocorrect="off" autocapitalize="off" spellcheck="off" type="text" class="form-control"
       #pickupOutput [formControl]="destinationOutput" size="55">
   </div>
+  <app-get-estimate-button label="Get Trip Estimate" color="accent"  (click)="getTripEstimate($event)"></app-get-estimate-button>
   <app-raised-button label="Find Your Ride" color="primary" (click)="onFindRideClick($event)"></app-raised-button>
 </mat-card>

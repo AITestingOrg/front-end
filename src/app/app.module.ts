@@ -12,6 +12,8 @@ import { StoreModule, Store } from '@ngrx/store';
 import { MatFormFieldModule, MatInputModule } from '@angular/material';
 import { GMapsDirectionsService } from 'app/common/states/gmaps.service';
 import { HttpModule } from '@angular/http';
+import 'rxjs/add/operator/map';
+import { HttpClientModule } from '@angular/common/http';
 
 const routes:Routes = [ 
     {path: '', redirectTo: 'login', pathMatch: 'full'},
@@ -36,7 +38,8 @@ const routes:Routes = [
     }),
     MatFormFieldModule,
     MatInputModule,
-    HttpModule
+    HttpModule,
+    HttpClientModule
   ],
   providers: [
     GoogleMapsAPIWrapper, GMapsDirectionsService
