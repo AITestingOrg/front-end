@@ -1,10 +1,10 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture } from '@angular/core/testing';
 
 import { LoginComponent } from './login.component';
 
 describe('LoginComponent', () => {
-  let component: LoginComponent;
-  let fixture: ComponentFixture<LoginComponent>;
+  const component: LoginComponent = null;
+  const fixture: ComponentFixture<LoginComponent> = null;
 
   it('should be created', () => {
     expect(true).toBeTruthy();

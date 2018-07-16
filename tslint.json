@@ -31,8 +31,32 @@
     "member-access": false,
     "member-ordering": [
       true,
-      "static-before-instance",
-      "variables-before-functions"
+      {
+        "order": [
+          {
+            "name": "static",
+            "kinds": [
+              "private-static-field",
+              "private-static-method",
+              "protected-static-field",
+              "protected-static-method",
+              "public-static-field",
+              "public-static-method"
+            ]
+          },
+          {
+            "name": "variables",
+            "kinds": [
+              "private-static-field",
+              "private-instance-field",
+              "protected-static-field",
+              "protected-instance-field",
+              "public-static-field",
+              "public-instance-field"
+            ]
+          }
+        ]
+      }
     ],
     "no-arg": true,
     "no-bitwise": true,
@@ -48,7 +72,7 @@
     "no-debugger": true,
     "no-duplicate-super": true,
     "no-empty": false,
-    "no-empty-interface": true,
+    "no-empty-interface": false,
     "no-eval": true,
     "no-inferrable-types": [
       true,
@@ -63,7 +87,6 @@
     "no-trailing-whitespace": true,
     "no-unnecessary-initializer": true,
     "no-unused-expression": true,
-    "no-use-before-declare": true,
     "no-var-keyword": true,
     "object-literal-sort-keys": false,
     "one-line": [
@@ -80,7 +103,7 @@
     ],
     "radix": true,
     "semicolon": [
-      "always"
+      true
     ],
     "triple-equals": [
       true,

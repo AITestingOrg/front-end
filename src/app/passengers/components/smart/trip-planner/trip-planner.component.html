@@ -2,20 +2,20 @@
   <h1>{{ title }}</h1>
   <div class="container">
     <agm-map [latitude]="latitude" [longitude]="longitude" [zoom]="zoom">
-      <directions-service></directions-service>
+      <div appDirectionsService></div>
     </agm-map>
   </div>
   <div class="inprogress">
-    <app-text-box placeholder="Enter your pickup location." 
-    icon="my_location" 
-    ngDefaultControl 
+    <app-text-box placeholder="Enter your pickup location."
+    icon="my_location"
+    ngDefaultControl
     [(ngModel)]="pickupTextboxValue"
     (ngModelChange)="onPickupTextChange($event)">
     </app-text-box>
     <p>{{originLatitude}}</p>
-    <app-text-box placeholder="Enter your destination." 
+    <app-text-box placeholder="Enter your destination."
     icon="place"
-    ngDefaultControl 
+    ngDefaultControl
     [(ngModel)]="destinationTextboxValue"
     (ngModelChange)="onDestinationTextChange($event)">>
     </app-text-box>
