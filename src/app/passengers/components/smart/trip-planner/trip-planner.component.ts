@@ -1,17 +1,17 @@
-import {Component, OnInit, Input, ElementRef, NgZone, ViewChild} from '@angular/core';
-import {FormControl, ReactiveFormsModule} from '@angular/forms';
-import {error} from 'util';
-import {GoogleMapsAPIWrapper, MapsAPILoader} from '@agm/core';
-import {GMapsDirectionsService} from 'app/common/states/gmaps.service';
-import {NotificationService} from 'app/common/states/notification.service';
-import {} from '@types/googlemaps';
-import {Observable} from 'rxjs/Observable';
-import {Store} from '@ngrx/store';
+import { Component, OnInit, Input, ElementRef, NgZone, ViewChild } from '@angular/core';
+import { FormControl } from '@angular/forms';
+import { GoogleMapsAPIWrapper, MapsAPILoader } from '@agm/core';
+import { GMapsDirectionsServiceDirective } from 'app/common/states/gmaps.service';
+import { Observable } from 'rxjs/Observable';
+import { Store } from '@ngrx/store';
 import * as MapActions from 'app/common/states/actions/map.action';
 import * as MapReducer from 'app/common/states/reducers/map.reducer';
-import {Map} from 'app/common/models/map';
-import {Route} from 'app/common/models/route';
-import {Location} from 'app/common/models/location';
+import { Map } from 'app/common/models/map';
+import { Route } from 'app/common/models/route';
+import { Location } from 'app/common/models/location';
+// noinspection ES6UnusedImports
+import {} from '@types/googlemaps';
+import DirectionsRenderer = google.maps.DirectionsRenderer;
 
 @Component({
   selector: 'app-trip-planner',
@@ -46,7 +46,7 @@ export class TripPlannerComponent implements OnInit {
   @ViewChild('pickupOutput')
   public pickupOutputElementRef: ElementRef;
 
-  @ViewChild(GMapsDirectionsService) service: GMapsDirectionsService;
+  @ViewChild(GMapsDirectionsServiceDirective) service: GMapsDirectionsServiceDirective;
 
   constructor(
     private store: Store<MapReducer.State>,
@@ -60,7 +60,6 @@ export class TripPlannerComponent implements OnInit {
   }
 
   ngOnInit() {
-
     // Set Default Map View
     this.setInitialCords().then((cords) => {
       this.latitude = cords.lat;
@@ -117,8 +116,6 @@ export class TripPlannerComponent implements OnInit {
     }
   }
 
-
-
   private setupPlaceChangedListener(autocomplete: any, inputType: string) {
     autocomplete.addListener('place_changed', () => {
       this.ngZone.run(() => {
@@ -135,7 +132,7 @@ export class TripPlannerComponent implements OnInit {
         }
         if (this.service.directionsDisplay === undefined) {
           this.mapsAPILoader.load().then(() => {
-            this.service.directionsDisplay = new google.maps.DirectionsRenderer;
+            this.service.directionsDisplay = new DirectionsRenderer;
           });
         }
         this.service.updateDirections();
@@ -156,22 +153,22 @@ export class TripPlannerComponent implements OnInit {
           resolve({lat: position.coords.latitude, lng: position.coords.longitude});
         });
       } else {
-        reject(new Error('No geolocation found in API.'))
+        reject(new Error('No geolocation found in API.'));
       }
     });
   }
 
   onFindRideClick(event) {
-    var pickupAddress = this.pickupTextboxValue;
-    var destinationAddress = this.destinationTextboxValue;
+    const pickupAddress = this.pickupTextboxValue;
+    const destinationAddress = this.destinationTextboxValue;
     this.service.getGeocodeFromAddress(pickupAddress, this.geocoder);
     this.service.getGeocodeFromAddress(destinationAddress, this.geocoder);
-    //TODO:
-    //Use Service to Plan Route
-    //this.origin = this.service.getGeocodeFromAddress(pickupAddress, this.geocoder);
-    //this.destination = this.service.getGeocodeFromAddress(destinationAddress, this.geocoder);
-    //Dispatch Action
-    let map = new Map(this.origin);
+    // TODO:
+    // Use Service to Plan Route
+    // this.origin = this.service.getGeocodeFromAddress(pickupAddress, this.geocoder);
+    // this.destination = this.service.getGeocodeFromAddress(destinationAddress, this.geocoder);
+    // Dispatch Action
+    const map = new Map(this.origin);
     this.store.dispatch(new MapActions.AddLocation(map));
   }
 
@@ -179,12 +176,8 @@ export class TripPlannerComponent implements OnInit {
     return this.estimatedPrice !== null;
   }
 
-  //To-Do: Disable "Find Ride" until inputs are validated
+  // To-Do: Disable "Find Ride" until inputs are validated
   validateInputs() {
-    if (this.pickupTextboxValue != null && this.destinationTextboxValue != null) {
-      return true;
-    }
-    return false;
+    return this.pickupTextboxValue != null && this.destinationTextboxValue != null;
   }
-
 }

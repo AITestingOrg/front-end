@@ -7,11 +7,11 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 })
 export class CheckBoxComponent implements OnInit {
 
-  @Input() private label: string
-  @Input() private color: string
-  @Input() private checkboxValue:boolean  
+  @Input() private label: string;
+  @Input() private color: string;
+  @Input() private checkboxValue: boolean;
 
-  @Output() checkboxChange:EventEmitter<any> = new EventEmitter();
+  @Output() checkboxChange: EventEmitter<any> = new EventEmitter();
 
   constructor() { }
 
@@ -20,7 +20,7 @@ export class CheckBoxComponent implements OnInit {
 
   onChange(newValue) {
     this.checkboxValue = newValue;
-    console.log("The checkbox value is: " + newValue);
+    console.log('The checkbox value is: ' + newValue);
     this.checkboxChange.emit(newValue);
   }
 

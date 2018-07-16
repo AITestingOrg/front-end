@@ -18,12 +18,12 @@ export function mapReducer(
   state = initialState,
   action: MapActions.Actions
 ): State {
-  switch(action.type) {
+  switch (action.type) {
     case MapActions.ADD_LOCATION:
       return {
         ...adapter.addOne(action.payload, state),
         currentMapId: state.currentMapId,
-      }
+      };
     default: {
       return state;
     }
