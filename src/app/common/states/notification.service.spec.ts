@@ -1,13 +1,20 @@
 import { TestBed, inject } from '@angular/core/testing';
-import { sources } from 'eventsourcemock';
+import EventSourceMock, { sources } from 'eventsourcemock';
 import { NotificationService } from './notification.service';
+import {EventSourceService} from './event-source.service';
 
 describe('NotificationService', () => {
+  let uri: string;
+
   beforeEach(() => {
-    sources['`http://localhost:32700/events?stream=all'].emitOpen();
+    uri = 'http://localhost:1234/events';
+    const mockEventSource = new EventSourceMock(uri);
+
     TestBed.configureTestingModule({
-      providers: [NotificationService]
+      providers: [NotificationService, EventSourceService]
     });
+    const eventSourceService = TestBed.get(EventSourceService);
+    spyOn(eventSourceService, 'forUrl').and.returnValue(mockEventSource);
   });
 
   it('should be created', inject([NotificationService], (service: NotificationService) => {
@@ -15,6 +22,6 @@ describe('NotificationService', () => {
   }));
 
   it('should have a price estimate observable', inject([NotificationService], (service: NotificationService) => {
-    expect(service.getCurrentPriceEstimate()).toBeTruthy();
+    expect(service.getCurrentPriceEstimate(() => {})).toBeTruthy();
   }));
 });

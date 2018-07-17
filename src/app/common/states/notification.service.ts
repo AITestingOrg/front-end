@@ -1,51 +1,70 @@
-import { Injectable } from '@angular/core';
+import {Injectable, NgZone} from '@angular/core';
 import {Observable} from 'rxjs/Observable';
+import 'rxjs/add/operator/filter';
 import * as EventSource from 'eventsource';
-import {EventSourceService} from './event-source.service';
+import { EventSourceService } from './event-source.service';
+import { Subject } from 'rxjs/Subject';
+import {BehaviorSubject} from 'rxjs/BehaviorSubject';
+
 
 @Injectable()
 export class NotificationService {
   private notificationEvents: EventSource;
+  private subject: BehaviorSubject<any>;
+  private _isActive = false;
 
   constructor(
-    private eventSourceService: EventSourceService
+    private eventSourceService: EventSourceService,
+    private zone: NgZone
   ) {
-    this.onInit()
+    this.onInit();
   }
 
   onInit(): void {
-    this.notificationEvents = this.eventSourceService.forUrl("http://localhost:32700/test.php");
+    this.subject = new BehaviorSubject<any>({ RoutingKey: 'nothing', Data: null });
+    this.notificationEvents = this.eventSourceService.forUrl(`http://localhost:32700/events?stream=${this.userId()}`);
     this.notificationEvents.onopen = _ => {
-      console.log('SSE Connection opened');
+      this._isActive = true;
+    };
+
+    this.notificationEvents.onerror = _ => {
+      this._isActive = false;
+      console.log('SSE Connection failed. Retrying in 1 second...');
+      setTimeout(() => {
+        const currNotificationService = this;
+        this.onInit.call(currNotificationService);
+      }, 1000, this);
+    };
+
+    this.notificationEvents.onmessage = e => {
+      const data = JSON.parse((e as MessageEvent).data);
+      this.zone.run(() => {
+        this.subject.next(data);
+      });
     };
   }
 
-  getCurrentPriceEstimate(): Observable<string> {
+  private newObservableForKey(key: string): Observable<any> {
+    console.log(`Registering key: ${key}`);
+    const routingKey = new RegExp(key.replace('.', '\\.'));
+    return this.subject.asObservable().filter(value => {
+      return value['RoutingKey'] === 'all' || routingKey.test(value['RoutingKey']);
+    }).map(value => {
+      return value['Body'];
+    });
+  }
+
+  getCurrentPriceEstimate(updateCallback: () => void): Observable<string> {
       // Setup Notification server-side event code
-    console.log(this);
-      return new Observable((obs) => {
-        this.notificationEvents.onerror = _ => {
-          obs.error();
-          console.log('SSE Connection failed')
-        };
-
-        this.notificationEvents.onmessage = e => {
-          console.log(e);
-          const data = JSON.parse((e as MessageEvent).data);
-          const price: number = Number.parseFloat(data.price);
-          const priceString: string = price.toLocaleString('en-US', {style: 'currency', currency: 'USD' });
-          console.log(priceString);
-
-          obs.next(priceString);
-        };
-
-        const service = this;
-        return { unsubscribe() { service.notificationEvents.close(); }};
-      });
-    }
+    const observable = this.newObservableForKey('notification.trip.estimatecalculated');
+    return observable.map(val => {
+      updateCallback();
+      return val['cost'].toLocaleString('en-US', { style: 'currency', currency: 'USD' });
+    });
+  }
 
   private userId() {
-      return 'all';
-    }
+      return '560c62f4-8612-11e8-adc0-fa7ae01bbebc';
+  }
 }
 

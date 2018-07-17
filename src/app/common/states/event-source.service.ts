@@ -7,7 +7,6 @@ export class EventSourceService {
   constructor() { }
 
   forUrl(url: string): EventSource {
-    console.log(`creating event source for ${url}`);
     return new this.EventSource(url);
   }
 }

@@ -1,5 +1,7 @@
 import { Component, OnInit, Input, ElementRef, NgZone, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
+// noinspection ES6UnusedImports
+import {} from '@types/googlemaps';
 import { GoogleMapsAPIWrapper, MapsAPILoader } from '@agm/core';
 import { GMapsDirectionsServiceDirective } from 'app/common/states/gmaps.service';
 import { Observable } from 'rxjs/Observable';
@@ -9,9 +11,7 @@ import * as MapReducer from 'app/common/states/reducers/map.reducer';
 import { Map } from 'app/common/models/map';
 import { Route } from 'app/common/models/route';
 import { Location } from 'app/common/models/location';
-// noinspection ES6UnusedImports
-import {} from '@types/googlemaps';
-import DirectionsRenderer = google.maps.DirectionsRenderer;
+import { NotificationService } from '../../../../common/states/notification.service';
 
 @Component({
   selector: 'app-trip-planner',
@@ -19,7 +19,7 @@ import DirectionsRenderer = google.maps.DirectionsRenderer;
   styleUrls: ['./trip-planner.component.scss']
 })
 export class TripPlannerComponent implements OnInit {
-  title: string = 'Trip Planner';
+  title = 'Trip Planner';
 
   @Input() private latitude: number;
   @Input() private longitude: number;
@@ -47,6 +47,7 @@ export class TripPlannerComponent implements OnInit {
   public pickupOutputElementRef: ElementRef;
 
   @ViewChild(GMapsDirectionsServiceDirective) service: GMapsDirectionsServiceDirective;
+  pricingValid = false;
 
   constructor(
     private store: Store<MapReducer.State>,
@@ -55,7 +56,7 @@ export class TripPlannerComponent implements OnInit {
     private gmapsApi: GoogleMapsAPIWrapper,
     private _elementRef: ElementRef,
     private notificationService: NotificationService
-    //private gmapsservice: GMapsDirectionsService
+    // private gmapsservice: GMapsDirectionsService
   ) {
   }
 
@@ -98,7 +99,7 @@ export class TripPlannerComponent implements OnInit {
       this.setupPlaceChangedListener(autocompleteOutput2, 'destination');
     });
 
-    this.estimatedPrice = this.notificationService.getCurrentPriceEstimate();
+    this.estimatedPrice = this.notificationService.getCurrentPriceEstimate(() => this.pricingValid = true);
   }
 
   onPickupTextChange(event) {
@@ -132,7 +133,7 @@ export class TripPlannerComponent implements OnInit {
         }
         if (this.service.directionsDisplay === undefined) {
           this.mapsAPILoader.load().then(() => {
-            this.service.directionsDisplay = new DirectionsRenderer;
+            this.service.directionsDisplay = new google.maps.DirectionsRenderer;
           });
         }
         this.service.updateDirections();
@@ -173,7 +174,7 @@ export class TripPlannerComponent implements OnInit {
   }
 
   isPriceEstimateAvailable() {
-    return this.estimatedPrice !== null;
+    return this.pricingValid;
   }
 
   // To-Do: Disable "Find Ride" until inputs are validated
