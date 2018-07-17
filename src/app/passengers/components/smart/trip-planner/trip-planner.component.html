@@ -26,8 +26,13 @@
     <input placeholder="Enter your destination." autocorrect="off" autocapitalize="off" spellcheck="off" type="text" class="form-control"
       #pickupOutput [formControl]="destinationOutput" size="55">
   </div>
-  <div id="trip-price-estimate">
-    <p>Est. Price: <span id="trip-price">{{ (estimatedPrice | async) }}</span></p>
+  <div id="trip-price-estimate" *ngIf="isPriceEstimateAvailable(); else planRoute">
+    <p>Estimated Price: <span id="trip-price">{{ (estimatedPrice | async) }}</span></p>
   </div>
+  <ng-template #planRoute>
+    <div id="plan-your-trip">
+      <p>Please select a pickup and destination location.</p>
+    </div>
+  </ng-template>
   <app-raised-button label="Find Your Ride" color="primary" (click)="onFindRideClick($event)"></app-raised-button>
 </mat-card>

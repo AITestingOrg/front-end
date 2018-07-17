@@ -12,6 +12,7 @@ import { Map } from 'app/common/models/map';
 import { Route } from 'app/common/models/route';
 import { Location } from 'app/common/models/location';
 import { NotificationService } from '../../../../common/states/notification.service';
+import { isNullOrUndefined } from 'util';
 
 @Component({
   selector: 'app-trip-planner',
@@ -99,7 +100,8 @@ export class TripPlannerComponent implements OnInit {
       this.setupPlaceChangedListener(autocompleteOutput2, 'destination');
     });
 
-    this.estimatedPrice = this.notificationService.getCurrentPriceEstimate(() => this.pricingValid = true);
+    this.estimatedPrice = this.notificationService.getCurrentPriceEstimate(() => {});
+    this.estimatedPrice.subscribe(next => { if (!isNullOrUndefined(next)) this.pricingValid = true });
   }
 
   onPickupTextChange(event) {
@@ -120,6 +122,9 @@ export class TripPlannerComponent implements OnInit {
   private setupPlaceChangedListener(autocomplete: any, inputType: string) {
     autocomplete.addListener('place_changed', () => {
       this.ngZone.run(() => {
+        console.log('moo');
+        this.pricingValid = false;
+
         const place: google.maps.places.PlaceResult = autocomplete.getPlace();
         if (place.geometry === undefined) {
           return;

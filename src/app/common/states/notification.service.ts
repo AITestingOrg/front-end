@@ -49,7 +49,6 @@ export class NotificationService {
     };
 
     this.notificationEvents.onmessage = e => {
-      console.log((e as MessageEvent).data);
       const data = JSON.parse((e as MessageEvent).data);
       this.zone.run(() => {
         this.subject.next(data);
