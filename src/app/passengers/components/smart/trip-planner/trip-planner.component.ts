@@ -173,43 +173,52 @@ export class TripPlannerComponent implements OnInit {
 
   getTripEstimate(event){
     var res;
+
     const headers = new HttpHeaders({
       'Content-Type': 'application/x-www-form-urlencoded',
       'Authorization': 'Basic ' + btoa('front-end:front-end')
     });
+
     const data = "grant_type=password&scope=webclient&username=passenger&password=password";
+
     const options = {
       headers,
       withCredentials: true
     }; 
-   this.http.post('http://localhost:32883/auth/oauth/token', data, options).subscribe(res => {
+
+   this.http.post('http://localhost:32775/auth/oauth/token', data, options).subscribe(res => {
      if(res){
-       console.log(JSON.stringify(res))
-       localStorage.setItem("accessToken", JSON.stringify(res))
+       localStorage.setItem("accessToken", JSON.parse(JSON.stringify(res)).access_token)
      }
    })
-   // Request to communicate with calculation service via JWT token
-   const token = localStorage.getItem("accessToken");
-   const resHeaders = new HttpHeaders({
-    'Content-Type': 'text/plain',
-    'Authorization': 'Bearer ' + token
-   })
-   console.log("token "+token)
+   this.postToCalculstionService()
+}
+// Request to communicate with calculation service via JWT token
+  postToCalculstionService = function(){
+    const token = localStorage.getItem("accessToken");
+    const headers = new HttpHeaders({
+    'Content-Type': 'application/json',
+    'Authorization': 'Bearer '+ token
+    });
 
-   const resOptions = {
-     resHeaders,
-     withCredentials: true
-   };
+    const resOptions = {
+    headers,
+    withCredentials: true
+    };
 
-   const inputElem = JSON.stringify({
-      "origin": this.pickupInputElementRef.nativeElement.value,
-      "destination": this.pickupOutputElementRef.nativeElement.value
-      //"userId": "560c62f4-8612-11e8-adc0-fa7ae01bbebc",
+    const inputElem = JSON.stringify({
+    "origin": this.pickupInputElementRef.nativeElement.value,
+    "destination": this.pickupOutputElementRef.nativeElement.value,
+    "userId": "560c62f4-8612-11e8-adc0-fa7ae01bbebc",
     })
     console.log(inputElem)
 
-   this.http.post<string>('http://localhost:32884/api/v1/cost',inputElem, resOptions).subscribe()
-}
+    this.http.post('http://localhost:8080/api/calculationservice/api/v1/cost',inputElem, resOptions).subscribe(res=> {
+      if(res){
+        console.log(JSON.parse(JSON.stringify(res)))
+      }
+    })
+  }
 
   //To-Do: Disable "Find Ride" until inputs are validated
   validateInputs() {
