@@ -190,10 +190,10 @@ export class TripPlannerComponent implements OnInit {
        localStorage.setItem("accessToken", JSON.parse(JSON.stringify(res)).access_token)
      }
    })
-   this.postToCalculstionService()
+   this.postToCalculationService()
 }
 // Request to communicate with calculation service via JWT token
-  postToCalculstionService = function(){
+  postToCalculationService = function(){
     const token = localStorage.getItem("accessToken");
     const headers = new HttpHeaders({
     'Content-Type': 'application/json',
