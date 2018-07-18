@@ -2,7 +2,7 @@
   <h1>{{ title }}</h1>
   <div class="container">
     <agm-map [latitude]="latitude" [longitude]="longitude" [zoom]="zoom">
-      <directions-service></directions-service>
+      <div appDirectionsService></div>
     </agm-map>
   </div>
   <div class="inprogress">
@@ -17,7 +17,7 @@
     icon="place"
     ngDefaultControl
     [(ngModel)]="destinationTextboxValue"
-    (ngModelChange)="onDestinationTextChange($event)">>
+    (ngModelChange)="onDestinationTextChange($event)">
     </app-text-box>
   </div>
   <div class="trip-inputs">

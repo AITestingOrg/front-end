@@ -17,18 +17,18 @@ import { GetEstimateButtonComponent } from './components/presentation/get-estima
 
 @NgModule({
   imports: [
-    CommonModule, 
-    MatToolbarModule, 
-    MatCheckboxModule, 
-    MatButtonModule, 
-    MatFormFieldModule, 
-    MatInputModule, 
-    MatIconModule, 
-    MatCardModule, 
-    FormsModule, 
-    ReactiveFormsModule, 
-    MatAutocompleteModule, 
-    AgmCoreModule, 
+    CommonModule,
+    MatToolbarModule,
+    MatCheckboxModule,
+    MatButtonModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatIconModule,
+    MatCardModule,
+    FormsModule,
+    ReactiveFormsModule,
+    MatAutocompleteModule,
+    AgmCoreModule,
     RouterModule
   ],
   declarations: [
@@ -56,4 +56,5 @@ import { GetEstimateButtonComponent } from './components/presentation/get-estima
   ],
 })
 
-export class FeCommonModule { }
+export class FeCommonModule {
+}

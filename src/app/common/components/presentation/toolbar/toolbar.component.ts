@@ -6,8 +6,7 @@ import { Component, OnInit, Input } from '@angular/core';
   styleUrls: ['./toolbar.component.scss']
 })
 export class ToolbarComponent implements OnInit {
-
-  @Input() private title:string
+  @Input() private title: string;
 
   constructor() { }
 
@@ -15,7 +14,6 @@ export class ToolbarComponent implements OnInit {
   }
 
   goHome(event) {
-    console.log("Clicked home: " + event);
+    console.log('Clicked home: ' + event);
   }
-
 }

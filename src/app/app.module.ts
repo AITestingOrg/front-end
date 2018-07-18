@@ -15,15 +15,15 @@ import { HttpModule } from '@angular/http';
 import 'rxjs/add/operator/map';
 import { HttpClientModule } from '@angular/common/http';
 
-const routes:Routes = [ 
+const routes: Routes = [
     {path: '', redirectTo: 'login', pathMatch: 'full'},
     {path: 'login', component: LoginComponent},
     {path: 'dashboard', component: TripPlannerComponent}
-]
+];
 
 @NgModule({
   declarations: [
-    AppComponent, TripPlannerComponent, PlacesAutocompleteComponent    
+    AppComponent, TripPlannerComponent, PlacesAutocompleteComponent
   ],
   imports: [
     BrowserModule,

@@ -7,11 +7,11 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 })
 export class BasicButtonComponent implements OnInit {
 
-  @Input() private label:string
-  @Input() private color:string
+  @Input() private label: string;
+  @Input() private color: string;
 
-  @Output() public clickEvent:EventEmitter<any> = new EventEmitter();
-    
+  @Output() public clickEvent: EventEmitter<any> = new EventEmitter();
+
   constructor() { }
 
   ngOnInit() {

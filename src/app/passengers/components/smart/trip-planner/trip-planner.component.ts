@@ -1,9 +1,7 @@
 import { Component, OnInit, Input, ElementRef, NgZone, ViewChild } from '@angular/core';
-import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { error } from 'util';
+import { FormControl } from '@angular/forms';
 import { GoogleMapsAPIWrapper, MapsAPILoader } from '@agm/core';
 import { GMapsDirectionsService } from 'app/common/states/gmaps.service';
-import { } from '@types/googlemaps';
 import { Observable } from 'rxjs/Observable';
 import { Store } from '@ngrx/store';
 import * as MapActions from 'app/common/states/actions/map.action';
@@ -14,6 +12,8 @@ import { Location } from 'app/common/models/location';
 import { HttpHeaders, HttpClient, HttpParams } from '@angular/common/http';
 import 'rxjs/add/operator/toPromise';
 import { HttpClientModule } from '@angular/common/http';
+// noinspection ES6UnusedImports
+import {} from '@types/googlemaps';
 
 @Component({
   selector: 'app-trip-planner',
@@ -62,7 +62,6 @@ export class TripPlannerComponent implements OnInit {
   }
 
   ngOnInit() {
-
     // Set Default Map View
     this.setInitialCords().then((cords) => {
         this.latitude = cords.lat;
@@ -115,7 +114,7 @@ export class TripPlannerComponent implements OnInit {
     }
   }
 
-  private setupPlaceChangedListener(autocomplete:any, inputType:string) {
+  private setupPlaceChangedListener(autocomplete: any, inputType: string) {
     autocomplete.addListener('place_changed', () => {
       this.ngZone.run(() => {
         const place: google.maps.places.PlaceResult = autocomplete.getPlace();
@@ -152,22 +151,22 @@ export class TripPlannerComponent implements OnInit {
           resolve({ lat: position.coords.latitude, lng: position.coords.longitude });
         });
       } else {
-        reject(new Error('No geolocation found in API.'))
+        reject(new Error('No geolocation found in API.'));
       }
     });
   }
 
   onFindRideClick(event) {
-    var pickupAddress = this.pickupTextboxValue;
-    var destinationAddress = this.destinationTextboxValue;
+    const pickupAddress = this.pickupTextboxValue;
+    const destinationAddress = this.destinationTextboxValue;
     this.service.getGeocodeFromAddress(pickupAddress, this.geocoder);
     this.service.getGeocodeFromAddress(destinationAddress, this.geocoder);
-    //TODO:
-    //Use Service to Plan Route
-    //this.origin = this.service.getGeocodeFromAddress(pickupAddress, this.geocoder);
-    //this.destination = this.service.getGeocodeFromAddress(destinationAddress, this.geocoder);
-    //Dispatch Action
-    let map = new Map(this.origin);
+    // TODO:
+    // Use Service to Plan Route
+    // this.origin = this.service.getGeocodeFromAddress(pickupAddress, this.geocoder);
+    // this.destination = this.service.getGeocodeFromAddress(destinationAddress, this.geocoder);
+    // Dispatch Action
+    const map = new Map(this.origin);
     this.store.dispatch(new MapActions.AddLocation(map));
   }
 
@@ -186,7 +185,7 @@ export class TripPlannerComponent implements OnInit {
       withCredentials: true
     }; 
 
-   this.http.post('http://localhost:32775/auth/oauth/token', data, options).subscribe(res => {
+   this.http.post('http://localhost:32798/auth/oauth/token', data, options).subscribe(res => {
      if(res){
        localStorage.setItem("accessToken", JSON.parse(JSON.stringify(res)).access_token)
      }
@@ -222,10 +221,6 @@ export class TripPlannerComponent implements OnInit {
 
   //To-Do: Disable "Find Ride" until inputs are validated
   validateInputs() {
-    if (this.pickupTextboxValue != null && this.destinationTextboxValue != null) {
-      return true;
-    }
-   return false;
+    return this.pickupTextboxValue != null && this.destinationTextboxValue != null;
   }
-
 }
