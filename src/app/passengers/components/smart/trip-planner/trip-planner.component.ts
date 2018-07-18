@@ -185,21 +185,18 @@ export class TripPlannerComponent implements OnInit {
       withCredentials: true
     }; 
 
-   this.http.post('http://localhost:32798/auth/oauth/token', data, options).subscribe(res => {
+   this.http.post('http://localhost:32815/auth/oauth/token', data, options).subscribe(res => {
      if(res){
        localStorage.setItem("accessToken", JSON.parse(JSON.stringify(res)).access_token)
      }
    })
+
    this.postToCalculationService()
 }
 // Request to communicate with calculation service via JWT token
   postToCalculationService = function(){
     const token = localStorage.getItem("accessToken");
-    const headers = new HttpHeaders({
-    'Content-Type': 'application/json',
-    'Authorization': 'Bearer '+ token
-    });
-
+    const headers = this.requestHeader("application/json", "Bearer")
     const resOptions = {
     headers,
     withCredentials: true
@@ -217,6 +214,17 @@ export class TripPlannerComponent implements OnInit {
         console.log(JSON.parse(JSON.stringify(res)))
       }
     })
+  }
+
+  requestHeader(content, authorization){
+    const Content_type = content;
+    const Authorization = authorization;
+    const token = localStorage.getItem("accessToken");
+    const headers = new HttpHeaders({
+      'Content-Type': Content_type,
+      'Authorization': Authorization +" "+ token
+      });
+
   }
 
   //To-Do: Disable "Find Ride" until inputs are validated
