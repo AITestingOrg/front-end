@@ -3,7 +3,7 @@ import { FormControl } from '@angular/forms';
 // noinspection ES6UnusedImports
 import {} from '@types/googlemaps';
 import { GoogleMapsAPIWrapper, MapsAPILoader } from '@agm/core';
-import { GMapsDirectionsServiceDirective } from 'app/common/states/gmaps.service';
+import { GMapsDirectionsService } from 'app/common/states/gmaps.service';
 import { Observable } from 'rxjs/Observable';
 import { Store } from '@ngrx/store';
 import * as MapActions from 'app/common/states/actions/map.action';
@@ -13,6 +13,11 @@ import { Route } from 'app/common/models/route';
 import { Location } from 'app/common/models/location';
 import { NotificationService } from '../../../../common/states/notification.service';
 import { isNullOrUndefined } from 'util';
+import { HttpHeaders, HttpClient, HttpParams } from '@angular/common/http';
+import 'rxjs/add/operator/toPromise';
+import { HttpClientModule } from '@angular/common/http';
+// noinspection ES6UnusedImports
+import {} from '@types/googlemaps';
 
 @Component({
   selector: 'app-trip-planner',
@@ -20,7 +25,8 @@ import { isNullOrUndefined } from 'util';
   styleUrls: ['./trip-planner.component.scss']
 })
 export class TripPlannerComponent implements OnInit {
-  title = 'Trip Planner';
+
+  title: string = 'Trip Planner';
 
   @Input() private latitude: number;
   @Input() private longitude: number;
@@ -47,7 +53,7 @@ export class TripPlannerComponent implements OnInit {
   @ViewChild('pickupOutput')
   public pickupOutputElementRef: ElementRef;
 
-  @ViewChild(GMapsDirectionsServiceDirective) service: GMapsDirectionsServiceDirective;
+  @ViewChild(GMapsDirectionsService) service: GMapsDirectionsService;
   pricingValid = false;
 
   constructor(
@@ -56,8 +62,9 @@ export class TripPlannerComponent implements OnInit {
     private mapsAPILoader: MapsAPILoader,
     private gmapsApi: GoogleMapsAPIWrapper,
     private _elementRef: ElementRef,
-    private notificationService: NotificationService
+    private notificationService: NotificationService,
     // private gmapsservice: GMapsDirectionsService
+    private http : HttpClient
   ) {
   }
 
@@ -183,6 +190,56 @@ export class TripPlannerComponent implements OnInit {
   }
 
   // To-Do: Disable "Find Ride" until inputs are validated
+  getTripEstimate(event){
+    var res;
+
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/x-www-form-urlencoded',
+      'Authorization': 'Basic ' + btoa('front-end:front-end')
+    });
+
+    const data = "grant_type=password&scope=webclient&username=passenger&password=password";
+
+    const options = {
+      headers,
+      withCredentials: true
+    };
+
+   this.http.post('http://localhost:32798/auth/oauth/token', data, options).subscribe(res => {
+     if(res){
+       localStorage.setItem("accessToken", JSON.parse(JSON.stringify(res)).access_token)
+     }
+   })
+   this.postToCalculstionService()
+}
+// Request to communicate with calculation service via JWT token
+  postToCalculstionService = function(){
+    const token = localStorage.getItem("accessToken");
+    const headers = new HttpHeaders({
+    'Content-Type': 'application/json',
+    'Authorization': 'Bearer '+ token
+    });
+
+    const resOptions = {
+    headers,
+    withCredentials: true
+    };
+
+    const inputElem = JSON.stringify({
+    "origin": this.pickupInputElementRef.nativeElement.value,
+    "destination": this.pickupOutputElementRef.nativeElement.value,
+    "userId": "560c62f4-8612-11e8-adc0-fa7ae01bbebc",
+    })
+    console.log(inputElem)
+
+    this.http.post('http://localhost:8080/api/calculationservice/api/v1/cost',inputElem, resOptions).subscribe(res=> {
+      if(res){
+        console.log(JSON.parse(JSON.stringify(res)))
+      }
+    })
+  }
+
+  //To-Do: Disable "Find Ride" until inputs are validated
   validateInputs() {
     return this.pickupTextboxValue != null && this.destinationTextboxValue != null;
   }

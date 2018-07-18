@@ -10,10 +10,12 @@ import { AgmCoreModule, GoogleMapsAPIWrapper } from '@agm/core';
 import { PlacesAutocompleteComponent } from 'app/passengers/components/presentation/places-autocomplete/places-autocomplete.component';
 import { StoreModule } from '@ngrx/store';
 import { MatFormFieldModule, MatInputModule } from '@angular/material';
-import { GMapsDirectionsServiceDirective } from 'app/common/states/gmaps.service';
+import { GMapsDirectionsService } from 'app/common/states/gmaps.service';
 import { HttpModule } from '@angular/http';
 import { NotificationService } from 'app/common/states/notification.service';
 import { EventSourceService } from 'app/common/states/event-source.service';
+import 'rxjs/add/operator/map';
+import { HttpClientModule } from '@angular/common/http';
 
 const routes: Routes = [
     {path: '', redirectTo: 'login', pathMatch: 'full'},
@@ -38,10 +40,11 @@ const routes: Routes = [
     }),
     MatFormFieldModule,
     MatInputModule,
-    HttpModule
+    HttpModule,
+    HttpClientModule
   ],
   providers: [
-    GoogleMapsAPIWrapper, GMapsDirectionsServiceDirective, NotificationService, EventSourceService
+    GoogleMapsAPIWrapper, GMapsDirectionsService, NotificationService, EventSourceService
   ],
   bootstrap: [AppComponent]
 })

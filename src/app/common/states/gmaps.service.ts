@@ -9,7 +9,7 @@ declare var google: any;
 @Directive({
   selector: '[appDirectionsService]'
 })
-export class GMapsDirectionsServiceDirective {
+export class GMapsDirectionsService {
 
   @Input() origin: any;
   @Input() destination: any;

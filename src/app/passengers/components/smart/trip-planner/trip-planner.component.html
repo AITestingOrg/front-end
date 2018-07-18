@@ -17,7 +17,7 @@
     icon="place"
     ngDefaultControl
     [(ngModel)]="destinationTextboxValue"
-    (ngModelChange)="onDestinationTextChange($event)">>
+    (ngModelChange)="onDestinationTextChange($event)">
     </app-text-box>
   </div>
   <div class="trip-inputs">
@@ -34,5 +34,6 @@
       <p>Please select a pickup and destination location.</p>
     </div>
   </ng-template>
+  <app-get-estimate-button label="Get Trip Estimate" color="accent"  (click)="getTripEstimate($event)"></app-get-estimate-button>
   <app-raised-button label="Find Your Ride" color="primary" (click)="onFindRideClick($event)"></app-raised-button>
 </mat-card>
