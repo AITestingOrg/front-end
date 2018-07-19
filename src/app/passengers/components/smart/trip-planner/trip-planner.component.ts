@@ -210,8 +210,11 @@ export class TripPlannerComponent implements OnInit {
     this.store.dispatch(new MapActions.AddLocation(map));
   }
 
+  getTripEstimate(event) {
+    //authPort is in reference to the port that user-service is running on
+    //Until user-service is configured we will have to hit directly user service to get JWT token to contact edge-service
+    var authPort = "32843"
   // To-Do: Disable "Find Ride" until inputs are validated
-  getTripEstimate(e) {
     if (this.tripEstimateButtonDisabled()) return;
 
     const headers = new HttpHeaders({
@@ -226,6 +229,14 @@ export class TripPlannerComponent implements OnInit {
       withCredentials: true
     };
 
+   this.http.post(`http://localhost:${authPort}/auth/oauth/token`, data, options).subscribe(res => {
+     if(res){
+       localStorage.setItem("accessToken", (res as any).access_token)
+     }
+   })
+
+   this.postToCalculationService()
+}
     this.interactionState = TripState.CALCULATING_PRICE;
     this.http.post('http://localhost:32933/auth/oauth/token', data, options).subscribe(res => {
       if (res) {
@@ -239,13 +250,9 @@ export class TripPlannerComponent implements OnInit {
   }
 
 // Request to communicate with calculation service via JWT token
-  postToCalculationService() {
-    const token = localStorage.getItem('accessToken');
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      'Authorization': 'Bearer ' + token
-    });
-
+  postToCalculationService = function(){
+    const token = localStorage.getItem("accessToken");
+    const headers = this.requestHeader("application/json", "Bearer")
     const resOptions = {
       headers,
       withCredentials: true,
@@ -258,6 +265,19 @@ export class TripPlannerComponent implements OnInit {
       'userId': '560c62f4-8612-11e8-adc0-fa7ae01bbebc'
     });
 
+    this.http.post('http://localhost:8080/api/calculationservice/api/v1/cost',inputElem, resOptions).subscribe()
+  }
+
+  requestHeader(content, authorization){
+    const Content_type = content;
+    const Authorization = authorization;
+    const token = localStorage.getItem("accessToken");
+    const headers = new HttpHeaders({
+      'Content-Type': Content_type,
+      'Authorization': Authorization +" "+ token
+      });
+
+  }
     this.http.post('http://localhost:8080/api/calculationservice/api/v1/cost', inputElem, resOptions).subscribe(() => {}, err => {
       this.interactionState = TripState.SERVER_ERROR;
       console.warn(`Failed to communicate with edge service. Err: ${JSON.stringify(err)}`);
