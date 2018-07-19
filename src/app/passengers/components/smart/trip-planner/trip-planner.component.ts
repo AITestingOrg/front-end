@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, ElementRef, NgZone, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { GoogleMapsAPIWrapper, MapsAPILoader } from '@agm/core';
-import { GMapsDirectionsServiceDirective } from 'app/common/states/gmaps.service';
+import { GMapsDirectionsService } from 'app/common/states/gmaps.service';
 import { Observable } from 'rxjs/Observable';
 import { Store } from '@ngrx/store';
 import * as MapActions from 'app/common/states/actions/map.action';
@@ -9,9 +9,11 @@ import * as MapReducer from 'app/common/states/reducers/map.reducer';
 import { Map } from 'app/common/models/map';
 import { Route } from 'app/common/models/route';
 import { Location } from 'app/common/models/location';
+import { HttpHeaders, HttpClient, HttpParams } from '@angular/common/http';
+import 'rxjs/add/operator/toPromise';
+import { HttpClientModule } from '@angular/common/http';
 // noinspection ES6UnusedImports
 import {} from '@types/googlemaps';
-import DirectionsRenderer = google.maps.DirectionsRenderer;
 
 @Component({
   selector: 'app-trip-planner',
@@ -19,7 +21,8 @@ import DirectionsRenderer = google.maps.DirectionsRenderer;
   styleUrls: ['./trip-planner.component.scss']
 })
 export class TripPlannerComponent implements OnInit {
-  title = 'Trip Planner';
+  
+  title: string = 'Trip Planner';
 
   @Input() private latitude: number;
   @Input() private longitude: number;
@@ -45,7 +48,7 @@ export class TripPlannerComponent implements OnInit {
   @ViewChild('pickupOutput')
   public pickupOutputElementRef: ElementRef;
 
-  @ViewChild(GMapsDirectionsServiceDirective) service: GMapsDirectionsServiceDirective;
+  @ViewChild(GMapsDirectionsService) service: GMapsDirectionsService;
 
   constructor(
     private store: Store<MapReducer.State>,
@@ -53,7 +56,8 @@ export class TripPlannerComponent implements OnInit {
     private mapsAPILoader: MapsAPILoader,
     private gmapsApi: GoogleMapsAPIWrapper,
     private _elementRef: ElementRef,
-    // private gmapsservice: GMapsDirectionsServiceDirective
+    private http : HttpClient,
+    //private gmapsservice: GMapsDirectionsService
   ) {
   }
 
@@ -126,7 +130,7 @@ export class TripPlannerComponent implements OnInit {
         }
         if (this.service.directionsDisplay === undefined) {
           this.mapsAPILoader.load().then(() => {
-            this.service.directionsDisplay = new DirectionsRenderer;
+            this.service.directionsDisplay = new google.maps.DirectionsRenderer;
           });
         }
         this.service.updateDirections();
@@ -166,7 +170,61 @@ export class TripPlannerComponent implements OnInit {
     this.store.dispatch(new MapActions.AddLocation(map));
   }
 
-  // To-Do: Disable "Find Ride" until inputs are validated
+  getTripEstimate(event){
+    var res;
+    //authPort is in reference to the port that user-service is running on
+    //Until user-service is configured we will have to hit directly user service to get JWT token to contact edge-service
+    var authPort = "32843"
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/x-www-form-urlencoded',
+      'Authorization': 'Basic ' + btoa('front-end:front-end')
+    });
+
+    const data = "grant_type=password&scope=webclient&username=passenger&password=password";
+
+    const options = {
+      headers,
+      withCredentials: true
+    }; 
+
+   this.http.post(`http://localhost:${authPort}/auth/oauth/token`, data, options).subscribe(res => {
+     if(res){
+       localStorage.setItem("accessToken", (res as any).access_token)
+     }
+   })
+
+   this.postToCalculationService()
+}
+// Request to communicate with calculation service via JWT token
+  postToCalculationService = function(){
+    const token = localStorage.getItem("accessToken");
+    const headers = this.requestHeader("application/json", "Bearer")
+    const resOptions = {
+    headers,
+    withCredentials: true
+    };
+
+    const inputElem = JSON.stringify({
+    "origin": this.pickupInputElementRef.nativeElement.value,
+    "destination": this.pickupOutputElementRef.nativeElement.value,
+    "userId": "560c62f4-8612-11e8-adc0-fa7ae01bbebc",
+    })
+
+    this.http.post('http://localhost:8080/api/calculationservice/api/v1/cost',inputElem, resOptions).subscribe()
+  }
+
+  requestHeader(content, authorization){
+    const Content_type = content;
+    const Authorization = authorization;
+    const token = localStorage.getItem("accessToken");
+    const headers = new HttpHeaders({
+      'Content-Type': Content_type,
+      'Authorization': Authorization +" "+ token
+      });
+
+  }
+
+  //To-Do: Disable "Find Ride" until inputs are validated
   validateInputs() {
     return this.pickupTextboxValue != null && this.destinationTextboxValue != null;
   }

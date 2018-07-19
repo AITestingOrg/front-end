@@ -17,7 +17,7 @@
     icon="place"
     ngDefaultControl
     [(ngModel)]="destinationTextboxValue"
-    (ngModelChange)="onDestinationTextChange($event)">>
+    (ngModelChange)="onDestinationTextChange($event)">
     </app-text-box>
   </div>
   <div class="trip-inputs">
@@ -26,5 +26,6 @@
     <input placeholder="Enter your destination." autocorrect="off" autocapitalize="off" spellcheck="off" type="text" class="form-control"
       #pickupOutput [formControl]="destinationOutput" size="55">
   </div>
+  <app-get-estimate-button label="Get Trip Estimate" color="accent"  (click)="getTripEstimate($event)"></app-get-estimate-button>
   <app-raised-button label="Find Your Ride" color="primary" (click)="onFindRideClick($event)"></app-raised-button>
 </mat-card>
