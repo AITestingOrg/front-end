@@ -174,7 +174,7 @@ export class TripPlannerComponent implements OnInit {
     var res;
     //authPort is in reference to the port that user-service is running on
     //Until user-service is configured we will have to hit directly user service to get JWT token to contact edge-service
-    var authPort = "32833"
+    var authPort = "32843"
     const headers = new HttpHeaders({
       'Content-Type': 'application/x-www-form-urlencoded',
       'Authorization': 'Basic ' + btoa('front-end:front-end')
@@ -209,13 +209,8 @@ export class TripPlannerComponent implements OnInit {
     "destination": this.pickupOutputElementRef.nativeElement.value,
     "userId": "560c62f4-8612-11e8-adc0-fa7ae01bbebc",
     })
-    console.log(inputElem)
 
-    this.http.post('http://localhost:8080/api/calculationservice/api/v1/cost',inputElem, resOptions).subscribe(res=> {
-      if(res){
-        console.log(JSON.parse(JSON.stringify(res)))
-      }
-    })
+    this.http.post('http://localhost:8080/api/calculationservice/api/v1/cost',inputElem, resOptions).subscribe()
   }
 
   requestHeader(content, authorization){
