@@ -16,6 +16,7 @@ import { NotificationService } from 'app/common/states/notification.service';
 import { EventSourceService } from 'app/common/states/event-source.service';
 import 'rxjs/add/operator/map';
 import { HttpClientModule } from '@angular/common/http';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 
 const routes: Routes = [
     {path: '', redirectTo: 'login', pathMatch: 'full'},
@@ -40,6 +41,7 @@ const routes: Routes = [
     }),
     MatFormFieldModule,
     MatInputModule,
+    MatProgressSpinnerModule,
     HttpModule,
     HttpClientModule
   ],

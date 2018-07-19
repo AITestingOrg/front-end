@@ -26,14 +26,34 @@
     <input placeholder="Enter your destination." autocorrect="off" autocapitalize="off" spellcheck="off" type="text" class="form-control"
       #pickupOutput [formControl]="destinationOutput" size="55">
   </div>
-  <div id="trip-price-estimate" *ngIf="isPriceEstimateAvailable(); else planRoute">
-    <p>Estimated Price: <span id="trip-price">{{ (estimatedPrice | async) }}</span></p>
+  <div id="plan-your-trip" *ngIf="isWaitingForUserInput(); else clickOnTripEstimate">
+    <p>Please select a pickup and destination location</p>
   </div>
-  <ng-template #planRoute>
-    <div id="plan-your-trip">
-      <p>Please select a pickup and destination location.</p>
+  <ng-template #clickOnTripEstimate>
+    <div id="click-get-trip-estimate" *ngIf="isWaitingForPricingCalculationRequest(); else calculatingTrip">
+      <p>If you are ready to go, click <strong>Get Trip Estimate</strong></p>
     </div>
   </ng-template>
-  <app-get-estimate-button label="Get Trip Estimate" color="accent"  (click)="getTripEstimate($event)"></app-get-estimate-button>
-  <app-raised-button label="Find Your Ride" color="primary" (click)="onFindRideClick($event)"></app-raised-button>
+  <ng-template #calculatingTrip>
+    <div id="calculating-trip" *ngIf="isCalculatingPrice(); else planRoute">
+      <p><mat-spinner id="main-progress-spinner" [diameter]="40" [strokeWidth]="3"></mat-spinner> Finding you the best possible trip...give us a second</p>
+    </div>
+  </ng-template>
+  <ng-template #planRoute>
+    <div id="trip-price-estimate" *ngIf="isPriceEstimateAvailable(); else internalServerError">
+      <p>Your trip {{ estimatedTime | async }} minute trip will cost {{ (estimatedPrice | async) }}. When you're ready to go, click <strong>Find Your Ride</strong></p>
+    </div>
+  </ng-template>
+  <ng-template #internalServerError>
+    <div id="encountered-server" *ngIf="encounteredServerError(); else bunnies">
+      <p>{{ title }} encountered a server error. Please retry your operation</p>
+    </div>
+  </ng-template>
+  <ng-template #bunnies>
+    <div id="bunny-proto">
+      <p>Ah snap! The dev screwed up. Err: {{ interactionState }}</p>
+    </div>
+  </ng-template>
+  <app-get-estimate-button label="Get Trip Estimate" color="accent" (click)="getTripEstimate($event)" [disabled]="tripEstimateButtonDisabled()"></app-get-estimate-button>
+  <app-raised-button label="Find Your Ride" color="primary" (click)="onFindRideClick($event)" [disabled]="findYourRideButtonDisabled()"></app-raised-button>
 </mat-card>

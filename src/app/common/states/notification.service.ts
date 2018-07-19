@@ -29,23 +29,18 @@ export class NotificationService {
     private eventSourceService: EventSourceService,
     private zone: NgZone
   ) {
+    this.subject = new BehaviorSubject<any>({ RoutingKey: NotificationService.NOTHING, Data: null});
     this.onInit();
   }
 
   onInit(): void {
-    this.subject = new BehaviorSubject<any>({ RoutingKey: NotificationService.NOTHING, Data: null });
-    this.notificationEvents = this.eventSourceService.forUrl(`http://localhost:32700/events?stream=${this.userId()}`);
+    const currNotificationService = this;
+    this.notificationEvents = this.eventSourceService.forUrl(`http://localhost:32700/events?stream=${this.userId()}`, () => {
+      this.onInit.call(currNotificationService);
+    });
+
     this.notificationEvents.onopen = _ => {
       this._isActive = true;
-    };
-
-    this.notificationEvents.onerror = _ => {
-      this._isActive = false;
-      console.log('SSE Connection failed. Retrying in 1 second...');
-      setTimeout(() => {
-        const currNotificationService = this;
-        this.onInit.call(currNotificationService);
-      }, 1000, this);
     };
 
     this.notificationEvents.onmessage = e => {
@@ -66,12 +61,15 @@ export class NotificationService {
     });
   }
 
-  getCurrentPriceEstimate(updateCallback: () => void): Observable<string> {
-      // Setup Notification server-side event code
-    const observable = this.newObservableForKey(NotificationService.ESTIMATED_PRICE);
-    return observable.map(val => {
-      updateCallback();
+  getCurrentPriceEstimate(): Observable<string> {
+    return this.newObservableForKey(NotificationService.ESTIMATED_PRICE).map(val => {
       return val['cost'].toLocaleString('en-US', { style: 'currency', currency: 'USD' });
+    });
+  }
+
+  getCurrentTimeEstimate(): Observable<number> {
+    return this.newObservableForKey(NotificationService.ESTIMATED_PRICE).map(val => {
+      return val['duration'];
     });
   }
 

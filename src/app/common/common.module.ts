@@ -11,7 +11,8 @@ import { RaisedButtonComponent } from './components/presentation/raised-button/r
 import { BasicButtonComponent } from './components/presentation/basic-button/basic-button.component';
 import { IconButtonComponent } from './components/presentation/icon-button/icon-button.component';
 import { GMapsDirectionsService} from './states/gmaps.service';
-import { MatToolbarModule, MatCheckboxModule, MatButtonModule, MatFormFieldModule, MatFormFieldControl, MatInputModule, MatIconModule, MatCardModule, MatAutocompleteModule } from '@angular/material';
+import { MatToolbarModule, MatCheckboxModule, MatButtonModule, MatFormFieldModule, MatFormFieldControl, MatInputModule, MatIconModule, MatCardModule, MatAutocompleteModule,
+  MatProgressSpinnerModule } from '@angular/material';
 import { HeaderComponent } from './components/presentation/header/header.component';
 import { GetEstimateButtonComponent } from './components/presentation/get-estimate-button/get-estimate-button.component';
 
@@ -28,28 +29,29 @@ import { GetEstimateButtonComponent } from './components/presentation/get-estima
     FormsModule,
     ReactiveFormsModule,
     MatAutocompleteModule,
+    MatProgressSpinnerModule,
     AgmCoreModule,
     RouterModule
   ],
   declarations: [
-    TextBoxComponent, 
-    LoginComponent, 
-    CheckBoxComponent, 
-    ToolbarComponent, 
-    RaisedButtonComponent, 
-    BasicButtonComponent, 
-    IconButtonComponent, 
-    GMapsDirectionsService, 
+    TextBoxComponent,
+    LoginComponent,
+    CheckBoxComponent,
+    ToolbarComponent,
+    RaisedButtonComponent,
+    BasicButtonComponent,
+    IconButtonComponent,
+    GMapsDirectionsService,
     HeaderComponent, GetEstimateButtonComponent
   ],
   exports: [
-    ToolbarComponent, 
+    ToolbarComponent,
     MatCardModule,
     GetEstimateButtonComponent,
-    RaisedButtonComponent, 
-    ReactiveFormsModule, 
-    MatAutocompleteModule, 
-    GMapsDirectionsService, 
+    RaisedButtonComponent,
+    ReactiveFormsModule,
+    MatAutocompleteModule,
+    GMapsDirectionsService,
     HeaderComponent,
     TextBoxComponent,
     FormsModule

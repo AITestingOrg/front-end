@@ -42,7 +42,7 @@ describe('NotificationService', () => {
 
     // Act
     source.emitOpen();
-    const observable = service.getCurrentPriceEstimate(() => {});
+    const observable = service.getCurrentPriceEstimate();
     observable.subscribe(val => {
       // Assert
       expect(val).toBe(expectedCostString);
@@ -70,8 +70,7 @@ describe('NotificationService', () => {
     source.emitMessage(messageA);
     source.emitMessage(messageB);
     setTimeout(() => {
-        const observable = service.getCurrentPriceEstimate(() => {
-        });
+        const observable = service.getCurrentPriceEstimate();
         observable.subscribe(val => {
           // Assert
           expect(val).toBe(expectedCostString);
