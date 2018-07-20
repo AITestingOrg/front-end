@@ -4,6 +4,7 @@ import {isNullOrUndefined} from 'util';
 
 @Injectable()
 export class EventSourceService {
+  readonly TIME_BETWEEN_RETRIES = 3;
   private EventSource: any = window['EventSource'];
   private connections: any = {};
   constructor() { }
@@ -18,9 +19,13 @@ export class EventSourceService {
     return newCon.conn;
   }
 
+  _forUrl(url: string): EventSource {
+    return new this.EventSource(url);
+  }
+
   private createEventStreamConnection(url: string, err: (EventSource) => void) {
     const newCon = {
-      conn: new this.EventSource(url),
+      conn: this._forUrl(url),
       errorHandler: err,
       errorHandlerCalled: false
     };
@@ -30,17 +35,20 @@ export class EventSourceService {
         return;
       }
       newCon.errorHandlerCalled = true;
-      console.log('SSE Connection failed. Retrying in 5 seconds...');
+      console.log(`SSE Connection failed. Retrying in ${this.TIME_BETWEEN_RETRIES} seconds...`);
       let connection = this.connections[url];
       let timeoutCalled = false;
       setTimeout(() => {
         if (connection != null && !timeoutCalled) {
           timeoutCalled = true;
           this.connections[url] = this.createEventStreamConnection(url, err);
-          connection.errorHandler(this.connections[url]);
+          if (typeof connection.errorHandler === 'function') {
+            connection.errorHandler(this.connections[url]);
+          }
+
           connection = null;
         }
-      }, 5000, this);
+      }, this.TIME_BETWEEN_RETRIES * 1000, this);
     };
     return newCon;
   }

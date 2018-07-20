@@ -13,10 +13,32 @@ describe('EventSourceService', () => {
       providers: [EventSourceService]
     });
     eventSourceService = TestBed.get(EventSourceService);
-    spyOn(eventSourceService, 'forUrl').and.returnValue(mockEventSource);
+    spyOn(eventSourceService, '_forUrl').and.returnValue(mockEventSource);
   });
 
   it('should be created', inject([EventSourceService], (service: EventSourceService) => {
     expect(service).toBeTruthy();
   }));
+
+  it('should properly called the error handler', (done => {
+    eventSourceService.forUrl(uri, (eventSource) => {
+      expect(eventSource).toBeTruthy();
+      done();
+    });
+    sources[uri].emitError(null);
+  }));
+
+  it('should properly ignore unspecified error handlers', (done => {
+    eventSourceService.forUrl(uri, null);
+    sources[uri].emitError(null);
+
+    setTimeout(() => {
+      done();
+    }, 3500);
+  }));
+
+  it('should remember the connection after it is made', () => {
+    eventSourceService.forUrl(uri, null);
+    expect(eventSourceService['connections'][uri]).toBeTruthy();
+  });
 });

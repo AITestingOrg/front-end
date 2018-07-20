@@ -35,7 +35,7 @@ export class NotificationService {
     private eventSourceService: EventSourceService,
     private zone: NgZone
   ) {
-    this.subject = new BehaviorSubject<any>({ RoutingKey: NotificationService.NOTHING, Data: null});
+    this.subject = new BehaviorSubject<any>({ RoutingKey: NotificationService.NOTHING, Data: new Route() });
     this.onInit();
   }
 
@@ -72,12 +72,9 @@ export class NotificationService {
 
   listenForRouteUpdates() {
     this._subscription = this.newObservableForKey(NotificationService.ESTIMATED_PRICE).subscribe(next =>
-      this.passengerStore.dispatch(new UpdatePlannedRoute(next as Route)));
-  }
-
-  getCurrentPriceEstimate(): Observable<string> {
-    return this.newObservableForKey(NotificationService.ESTIMATED_PRICE).map(val => {
-      return val['cost'].toLocaleString('en-US', { style: 'currency', currency: 'USD' });
+    {
+      //console.log(next);
+      this.passengerStore.dispatch(new UpdatePlannedRoute(next as Route))
     });
   }
 

@@ -2,13 +2,16 @@ import { TestBed, inject } from '@angular/core/testing';
 import EventSourceMock, { sources } from 'eventsourcemock';
 import { NotificationService } from './notification.service';
 import {EventSourceService} from './event-source.service';
-import {StoreModule} from '@ngrx/store';
+import {Store, StoreModule} from '@ngrx/store';
 import {reducers} from '../../action-reducer-map';
+import {UpdatePlannedRoute} from './actions/notification.action';
 
 describe('NotificationService', () => {
+  const DEFAULT_TIMEOUT = jasmine.DEFAULT_TIMEOUT_INTERVAL;
   let uri: string;
 
   beforeEach(() => {
+    jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000;
     uri = 'http://localhost:1234/events';
     const mockEventSource = new EventSourceMock(uri);
 
@@ -19,6 +22,8 @@ describe('NotificationService', () => {
       providers: [NotificationService, EventSourceService]
     });
     const eventSourceService = TestBed.get(EventSourceService);
+    const store = TestBed.get(Store);
+    spyOn(store, 'dispatch').and.callThrough();
     spyOn(eventSourceService, 'forUrl').and.returnValue(mockEventSource);
   });
 
@@ -35,52 +40,50 @@ describe('NotificationService', () => {
     });
   }
 
-  it('should be able to update', (done) => {
+  it('should use the EventSourceService', () => {
+    const eventSourceService = TestBed.get(EventSourceService);
+    const service = TestBed.get(NotificationService);
+
+    service.onInit();
+
+    expect(eventSourceService.forUrl).toHaveBeenCalled();
+  });
+
+  it('should respond correctly to EventSource failing', () => {
+
+    const service = TestBed.get(NotificationService);
+    const eventSourceService = TestBed.get(EventSourceService);
+    spyOn(service, 'bindToNotificationEventSource').and.callThrough();
+    //spyOn(eventSourceService, 'forUrl');
+
+    service.onInit();
+    sources[uri].emitError(new Event(null, null));
+
+    expect(eventSourceService.forUrl).toHaveBeenCalledTimes(2);
+    expect(service.bindToNotificationEventSource).toHaveBeenCalledTimes(1);
+  });
+
+  it('should be able to update the app state', () => {
     // Arrange
+    const store = TestBed.get(Store);
     const service = TestBed.get(NotificationService);
     const source = sources[uri];
     const expectedCost = 1234.56;
-    const expectedCostString = expectedCost.toLocaleString('en-US', { currency: 'USD', style: 'currency' });
-    const message = mockNotificationEvent(NotificationService.ESTIMATED_PRICE, {
-      cost: expectedCost
-    });
+    let body = {
+      cost: expectedCost,
+      origin: null,
+      destination: null,
+      distance: 0,
+      duration: 0
+    };
+    const message = mockNotificationEvent(NotificationService.ESTIMATED_PRICE, body);
 
     // Act
     source.emitOpen();
-    const observable = service.getCurrentPriceEstimate();
-    observable.subscribe(val => {
-      // Assert
-      expect(val).toBe(expectedCostString);
-      done();
-    });
-
     source.emitMessage(message);
-  });
 
-  it('should use last available value', (done) => {
-    // Arrange
-    const service = TestBed.get(NotificationService);
-    const source = sources[uri];
-    const expectedCost = 1248.16;
-    const expectedCostString = expectedCost.toLocaleString('en-US', { currency: 'USD', style: 'currency' });
-    const messageA = mockNotificationEvent(NotificationService.ESTIMATED_PRICE, {
-      cost: 0.01
-    });
-    const messageB = mockNotificationEvent(NotificationService.ESTIMATED_PRICE, {
-      cost: expectedCost
-    });
-
-    // Act
-    source.emitOpen();
-    source.emitMessage(messageA);
-    source.emitMessage(messageB);
-    setTimeout(() => {
-        const observable = service.getCurrentPriceEstimate();
-        observable.subscribe(val => {
-          // Assert
-          expect(val).toBe(expectedCostString);
-          done();
-        });
-      }, 1000);
+    // Assert
+    expect(service._isActive).toBeTruthy();
+    expect(store.dispatch).toHaveBeenCalledWith(new UpdatePlannedRoute(body));
   });
 });
