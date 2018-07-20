@@ -19,6 +19,8 @@ import { HttpClientModule } from '@angular/common/http';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {reducers} from './action-reducer-map';
 import {StoreDevtoolsModule} from '@ngrx/store-devtools';
+import 'rxjs/add/operator/map';
+import { HttpClientModule } from '@angular/common/http';
 
 const routes: Routes = [
     {path: '', redirectTo: 'login', pathMatch: 'full'},
