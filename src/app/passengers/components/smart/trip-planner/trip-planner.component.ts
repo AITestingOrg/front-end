@@ -137,11 +137,6 @@ export class TripPlannerComponent implements OnInit {
     this.estimatedPrice.subscribe(next => {
       if (!isNullOrUndefined(next)) {
         this.updateInteractionState(FINDING_RIDE_REQUIRED);
-        // if (this.interactionState === TripState.CALCULATING_PRICE || this.interactionState === TripState.SERVER_ERROR) {
-        //         //   this.interactionState = TripState.FINDING_RIDE_REQUIRED;
-        //         // } else {
-        //         //   console.warn(`Refusing to transition UI state to ${TripState.FINDING_RIDE_REQUIRED} from ${this.interactionState}`);
-        //         // }
       } else {
         this.updateInteractionState(SERVER_ERROR);
         console.warn('The notification service encountered an error communicating');
@@ -239,7 +234,6 @@ export class TripPlannerComponent implements OnInit {
     // authPort is in reference to the port that user-service is running on
     // Until user-service is configured we will have to hit directly user service to get JWT token to contact edge-service
     const authPort = '32942';
-    // To-Do: Disable "Find Ride" until inputs are validated
     if (this.tripEstimateButtonDisabled) {
       return;
     }
