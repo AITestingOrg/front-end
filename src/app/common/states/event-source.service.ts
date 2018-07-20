@@ -8,14 +8,14 @@ export class EventSourceService {
   private connections: any = {};
   constructor() { }
 
-  forUrl(url: string, err: () => void): EventSource {
+  forUrl(url: string, err: (EventSource) => void): EventSource {
     if (!isNullOrUndefined(this.connections[url]) && (this.connections[url].conn.readyState !== 2 && this.connections[url].err !== null)) return this.connections[url];
     let newCon = this.createEventStreamConnection(url, err);
     this.connections[url] = newCon;
     return newCon.conn;
   }
 
-  private createEventStreamConnection(url: string, err: () => void) {
+  private createEventStreamConnection(url: string, err: (EventSource) => void) {
     let newCon = {
       conn: new this.EventSource(url),
       errorHandler: err,
@@ -34,7 +34,7 @@ export class EventSourceService {
         if (connection != null && !timeoutCalled) {
           timeoutCalled = true;
           this.connections[url] = this.createEventStreamConnection(url, err);
-          connection.errorHandler();
+          connection.errorHandler(this.connections[url]);
           connection = null;
         }
       }, 5000, this);

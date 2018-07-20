@@ -17,6 +17,8 @@ import { EventSourceService } from 'app/common/states/event-source.service';
 import 'rxjs/add/operator/map';
 import { HttpClientModule } from '@angular/common/http';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import {reducers} from './action-reducer-map';
+import {StoreDevtoolsModule} from '@ngrx/store-devtools';
 
 const routes: Routes = [
     {path: '', redirectTo: 'login', pathMatch: 'full'},
@@ -37,8 +39,8 @@ const routes: Routes = [
       apiKey: 'AIzaSyDPs_IyBxZNsYKEh8JplMe8a91URajuqic',
       libraries: ['places']
     }),
-    StoreModule.forRoot({
-    }),
+    StoreModule.forRoot(reducers),
+    StoreDevtoolsModule.instrument({ maxAge: 25 }),
     MatFormFieldModule,
     MatInputModule,
     MatProgressSpinnerModule,

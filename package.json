@@ -27,6 +27,7 @@
     "@ngrx/core": "^1.2.0",
     "@ngrx/entity": "^4.1.1",
     "@ngrx/store": "^4.1.1",
+    "@ngrx/store-devtools": "^4.1.1",
     "@types/eventsource": "^1.0.2",
     "@types/googlemaps": "^3.30.10",
     "angular-font-awesome": "^3.1.2",

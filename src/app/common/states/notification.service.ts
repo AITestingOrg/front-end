@@ -4,6 +4,10 @@ import 'rxjs/add/operator/filter';
 import * as EventSource from 'eventsource';
 import { EventSourceService } from './event-source.service';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import {Store} from '@ngrx/store';
+import {UpdatePlannedRoute} from './actions/notification.action';
+import {State} from '../../action-reducer-map';
+import {Route} from '../models/route';
 
 @Injectable()
 export class NotificationService {
@@ -24,8 +28,10 @@ export class NotificationService {
   private notificationEvents: EventSource;
   private subject: BehaviorSubject<any>;
   private _isActive = false;
+  private _subscription = null;
 
   constructor(
+    private passengerStore: Store<State>,
     private eventSourceService: EventSourceService,
     private zone: NgZone
   ) {
@@ -35,10 +41,14 @@ export class NotificationService {
 
   onInit(): void {
     const currNotificationService = this;
-    this.notificationEvents = this.eventSourceService.forUrl(`http://localhost:32700/events?stream=${this.userId()}`, () => {
-      this.onInit.call(currNotificationService);
-    });
+    this.bindToNotificationEventSource(this.eventSourceService.forUrl(`http://localhost:32700/events?stream=${this.userId()}`, eventSource => {
+      this.bindToNotificationEventSource.call(currNotificationService, eventSource);
+    }));
+    this.listenForRouteUpdates();
+  }
 
+  private bindToNotificationEventSource(eventSource: EventSource): void {
+    this.notificationEvents = eventSource;
     this.notificationEvents.onopen = _ => {
       this._isActive = true;
     };
@@ -61,15 +71,14 @@ export class NotificationService {
     });
   }
 
+  listenForRouteUpdates() {
+    this._subscription = this.newObservableForKey(NotificationService.ESTIMATED_PRICE).subscribe(next =>
+      this.passengerStore.dispatch(new UpdatePlannedRoute(next as Route)));
+  }
+
   getCurrentPriceEstimate(): Observable<string> {
     return this.newObservableForKey(NotificationService.ESTIMATED_PRICE).map(val => {
       return val['cost'].toLocaleString('en-US', { style: 'currency', currency: 'USD' });
-    });
-  }
-
-  getCurrentTimeEstimate(): Observable<number> {
-    return this.newObservableForKey(NotificationService.ESTIMATED_PRICE).map(val => {
-      return val['duration'];
     });
   }
 

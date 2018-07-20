@@ -17,13 +17,19 @@ import {HttpHeaders, HttpClient} from '@angular/common/http';
 import 'rxjs/add/operator/toPromise';
 // noinspection ES6UnusedImports
 import {} from '@types/googlemaps';
-
-enum TripState {
-  USER_LOCATION_INPUT_REQUIRED,
-  PRICE_CALCULATION_REQUIRED,
+import {
   CALCULATING_PRICE,
   FINDING_RIDE_REQUIRED,
-  SERVER_ERROR
+  PRICE_CALCULATION_REQUIRED,
+  SERVER_ERROR,
+  TripPlannerState,
+  USER_LOCATION_INPUT_REQUIRED
+} from '../../../actions/trip-planner.action';
+import {last} from 'rxjs/operator/last';
+
+interface AppState {
+  tripPlannerState: TripPlannerState;
+  routePlan: Route;
 }
 
 @Component({
@@ -61,10 +67,12 @@ export class TripPlannerComponent implements OnInit {
   public pickupOutputElementRef: ElementRef;
 
   @ViewChild(GMapsDirectionsService) service: GMapsDirectionsService;
-  interactionState: TripState = TripState.USER_LOCATION_INPUT_REQUIRED;
+  interactionState: Observable<TripPlannerState>;
+  currentRoutePlan: Observable<Route>;
 
   constructor(
     private store: Store<MapReducer.State>,
+    private passengerStore: Store<AppState>,
     private ngZone: NgZone,
     private mapsAPILoader: MapsAPILoader,
     private gmapsApi: GoogleMapsAPIWrapper,
@@ -76,6 +84,13 @@ export class TripPlannerComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.interactionState = this.passengerStore.select('tripPlannerState');
+    this.currentRoutePlan = this.passengerStore.select('routePlan');
+
+    this.currentRoutePlan.map(val => {
+      console.log(val.cost);
+    });
+
     // Set Default Map View
     this.setInitialCords().then((cords) => {
       this.latitude = cords.lat;
@@ -112,22 +127,28 @@ export class TripPlannerComponent implements OnInit {
       });
       this.setupPlaceChangedListener(autocompleteInput2, 'pickup');
       this.setupPlaceChangedListener(autocompleteOutput2, 'destination');
+
     });
 
-    this.estimatedPrice = this.notificationService.getCurrentPriceEstimate();
-    this.estimatedTime = this.notificationService.getCurrentTimeEstimate();
+    this.estimatedPrice = this.getCurrentPriceEstimate$();
+    this.estimatedTime = this.getCurrentTimeEstimate$();
     this.estimatedPrice.subscribe(next => {
       if (!isNullOrUndefined(next)) {
-        if (this.interactionState === TripState.CALCULATING_PRICE || this.interactionState === TripState.SERVER_ERROR) {
-          this.interactionState = TripState.FINDING_RIDE_REQUIRED;
-        } else {
-          console.warn(`Refusing to transition UI state to ${TripState.FINDING_RIDE_REQUIRED} from ${this.interactionState}`);
-        }
+        this.updateInteractionState(FINDING_RIDE_REQUIRED);
+        // if (this.interactionState === TripState.CALCULATING_PRICE || this.interactionState === TripState.SERVER_ERROR) {
+        //         //   this.interactionState = TripState.FINDING_RIDE_REQUIRED;
+        //         // } else {
+        //         //   console.warn(`Refusing to transition UI state to ${TripState.FINDING_RIDE_REQUIRED} from ${this.interactionState}`);
+        //         // }
       } else {
-        this.interactionState = TripState.SERVER_ERROR;
+        this.updateInteractionState(SERVER_ERROR);
         console.warn('The notification service encountered an error communicating');
       }
     });
+  }
+
+  private updateInteractionState(type: TripPlannerState) {
+    this.passengerStore.dispatch({type: type});
   }
 
   onPickupTextChange(event) {
@@ -171,9 +192,9 @@ export class TripPlannerComponent implements OnInit {
         }
 
         if (this.pickupLocation !== null && this.destLocation !== null) {
-          this.interactionState = TripState.PRICE_CALCULATION_REQUIRED;
+          this.updateInteractionState(PRICE_CALCULATION_REQUIRED);
         } else {
-          this.interactionState = TripState.USER_LOCATION_INPUT_REQUIRED;
+          this.updateInteractionState(USER_LOCATION_INPUT_REQUIRED);
         }
 
         this.service.updateDirections();
@@ -195,7 +216,7 @@ export class TripPlannerComponent implements OnInit {
   }
 
   onFindRideClick(event) {
-    if (this.findYourRideButtonDisabled()) return;
+    //if (this.findYourRideButtonDisabled$()) return;
 
     const pickupAddress = this.pickupTextboxValue;
     const destinationAddress = this.destinationTextboxValue;
@@ -211,11 +232,10 @@ export class TripPlannerComponent implements OnInit {
   }
 
   getTripEstimate(event) {
-    //authPort is in reference to the port that user-service is running on
-    //Until user-service is configured we will have to hit directly user service to get JWT token to contact edge-service
-    var authPort = "32843"
-  // To-Do: Disable "Find Ride" until inputs are validated
-    if (this.tripEstimateButtonDisabled()) return;
+    // authPort is in reference to the port that user-service is running on
+    // Until user-service is configured we will have to hit directly user service to get JWT token to contact edge-service
+    const authPort = '32942';
+    // To-Do: Disable "Find Ride" until inputs are validated
 
     const headers = new HttpHeaders({
       'Content-Type': 'application/x-www-form-urlencoded',
@@ -229,30 +249,21 @@ export class TripPlannerComponent implements OnInit {
       withCredentials: true
     };
 
-   this.http.post(`http://localhost:${authPort}/auth/oauth/token`, data, options).subscribe(res => {
-     if(res){
-       localStorage.setItem("accessToken", (res as any).access_token)
-     }
-   })
-
-   this.postToCalculationService()
-}
-    this.interactionState = TripState.CALCULATING_PRICE;
-    this.http.post('http://localhost:32933/auth/oauth/token', data, options).subscribe(res => {
+    this.updateInteractionState(CALCULATING_PRICE);
+    this.http.post(`http://localhost:${authPort}/auth/oauth/token`, data, options).subscribe(res => {
       if (res) {
         localStorage.setItem('accessToken', (res as any).access_token);
         this.postToCalculationService();
       }
     }, err => {
-      this.interactionState = TripState.SERVER_ERROR;
-      console.warn(`Failed to communicate with the user service. Err: ${err}`);
+      this.updateInteractionState(SERVER_ERROR);
+      console.warn(`Failed to communicate with the user service. Err: ${JSON.stringify(err)}`);
     });
   }
 
 // Request to communicate with calculation service via JWT token
-  postToCalculationService = function(){
-    const token = localStorage.getItem("accessToken");
-    const headers = this.requestHeader("application/json", "Bearer")
+  postToCalculationService() {
+    const headers = this.requestHeaders("application/json", "Bearer");
     const resOptions = {
       headers,
       withCredentials: true,
@@ -265,60 +276,35 @@ export class TripPlannerComponent implements OnInit {
       'userId': '560c62f4-8612-11e8-adc0-fa7ae01bbebc'
     });
 
-    this.http.post('http://localhost:8080/api/calculationservice/api/v1/cost',inputElem, resOptions).subscribe()
-  }
-
-  requestHeader(content, authorization){
-    const Content_type = content;
-    const Authorization = authorization;
-    const token = localStorage.getItem("accessToken");
-    const headers = new HttpHeaders({
-      'Content-Type': Content_type,
-      'Authorization': Authorization +" "+ token
-      });
-
-  }
     this.http.post('http://localhost:8080/api/calculationservice/api/v1/cost', inputElem, resOptions).subscribe(() => {}, err => {
-      this.interactionState = TripState.SERVER_ERROR;
+      this.updateInteractionState(SERVER_ERROR);
       console.warn(`Failed to communicate with edge service. Err: ${JSON.stringify(err)}`);
     });
-  };
-
-  // To-Do: Disable "Find Ride" until inputs are validated
-  validateInputs(): boolean {
-    return (TripPlannerComponent.validateInput(this.destinationInput.value) || TripPlannerComponent.validateInput(this.pickupTextboxValue)) &&
-      (TripPlannerComponent.validateInput(this.destinationOutput.value) || TripPlannerComponent.validateInput(this.destinationTextboxValue));
   }
 
-  private static validateInput(controlValue: string): boolean {
-    return controlValue !== null && controlValue !== '';
+  requestHeaders(contentType, authorization: string): HttpHeaders {
+    const token = localStorage.getItem("accessToken");
+    return new HttpHeaders({
+      'Content-Type': contentType,
+      'Authorization': `${authorization} ${token}`
+    });
   }
 
-  tripEstimateButtonDisabled(): boolean {
-    return this.interactionState != TripState.PRICE_CALCULATION_REQUIRED && this.interactionState != TripState.SERVER_ERROR;
+  tripEstimateButtonDisabled$(): Observable<boolean> {
+    return this.interactionState.map(state => state !== PRICE_CALCULATION_REQUIRED && state !== SERVER_ERROR);
+    // return this.interactionState != TripState.PRICE_CALCULATION_REQUIRED && this.interactionState != TripState.SERVER_ERROR;
   }
 
-  findYourRideButtonDisabled() {
-    return this.interactionState !== TripState.FINDING_RIDE_REQUIRED;
+  findYourRideButtonDisabled$(): Observable<boolean> {
+    return this.interactionState.map(state => state !== FINDING_RIDE_REQUIRED);
+    // return this.interactionState !== TripState.FINDING_RIDE_REQUIRED;
   }
 
-  isPriceEstimateAvailable() {
-    return this.interactionState === TripState.FINDING_RIDE_REQUIRED;
+  private getCurrentPriceEstimate$() {
+    return this.currentRoutePlan.map(val => val.cost.toLocaleString('en-US', { style: 'currency', currency: 'USD' }));
   }
 
-  isCalculatingPrice(): boolean {
-    return this.interactionState === TripState.CALCULATING_PRICE;
-  }
-
-  isWaitingForUserInput(): boolean {
-    return this.interactionState ===  TripState.USER_LOCATION_INPUT_REQUIRED;
-  }
-
-  isWaitingForPricingCalculationRequest(): boolean {
-    return this.interactionState === TripState.PRICE_CALCULATION_REQUIRED;
-  }
-
-  encounteredServerError(): boolean {
-    return this.interactionState === TripState.SERVER_ERROR;
+  private getCurrentTimeEstimate$() {
+    return this.currentRoutePlan.map(route => route.duration);
   }
 }
