@@ -9,14 +9,17 @@ export class EventSourceService {
   constructor() { }
 
   forUrl(url: string, err: (EventSource) => void): EventSource {
-    if (!isNullOrUndefined(this.connections[url]) && (this.connections[url].conn.readyState !== 2 && this.connections[url].err !== null)) return this.connections[url];
-    let newCon = this.createEventStreamConnection(url, err);
+    if (!isNullOrUndefined(this.connections[url]) && (this.connections[url].conn.readyState !== 2 && this.connections[url].err !== null))  {
+      return this.connections[url];
+    }
+
+    const newCon = this.createEventStreamConnection(url, err);
     this.connections[url] = newCon;
     return newCon.conn;
   }
 
   private createEventStreamConnection(url: string, err: (EventSource) => void) {
-    let newCon = {
+    const newCon = {
       conn: new this.EventSource(url),
       errorHandler: err,
       errorHandlerCalled: false

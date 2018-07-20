@@ -39,7 +39,7 @@ interface AppState {
 })
 export class TripPlannerComponent implements OnInit {
 
-  title: string = 'Trip Planner';
+  title = 'Trip Planner';
 
   @Input() private latitude: number;
   @Input() private longitude: number;
@@ -218,7 +218,9 @@ export class TripPlannerComponent implements OnInit {
   }
 
   onFindRideClick(event) {
-    if (this.findYourRideButtonDisabled) return;
+    if (this.findYourRideButtonDisabled) {
+      return;
+    }
 
     const pickupAddress = this.pickupTextboxValue;
     const destinationAddress = this.destinationTextboxValue;
@@ -238,7 +240,9 @@ export class TripPlannerComponent implements OnInit {
     // Until user-service is configured we will have to hit directly user service to get JWT token to contact edge-service
     const authPort = '32942';
     // To-Do: Disable "Find Ride" until inputs are validated
-    if (this.tripEstimateButtonDisabled) return;
+    if (this.tripEstimateButtonDisabled) {
+      return;
+    }
 
     const headers = new HttpHeaders({
       'Content-Type': 'application/x-www-form-urlencoded',
@@ -266,7 +270,7 @@ export class TripPlannerComponent implements OnInit {
 
 // Request to communicate with calculation service via JWT token
   postToCalculationService() {
-    const headers = this.requestHeaders("application/json", "Bearer");
+    const headers = this.requestHeaders('application/json', 'Bearer');
     const resOptions = {
       headers,
       withCredentials: true,
@@ -286,7 +290,7 @@ export class TripPlannerComponent implements OnInit {
   }
 
   requestHeaders(contentType, authorization: string): HttpHeaders {
-    const token = localStorage.getItem("accessToken");
+    const token = localStorage.getItem('accessToken');
     return new HttpHeaders({
       'Content-Type': contentType,
       'Authorization': `${authorization} ${token}`

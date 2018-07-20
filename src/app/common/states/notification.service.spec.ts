@@ -2,6 +2,8 @@ import { TestBed, inject } from '@angular/core/testing';
 import EventSourceMock, { sources } from 'eventsourcemock';
 import { NotificationService } from './notification.service';
 import {EventSourceService} from './event-source.service';
+import {StoreModule} from '@ngrx/store';
+import {reducers} from '../../action-reducer-map';
 
 describe('NotificationService', () => {
   let uri: string;
@@ -11,6 +13,9 @@ describe('NotificationService', () => {
     const mockEventSource = new EventSourceMock(uri);
 
     TestBed.configureTestingModule({
+      imports: [
+        StoreModule.forRoot({reducers})
+      ],
       providers: [NotificationService, EventSourceService]
     });
     const eventSourceService = TestBed.get(EventSourceService);

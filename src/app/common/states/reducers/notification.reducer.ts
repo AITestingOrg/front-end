@@ -9,8 +9,7 @@ initialState.duration = 0;
 export function notificationReducer(state: Route = initialState, action: PlannedRouteAction): Route {
   switch (action.type) {
     case 'UPDATE_ROUTE':
-      let action1 = (action as UpdatePlannedRoute);
-      return action1.data;
+      return (action as UpdatePlannedRoute).data;
 
     default:
       return state;

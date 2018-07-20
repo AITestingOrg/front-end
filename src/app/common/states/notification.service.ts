@@ -41,9 +41,8 @@ export class NotificationService {
 
   onInit(): void {
     const currNotificationService = this;
-    this.bindToNotificationEventSource(this.eventSourceService.forUrl(`http://localhost:32700/events?stream=${this.userId()}`, eventSource => {
-      this.bindToNotificationEventSource.call(currNotificationService, eventSource);
-    }));
+    this.bindToNotificationEventSource(this.eventSourceService.forUrl(`http://localhost:32700/events?stream=${this.userId()}`,
+        eventSource => this.bindToNotificationEventSource.call(currNotificationService, eventSource)));
     this.listenForRouteUpdates();
   }
 
