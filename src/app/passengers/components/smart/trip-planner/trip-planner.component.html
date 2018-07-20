@@ -46,6 +46,6 @@
       <p>Ah snap! The dev screwed up. Err: {{ interactionState | async }}</p>
     </div>
   </div>
-  <app-get-estimate-button label="Get Trip Estimate" color="accent" (click)="getTripEstimate($event)" [disabled]="tripEstimateButtonDisabled$() | async"></app-get-estimate-button>
-  <app-raised-button label="Find Your Ride" color="primary" (click)="onFindRideClick($event)" [disabled]="findYourRideButtonDisabled$() | async"></app-raised-button>
+  <app-get-estimate-button label="Get Trip Estimate" color="accent" (click)="getTripEstimate($event)" [disabled]="isTripEstimateButtonDisabled$() | async"></app-get-estimate-button>
+  <app-raised-button label="Find Your Ride" color="primary" (click)="onFindRideClick($event)" [disabled]="isFindYourRideButtonDisabled$() | async"></app-raised-button>
 </mat-card>

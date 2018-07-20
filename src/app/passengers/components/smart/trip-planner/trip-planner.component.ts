@@ -69,6 +69,8 @@ export class TripPlannerComponent implements OnInit {
   @ViewChild(GMapsDirectionsService) service: GMapsDirectionsService;
   interactionState: Observable<TripPlannerState>;
   currentRoutePlan: Observable<Route>;
+  private tripEstimateButtonDisabled: boolean;
+  private findYourRideButtonDisabled: boolean;
 
   constructor(
     private store: Store<MapReducer.State>,
@@ -216,7 +218,7 @@ export class TripPlannerComponent implements OnInit {
   }
 
   onFindRideClick(event) {
-    //if (this.findYourRideButtonDisabled$()) return;
+    if (this.findYourRideButtonDisabled) return;
 
     const pickupAddress = this.pickupTextboxValue;
     const destinationAddress = this.destinationTextboxValue;
@@ -236,6 +238,7 @@ export class TripPlannerComponent implements OnInit {
     // Until user-service is configured we will have to hit directly user service to get JWT token to contact edge-service
     const authPort = '32942';
     // To-Do: Disable "Find Ride" until inputs are validated
+    if (this.tripEstimateButtonDisabled) return;
 
     const headers = new HttpHeaders({
       'Content-Type': 'application/x-www-form-urlencoded',
@@ -290,14 +293,22 @@ export class TripPlannerComponent implements OnInit {
     });
   }
 
-  tripEstimateButtonDisabled$(): Observable<boolean> {
-    return this.interactionState.map(state => state !== PRICE_CALCULATION_REQUIRED && state !== SERVER_ERROR);
-    // return this.interactionState != TripState.PRICE_CALCULATION_REQUIRED && this.interactionState != TripState.SERVER_ERROR;
+  isTripEstimateButtonDisabled$(): Observable<boolean> {
+    return this.interactionState
+      .map(state => state !== PRICE_CALCULATION_REQUIRED && state !== SERVER_ERROR)
+      .filter(val => {
+        this.tripEstimateButtonDisabled = val;
+        return val;
+      });
   }
 
-  findYourRideButtonDisabled$(): Observable<boolean> {
-    return this.interactionState.map(state => state !== FINDING_RIDE_REQUIRED);
-    // return this.interactionState !== TripState.FINDING_RIDE_REQUIRED;
+  isFindYourRideButtonDisabled$(): Observable<boolean> {
+    return this.interactionState
+      .map(state => state !== FINDING_RIDE_REQUIRED)
+      .filter(val => {
+        this.findYourRideButtonDisabled = val;
+        return val;
+      });
   }
 
   private getCurrentPriceEstimate$() {

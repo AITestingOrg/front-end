@@ -1,5 +1,4 @@
 import { Component, OnInit, Input, Output, HostListener, EventEmitter } from '@angular/core';
-import { RouterModule, Routes} from '@angular/router';
 
 @Component({
   selector: 'app-get-estimate-button',
@@ -20,7 +19,6 @@ export class GetEstimateButtonComponent implements OnInit {
   }
 
   click(event) {
-    this.clickEvent.emit(event);
+    //this.clickEvent.emit(event);
   }
-
 }

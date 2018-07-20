@@ -23,7 +23,7 @@ import { GetEstimateButtonComponent } from './components/presentation/get-estima
     MatCheckboxModule,
     MatButtonModule,
     MatFormFieldModule,
-    MatInputModule, 
+    MatInputModule,
     MatIconModule,
     MatCardModule,
     FormsModule,
@@ -42,7 +42,8 @@ import { GetEstimateButtonComponent } from './components/presentation/get-estima
     BasicButtonComponent,
     IconButtonComponent,
     GMapsDirectionsService,
-    HeaderComponent, GetEstimateButtonComponent
+    HeaderComponent,
+    GetEstimateButtonComponent
   ],
   exports: [
     ToolbarComponent,
