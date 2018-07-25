@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ElementRef, NgZone, ViewChild } from '@angular/core';
+import { Component, OnInit, Input, ElementRef, NgZone, ViewChild, Output } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { GoogleMapsAPIWrapper, MapsAPILoader } from '@agm/core';
 import { GMapsDirectionsService } from 'app/common/states/gmaps.service';
@@ -33,7 +33,9 @@ export class TripPlannerComponent implements OnInit {
   @Input() private destinationOutput: FormControl;
   private estimatedTime: any;
   private estimatedDistance: any;
-  private geocoder: any;
+  private isFirstClick = true;
+  private address : string;
+  private geocoder : any;
   directionsDisplay: any;
   originLatitude: Observable<number>;
   originLongitude: Observable<number>;
@@ -170,11 +172,40 @@ export class TripPlannerComponent implements OnInit {
     this.store.dispatch(new MapActions.AddLocation(map));
   }
 
+  getGeoCode($event){
+    let lat = $event.coords.lat;
+    let lng = $event.coords.lng;
+    let latlng = {lat: lat, lng: lng}
+    
+    let geocoder = new google.maps.Geocoder;
+
+    geocoder.geocode({'location': latlng}, (res, status) =>{
+        if(status !== google.maps.GeocoderStatus.OK){
+          alert(status)
+        }else{
+          this.callback(res[0].formatted_address)
+        }
+    });
+}
+
+  callback(result){
+    this.ngZone.run(()=> {
+      if(this.isFirstClick){
+        this.pickupInputElementRef.nativeElement.value = result;
+        this.isFirstClick = false;
+      }else{
+        this.pickupOutputElementRef.nativeElement.value = result;
+        this.isFirstClick = true;
+      }
+    })
+}
+
+
   getTripEstimate(event){
     var res;
     //authPort is in reference to the port that user-service is running on
     //Until user-service is configured we will have to hit directly user service to get JWT token to contact edge-service
-    var authPort = "32843"
+    var authPort = "32769"
     const headers = new HttpHeaders({
       'Content-Type': 'application/x-www-form-urlencoded',
       'Authorization': 'Basic ' + btoa('front-end:front-end')
@@ -203,6 +234,7 @@ export class TripPlannerComponent implements OnInit {
     headers,
     withCredentials: true
     };
+    
 
     const inputElem = JSON.stringify({
     "origin": this.pickupInputElementRef.nativeElement.value,
