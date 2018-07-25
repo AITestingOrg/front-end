@@ -19,7 +19,9 @@ import {HttpClientModule} from '@angular/common/http';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {reducers} from './action-reducer-map';
 import {StoreDevtoolsModule} from '@ngrx/store-devtools';
+import {FormsModule} from '@angular/forms';
 import 'rxjs/add/operator/map';
+import { AuthenticationService } from './common/states/authentication.service';
 
 const routes: Routes = [
   {path: '', redirectTo: 'login', pathMatch: 'full'},
@@ -35,6 +37,7 @@ const routes: Routes = [
     BrowserModule,
     BrowserAnimationsModule,
     FeCommonModule,
+    FormsModule,
     RouterModule.forRoot(routes),
     AgmCoreModule.forRoot({
       apiKey: 'AIzaSyDPs_IyBxZNsYKEh8JplMe8a91URajuqic',
@@ -49,7 +52,7 @@ const routes: Routes = [
     HttpClientModule
   ],
   providers: [
-    GoogleMapsAPIWrapper, GMapsDirectionsService, NotificationService, EventSourceService
+    GoogleMapsAPIWrapper, GMapsDirectionsService, NotificationService, EventSourceService, AuthenticationService
   ],
   bootstrap: [AppComponent]
 })
