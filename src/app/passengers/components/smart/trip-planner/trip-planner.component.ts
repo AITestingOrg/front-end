@@ -175,31 +175,35 @@ export class TripPlannerComponent implements OnInit {
         if (place.geometry === undefined) {
           return;
         }
-        if (inputType === 'pickup') {
-          this.service.origin = {longitude: place.geometry.location.lng(), latitude: place.geometry.location.lat()};
-          this.service.originPlaceId = place.place_id;
-          this.pickupLocation = place.place_id;
-        } else {
-          this.service.destination = {longitude: place.geometry.location.lng(), latitude: place.geometry.location.lat()};
-          this.service.destinationPlaceId = place.place_id;
-          this.destLocation = place.place_id;
-        }
-        if (this.service.directionsDisplay === undefined) {
-          this.mapsAPILoader.load().then(() => {
-            this.service.directionsDisplay = new google.maps.DirectionsRenderer;
-          });
-        }
-
-        if (this.pickupLocation !== null && this.destLocation !== null) {
-          this.updateInteractionState(PRICE_CALCULATION_REQUIRED);
-        } else {
-          this.updateInteractionState(USER_LOCATION_INPUT_REQUIRED);
-        }
-
-        this.service.updateDirections();
-        this.zoom = 12;
+        this.updateLocations(inputType, place);
       });
     });
+  }
+
+  private updateLocations(inputType: string, place) {
+    if (inputType === 'pickup') {
+      this.service.origin = {longitude: place.geometry.location.lng(), latitude: place.geometry.location.lat()};
+      this.service.originPlaceId = place.place_id;
+      this.pickupLocation = place.place_id;
+    } else {
+      this.service.destination = {longitude: place.geometry.location.lng(), latitude: place.geometry.location.lat()};
+      this.service.destinationPlaceId = place.place_id;
+      this.destLocation = place.place_id;
+    }
+    if (this.service.directionsDisplay === undefined) {
+      this.mapsAPILoader.load().then(() => {
+        this.service.directionsDisplay = new google.maps.DirectionsRenderer;
+      });
+    }
+
+    if (this.pickupLocation !== null && this.destLocation !== null) {
+      this.updateInteractionState(PRICE_CALCULATION_REQUIRED);
+    } else {
+      this.updateInteractionState(USER_LOCATION_INPUT_REQUIRED);
+    }
+
+    this.service.updateDirections();
+    this.zoom = 12;
   }
 
   setInitialCords(): any {
@@ -243,18 +247,20 @@ export class TripPlannerComponent implements OnInit {
         if(status !== google.maps.GeocoderStatus.OK){
           alert(status)
         }else{
-          this.callback(res[0].formatted_address)
+          this.callback(res[0])
         }
     });
 }
 
-  callback(result){
+  callback(result: google.maps.GeocoderResult) {
     this.ngZone.run(()=> {
       if(this.isFirstClick){
-        this.pickupInputElementRef.nativeElement.value = result;
+        this.pickupInputElementRef.nativeElement.value = result.formatted_address;
+        this.updateLocations('pickup', result);
         this.isFirstClick = false;
       }else{
-        this.pickupOutputElementRef.nativeElement.value = result;
+        this.pickupOutputElementRef.nativeElement.value = result.formatted_address;
+        this.updateLocations('dest', result);
         this.isFirstClick = true;
       }
     })
@@ -265,7 +271,7 @@ export class TripPlannerComponent implements OnInit {
     var res;
     //authPort is in reference to the port that user-service is running on
     //Until user-service is configured we will have to hit directly user service to get JWT token to contact edge-service
-    var authPort = "32779"
+    var authPort = '32839';
     const headers = new HttpHeaders({
       'Content-Type': 'application/x-www-form-urlencoded',
       'Authorization': 'Basic ' + btoa('front-end:front-end')
