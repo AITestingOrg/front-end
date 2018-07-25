@@ -1,24 +1,9 @@
 <mat-card>
   <h1>{{ title }}</h1>
   <div class="container">
-    <agm-map [latitude]="latitude" [longitude]="longitude" [zoom]="zoom">
+    <agm-map [latitude]="latitude" [longitude]="longitude" [zoom]="zoom" (mapClick)="getGeoCode($event)">
       <div appDirectionsService></div>
     </agm-map>
-  </div>
-  <div class="inprogress">
-    <app-text-box placeholder="Enter your pickup location."
-    icon="my_location"
-    ngDefaultControl
-    [(ngModel)]="pickupTextboxValue"
-    (ngModelChange)="onPickupTextChange($event)">
-    </app-text-box>
-    <p>{{originLatitude}}</p>
-    <app-text-box placeholder="Enter your destination."
-    icon="place"
-    ngDefaultControl
-    [(ngModel)]="destinationTextboxValue"
-    (ngModelChange)="onDestinationTextChange($event)">
-    </app-text-box>
   </div>
   <div class="trip-inputs">
     <input placeholder="Enter your pickup location." autocorrect="off" autocapitalize="off" spellcheck="off" type="text" class="form-control"
