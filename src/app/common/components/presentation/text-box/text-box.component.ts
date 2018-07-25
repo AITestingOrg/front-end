@@ -14,8 +14,6 @@ export class TextBoxComponent implements OnInit, OnChanges {
   @Input() private textboxValue: string;
   ngOnChanges(changes: SimpleChanges): void {}
 
-  //@Output() textboxChange: EventEmitter<String> = new EventEmitter<String>();
-
   constructor() { }
 
   ngOnInit() {}

@@ -5,19 +5,6 @@
       <div appDirectionsService></div>
     </agm-map>
   </div>
-  <!-- <div class="inprogress">
-    <app-text-box placeholder="Enter your pickup location."
-    icon="my_location"
-    ngDefaultControl
-    [textboxValue]="pickupTextboxValue">
-    </app-text-box>
-    <p>{{originLatitude}}</p>
-    <app-text-box placeholder="Enter your destination."
-    icon="place"
-    ngDefaultControl
-    [textboxValue]="destinationTextboxValue">
-    </app-text-box>
-  </div> -->
   <div class="trip-inputs">
     <input placeholder="Enter your pickup location." autocorrect="off" autocapitalize="off" spellcheck="off" type="text" class="form-control"
       #pickupInput [formControl]="destinationInput" size="55">
