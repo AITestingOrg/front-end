@@ -35,17 +35,15 @@ export class AuthenticationService {
             this.edgeServiceUrl,
             params.toString(),
             requestOptions,
-        ).subscribe();
-            // data => this.saveToken((data as any).access_token),
-            // err => {
-            //     alert('Invalid credientals');
-            //     console.warn(`Failed to communicated with the user service. Err: ${JSON.stringify(err)}`);
-            // });
-    }
-
-    saveToken(token) {
-        localStorage.setItem('accessToken', token);
-        console.log(token);
+        ).subscribe(
+            data => {
+                localStorage.setItem('accessToken', (data as any).access_token);
+                console.log((data as any).access_token);
+            },
+            err => {
+                alert('Invalid credientals');
+                console.warn(`Failed to communicated with the user service. Err: ${JSON.stringify(err)}`);
+            });
     }
 
     checkCredentials() {

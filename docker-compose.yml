@@ -39,6 +39,8 @@ services:
       - mysqlserver
     ports:
       - '8080'
+    environment:
+       - RABBIT_HOST=rabbitmq
 
   calculationservice:
     depends_on:

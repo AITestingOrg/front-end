@@ -247,7 +247,7 @@ export class TripPlannerComponent implements OnInit {
     const inputElem = JSON.stringify({
       'origin': this.pickupInputElementRef.nativeElement.value,
       'destination': this.pickupOutputElementRef.nativeElement.value,
-      'userId': '560c62f4-8612-11e8-adc0-fa7ae01bbebc'
+      'userId': '31323365-3435-3637-2d65-3839622d3132'
     });
 
     this.http.post('http://localhost:8080/api/calculationservice/api/v1/cost', inputElem, resOptions).subscribe(() => {}, err => {

@@ -15,6 +15,7 @@ export class LoginComponent {
 
   login() {
     this._service.obtainAccessToken(this.loginData);
+    this._service.checkCredentials();
   }
 
   register() {}

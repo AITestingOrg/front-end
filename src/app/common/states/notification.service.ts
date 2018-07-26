@@ -71,15 +71,13 @@ export class NotificationService {
   }
 
   listenForRouteUpdates() {
-    this._subscription = this.newObservableForKey(NotificationService.ESTIMATED_PRICE).subscribe(next =>
-    {
-      //console.log(next);
-      this.passengerStore.dispatch(new UpdatePlannedRoute(next as Route))
+    this._subscription = this.newObservableForKey(NotificationService.ESTIMATED_PRICE).subscribe(next => {
+      this.passengerStore.dispatch(new UpdatePlannedRoute(next as Route));
     });
   }
 
   private userId() {
-      return '560c62f4-8612-11e8-adc0-fa7ae01bbebc';
+      return '31323365-3435-3637-2d65-3839622d3132';
   }
 }
 
