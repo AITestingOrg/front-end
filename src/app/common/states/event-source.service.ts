@@ -41,9 +41,13 @@ export class EventSourceService {
       setTimeout(() => {
         if (connection != null && !timeoutCalled) {
           timeoutCalled = true;
+          // Manually close the instance, just in case it is still open (happens with ERR_CONNECTION_REFUSED)
+          if (connection.conn.readyState !== 2) {
+            connection.conn.close();
+          }
           this.connections[url] = this.createEventStreamConnection(url, err);
           if (typeof connection.errorHandler === 'function') {
-            connection.errorHandler(this.connections[url]);
+            connection.errorHandler(this.connections[url].conn);
           }
 
           connection = null;
