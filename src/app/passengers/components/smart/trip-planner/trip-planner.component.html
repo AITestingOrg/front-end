@@ -22,7 +22,7 @@
       <p><mat-spinner id="main-progress-spinner" [diameter]="40" [strokeWidth]="3"></mat-spinner> Finding you the best possible trip...give us a second</p>
     </div>
     <div id="trip-price-estimate" *ngSwitchCase="'FINDING_RIDE_REQUIRED'">
-      <p>Your trip {{ estimatedTime | async }} minute trip will cost {{ (estimatedPrice | async) }}. When you're ready to go, click <strong>Find Your Ride</strong></p>
+      <p>Your {{ estimatedTime | async }} minute trip will cost {{ (estimatedPrice | async) }}. When you're ready to go, click <strong>Find Your Ride</strong></p>
     </div>
     <div id="encountered-server" *ngSwitchCase="'SERVER_ERROR'">
       <p>{{ title }} encountered a server error. Please retry your operation</p>
