@@ -14,12 +14,12 @@ import {GMapsDirectionsService} from 'app/common/states/gmaps.service';
 import {HttpModule} from '@angular/http';
 import {NotificationService} from 'app/common/states/notification.service';
 import {EventSourceService} from 'app/common/states/event-source.service';
-import 'rxjs/add/operator/map';
+
 import {HttpClientModule} from '@angular/common/http';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {reducers} from './action-reducer-map';
 import {StoreDevtoolsModule} from '@ngrx/store-devtools';
-import 'rxjs/add/operator/map';
+
 
 const routes: Routes = [
   {path: '', redirectTo: 'login', pathMatch: 'full'},

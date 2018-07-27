@@ -1,7 +1,7 @@
 import { GoogleMapsAPIWrapper, MapsAPILoader } from '@agm/core';
 import { Directive, Input, Output } from '@angular/core';
 import { Http } from '@angular/http';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { Location } from 'app/common/models/location';
 
 declare var google: any;

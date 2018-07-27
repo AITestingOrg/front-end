@@ -4,7 +4,8 @@ import {FormControl} from '@angular/forms';
 import {} from '@types/googlemaps';
 import {GoogleMapsAPIWrapper, MapsAPILoader} from '@agm/core';
 import {GMapsDirectionsService} from 'app/common/states/gmaps.service';
-import {Observable} from 'rxjs/Observable';
+import {Observable} from 'rxjs';
+import { map, filter } from 'rxjs/operators';
 import {Store} from '@ngrx/store';
 import * as MapActions from 'app/common/states/actions/map.action';
 import * as MapReducer from 'app/common/states/reducers/map.reducer';
@@ -14,7 +15,7 @@ import {Location} from 'app/common/models/location';
 import {NotificationService} from '../../../../common/states/notification.service';
 import {isNullOrUndefined} from 'util';
 import {HttpHeaders, HttpClient} from '@angular/common/http';
-import 'rxjs/add/operator/toPromise';
+
 // noinspection ES6UnusedImports
 import {} from '@types/googlemaps';
 import {
@@ -25,7 +26,7 @@ import {
   TripPlannerState,
   USER_LOCATION_INPUT_REQUIRED
 } from '../../../actions/trip-planner.action';
-import {last} from 'rxjs/operator/last';
+
 
 interface AppState {
   tripPlannerState: TripPlannerState;
@@ -91,9 +92,9 @@ export class TripPlannerComponent implements OnInit {
     this.interactionState = this.passengerStore.select('tripPlannerState');
     this.currentRoutePlan = this.passengerStore.select('routePlan');
 
-    this.currentRoutePlan.map(val => {
+    this.currentRoutePlan.pipe(map(val => {
       console.log(val.cost);
-    });
+    }));
 
     // Set Default Map View
     this.setInitialCords().then((cords) => {
@@ -240,7 +241,7 @@ export class TripPlannerComponent implements OnInit {
     let lat = $event.coords.lat;
     let lng = $event.coords.lng;
     let latlng = {lat: lat, lng: lng}
-    
+
     let geocoder = new google.maps.Geocoder;
 
     geocoder.geocode({'location': latlng}, (res, status) =>{
@@ -271,7 +272,7 @@ export class TripPlannerComponent implements OnInit {
     var res;
     //authPort is in reference to the port that user-service is running on
     //Until user-service is configured we will have to hit directly user service to get JWT token to contact edge-service
-    var authPort = '32839';
+    var authPort = '32785';
     const headers = new HttpHeaders({
       'Content-Type': 'application/x-www-form-urlencoded',
       'Authorization': 'Basic ' + btoa('front-end:front-end')
@@ -304,7 +305,7 @@ export class TripPlannerComponent implements OnInit {
       withCredentials: true,
       responseType: 'text' as 'text'
     };
-    
+
 
     const inputElem = JSON.stringify({
       'origin': this.pickupInputElementRef.nativeElement.value,
@@ -328,27 +329,29 @@ export class TripPlannerComponent implements OnInit {
 
   isTripEstimateButtonDisabled$(): Observable<boolean> {
     return this.interactionState
-      .map(state => state !== PRICE_CALCULATION_REQUIRED && state !== SERVER_ERROR)
-      .filter(val => {
-        this.tripEstimateButtonDisabled = val;
-        return val;
-      });
+      .pipe(map(state => state !== PRICE_CALCULATION_REQUIRED && state !== SERVER_ERROR)).pipe(
+        filter(val => {
+          this.tripEstimateButtonDisabled = val;
+          return val;
+        })
+      )
   }
 
   isFindYourRideButtonDisabled$(): Observable<boolean> {
     return this.interactionState
-      .map(state => state !== FINDING_RIDE_REQUIRED)
-      .filter(val => {
-        this.findYourRideButtonDisabled = val;
-        return val;
-      });
+      .pipe(map(state => state !== FINDING_RIDE_REQUIRED)).pipe(
+        filter(val => {
+          this.findYourRideButtonDisabled = val;
+          return val;
+        })
+      )
   }
 
   private getCurrentPriceEstimate$() {
-    return this.currentRoutePlan.map(val => val.cost.toLocaleString('en-US', { style: 'currency', currency: 'USD' }));
+    return this.currentRoutePlan.pipe(map(val => val.cost.toLocaleString('en-US', { style: 'currency', currency: 'USD' })));
   }
 
   private getCurrentTimeEstimate$() {
-    return this.currentRoutePlan.map(route => route.duration);
+    return this.currentRoutePlan.pipe(map(route => route.duration));
   }
 }
