@@ -17,7 +17,7 @@ describe('NotificationService', () => {
 
     TestBed.configureTestingModule({
       imports: [
-        StoreModule.forRoot({reducers})
+        StoreModule.forRoot(reducers)
       ],
       providers: [NotificationService, EventSourceService]
     });
