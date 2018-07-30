@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpHeaders, HttpClient, HttpParams } from '@angular/common/http';
+import { JwtHelper } from 'angular2-jwt';
 
 @Injectable()
 export class AuthenticationService {
@@ -37,8 +38,9 @@ export class AuthenticationService {
             requestOptions,
         ).subscribe(
             data => {
-                localStorage.setItem('accessToken', (data as any).access_token);
-                console.log((data as any).access_token);
+                const token = (data as any).access_token;
+                localStorage.setItem('accessToken', token);
+                localStorage.setItem('userId', this.getUserId(token));
             },
             err => {
                 alert('Invalid credientals');
@@ -51,6 +53,12 @@ export class AuthenticationService {
         if (token != null) {
             this._router.navigate(['/dashboard']);
         }
+    }
+
+    getUserId(access_token) {
+        const helper = new JwtHelper();
+        const decodedToken = helper.decodeToken(access_token);
+        return (decodedToken as any).uuid;
     }
 
     logout() {
