@@ -236,61 +236,39 @@ export class TripPlannerComponent implements OnInit {
     this.store.dispatch(new MapActions.AddLocation(map));
   }
 
-<<<<<<< HEAD
   getTripEstimate(event) {
-=======
-  getGeoCode($event){
-    let lat = $event.coords.lat;
-    let lng = $event.coords.lng;
-    let latlng = {lat: lat, lng: lng}
-    
-    let geocoder = new google.maps.Geocoder;
+    this.updateInteractionState(CALCULATING_PRICE);
+    this.postToCalculationService();
+  }
 
-    geocoder.geocode({'location': latlng}, (res, status) =>{
-        if(status !== google.maps.GeocoderStatus.OK){
-          alert(status)
-        }else{
-          this.callback(res[0])
+  getGeoCode($event) {
+    const lat = $event.coords.lat;
+    const lng = $event.coords.lng;
+    const latlng = {lat: lat, lng: lng};
+    const geocoder = new google.maps.Geocoder;
+
+    geocoder.geocode({'location': latlng}, (res, status) => {
+        if (status !== google.maps.GeocoderStatus.OK) {
+          alert(status);
+        } else {
+          this.callback(res[0]);
         }
     });
-}
+  }
 
   callback(result: google.maps.GeocoderResult) {
-    this.ngZone.run(()=> {
-      if(this.isFirstClick){
+    this.ngZone.run(() => {
+      if (this.isFirstClick) {
         this.pickupInputElementRef.nativeElement.value = result.formatted_address;
         this.updateLocations('pickup', result);
         this.isFirstClick = false;
-      }else{
+      } else {
         this.pickupOutputElementRef.nativeElement.value = result.formatted_address;
         this.updateLocations('dest', result);
         this.isFirstClick = true;
       }
-    })
-}
-
-
-  getTripEstimate(event){
-    var res;
-    //authPort is in reference to the port that user-service is running on
-    //Until user-service is configured we will have to hit directly user service to get JWT token to contact edge-service
-    var authPort = '32839';
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/x-www-form-urlencoded',
-      'Authorization': 'Basic ' + btoa('front-end:front-end')
     });
-
-    const data = 'grant_type=password&scope=webclient&username=passenger&password=password';
-
-    const options = {
-      headers,
-      withCredentials: true
-    };
-
->>>>>>> master
-    this.updateInteractionState(CALCULATING_PRICE);
-    this.postToCalculationService();
-  }
+ }
 
 // Request to communicate with calculation service via JWT token
   postToCalculationService() {
@@ -300,7 +278,6 @@ export class TripPlannerComponent implements OnInit {
       withCredentials: true,
       responseType: 'text' as 'text'
     };
-    
 
     const inputElem = JSON.stringify({
       'origin': this.pickupInputElementRef.nativeElement.value,
