@@ -15,10 +15,6 @@ import {Location} from 'app/common/models/location';
 import {NotificationService} from '../../../../common/states/notification.service';
 import {isNullOrUndefined} from 'util';
 import {HttpHeaders, HttpClient} from '@angular/common/http';
-<<<<<<< HEAD
-
-=======
->>>>>>> master
 // noinspection ES6UnusedImports
 import {} from '@types/googlemaps';
 import {
