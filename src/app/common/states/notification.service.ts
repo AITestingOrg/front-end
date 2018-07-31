@@ -71,10 +71,9 @@ export class NotificationService {
   }
 
   listenForRouteUpdates() {
-    this._subscription = this.newObservableForKey(NotificationService.ESTIMATED_PRICE).subscribe(next =>
-    {
-      //console.log(next);
-      this.passengerStore.dispatch(new UpdatePlannedRoute(next as Route))
+    this._subscription = this.newObservableForKey(NotificationService.ESTIMATED_PRICE).subscribe(next => {
+      // console.log(next);
+      this.passengerStore.dispatch(new UpdatePlannedRoute(next as Route));
     });
   }
 
