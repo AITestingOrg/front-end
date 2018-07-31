@@ -42,7 +42,7 @@ const routes: Routes = [
     StoreDevtoolsModule.instrument({maxAge: 25}),
     MatInputModule,
     MatProgressSpinnerModule,
-    HttpClientModule
+    HttpClientModule,
   ],
   exports: [
     MatInputModule,
