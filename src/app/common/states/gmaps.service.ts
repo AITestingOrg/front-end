@@ -1,7 +1,7 @@
 import { GoogleMapsAPIWrapper, MapsAPILoader } from '@agm/core';
 import { Directive, Input, Output } from '@angular/core';
-import { Http } from '@angular/http';
-import { Observable } from 'rxjs/Observable';
+import {HttpClientModule} from '@angular/common/http';
+import { Observable } from 'rxjs';
 import { Location } from 'app/common/models/location';
 
 declare var google: any;
@@ -22,7 +22,7 @@ export class GMapsDirectionsService {
 
   constructor(
     private gmapsApi: GoogleMapsAPIWrapper,
-    private http: Http) { }
+    private http: HttpClientModule) { }
 
   updateDirections() {
     this.gmapsApi.getNativeMap().then(map => {

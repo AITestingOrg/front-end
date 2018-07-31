@@ -9,17 +9,15 @@ import {TripPlannerComponent} from 'app/passengers/components/smart/trip-planner
 import {AgmCoreModule, GoogleMapsAPIWrapper} from '@agm/core';
 import {PlacesAutocompleteComponent} from 'app/passengers/components/presentation/places-autocomplete/places-autocomplete.component';
 import {StoreModule} from '@ngrx/store';
-import {MatFormFieldModule, MatInputModule} from '@angular/material';
+import {MatInputModule} from '@angular/material';
 import {GMapsDirectionsService} from 'app/common/states/gmaps.service';
-import {HttpModule} from '@angular/http';
 import {NotificationService} from 'app/common/states/notification.service';
 import {EventSourceService} from 'app/common/states/event-source.service';
-import 'rxjs/add/operator/map';
 import {HttpClientModule} from '@angular/common/http';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {reducers} from './action-reducer-map';
 import {StoreDevtoolsModule} from '@ngrx/store-devtools';
-import 'rxjs/add/operator/map';
+
 
 const routes: Routes = [
   {path: '', redirectTo: 'login', pathMatch: 'full'},
@@ -42,11 +40,13 @@ const routes: Routes = [
     }),
     StoreModule.forRoot(reducers),
     StoreDevtoolsModule.instrument({maxAge: 25}),
-    MatFormFieldModule,
     MatInputModule,
     MatProgressSpinnerModule,
-    HttpModule,
-    HttpClientModule
+    HttpClientModule,
+  ],
+  exports: [
+    MatInputModule,
+    BrowserAnimationsModule
   ],
   providers: [
     GoogleMapsAPIWrapper, GMapsDirectionsService, NotificationService, EventSourceService

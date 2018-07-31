@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { FormGroup, FormControl } from '@angular/forms';
-import 'rxjs/add/operator/startWith';
-import 'rxjs/add/operator/map';
+import { startWith, map } from 'rxjs/operators';
+
+
 
 @Component({
   selector: 'app-places-autocomplete',
@@ -26,8 +27,9 @@ export class PlacesAutocompleteComponent implements OnInit {
 
   ngOnInit() {
     this.filteredOptions = this.myControl.valueChanges
-    .startWith(null)
-    .map(val => val ? this.filter(val) : this.options.slice());
+    .pipe(
+      startWith(null)
+    ).pipe(map(val => val ? this.filter(val) : this.options.slice()));
   }
 
   filter(val: string): string[] {
