@@ -20,8 +20,7 @@ before_install:
 before_script:
 - npm install -g @angular/cli
 - npm install -g karma
-- npm install typescript@'>=2.7.2 <2.10.0'
-- npm i
+- npm install
 - ng build
 
 script: ng test --karma-config karma.conf.js --watch=false
