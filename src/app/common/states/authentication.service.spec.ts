@@ -25,9 +25,11 @@ describe('AuthenticationService', () => {
                 TestTripPlannerComponent
             ],
             imports: [
-                RouterTestingModule.withRoutes(
-                    [{path: 'login', component: TestLoginComponent}, {path: 'dashboard', component: TestTripPlannerComponent}]
-                ),
+                RouterTestingModule.withRoutes([
+                    {path: '', redirectTo: 'login', pathMatch: 'full'},
+                    {path: 'login', component: TestLoginComponent},
+                    {path: 'dashboard', component: TestTripPlannerComponent}
+                ]),
                 HttpClientTestingModule
             ],
             providers: [AuthenticationService]
@@ -36,6 +38,7 @@ describe('AuthenticationService', () => {
         authenticationService = injector.get(AuthenticationService);
         httpMock = injector.get(HttpTestingController);
         router = injector.get(Router);
+        router.initialNavigation();
         let store = {};
         spyOn(localStorage, 'getItem').and.callFake((key) => store[key] || null);
         spyOn(localStorage, 'setItem').and.callFake((key, value) => store[key] = <string>value);
