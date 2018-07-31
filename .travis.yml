@@ -23,11 +23,11 @@ before_script:
 - npm install
 - ng build
 
+script: ng test --karma-config karma.conf.js --watch=false
+
 notification:
   slack:
     rooms: 
       - secure: L2abvdGXU1VHe01MqZZzhNaH6TXuXfj8cTU3HzyRQYmWVLoW4KSCFzaIE+GxLILI4foRdsPh0OKkR4UiiHmo97rFLm4NpgHDAPjXtLmWQJ8kvwAJQij5kYrxh+iLDegpnWy052UBBqdWbmQT9Fya0EEI+5othJN4hkz9A+LpMWxKxZAB7lX4RN5GMSuFgELOjxsPtsClqCDRSm6N3WqjD51YVnn9bmEBzbCf9Lfpohw6jtVg03e/XliKXDgiZA7HNOrIQZgOt05ntSzVh5exhGjFDmGnKtZxuZYgeLIVCJ7AXuGgKxh7UATJAPcC5p3s2cWIKr4yUaX3ORZw1x02YjP63HXzhUjXBL2Z6tjJf79LjmTuLEGfTcFvSK2TFA/Po7CHj0osOREIo3PiENdhaFISKlVDsDk+WpQmcA9F7kVleutIAm9iGy3Y1d09o/Uh1JPupuXelijVvi5uZymRXHV8PARG0ANtFC6TVGs0HZZf+Y3NdVTs0g2ZD1WcxKAVvUt+rE4iLmvwcgbZ63LKdvUz+wvPwXsScEZrF/MLqIhOVNj9oMtnw8dsmWjQLPgKY57HdaxOAo9sEurwRZ6bK4o9fxLqqxbjQNrJvlRvou1kHRt3S/KmC14lCq5IH66V5eZ9si6cAPwfpCFFwQQbtJl2ySMsullAGB1u3DOVK6o=
     on_success: never
     on_failure: always
-
-script: ng test --karma-config karma.conf.js --watch=false
