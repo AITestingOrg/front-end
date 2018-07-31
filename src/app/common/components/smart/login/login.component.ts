@@ -11,11 +11,11 @@ export class LoginComponent {
 
   loginData = {username: '', password: '', rememberUser: false};
 
-  constructor(private _service: AuthenticationService) {}
+  constructor(private service: AuthenticationService) {}
 
   login() {
-    this._service.obtainAccessToken(this.loginData);
-    this._service.checkCredentials();
+    this.service.login(this.loginData.username, this.loginData.password);
+    this.service.checkCredentials();
   }
 
   register() {}
