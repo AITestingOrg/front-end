@@ -36,10 +36,15 @@ describe('AuthenticationService', () => {
         authenticationService = injector.get(AuthenticationService);
         httpMock = injector.get(HttpTestingController);
         router = injector.get(Router);
+        let store = {};
+        spyOn(localStorage, 'getItem').and.callFake((key) => store[key] || null);
+        spyOn(localStorage, 'setItem').and.callFake((key, value) => store[key] = <string>value);
+        spyOn(localStorage, 'clear').and.callFake(() => store = {});
+        spyOn(localStorage, 'length').and.callFake(() => Object.keys(store).length);
     });
 
     afterEach(() => {
-        httpMock.verify();
+        localStorage.clear();
     });
 
     it('should successfully get the access token', (done) => {
@@ -69,8 +74,31 @@ describe('AuthenticationService', () => {
         const req = httpMock.expectOne(`${url}`);
         expect(req.request.method).toBe('POST');
         req.flush(happyResponse);
+        httpMock.verify();
 
         expect(localStorage.getItem('access_token')).toEqual(happyResponse.access_token);
         expect(localStorage.getItem('userId')).toEqual('HappyUserId');
+        // expect(localStorage.length()).toEqual(2);
+    });
+
+    it('should navigate to the dashboard if access token exists', (done) => {
+        router.navigate(['login']);
+        localStorage.setItem('access_token', 'HappyAccessToken');
+        authenticationService.checkCredentials();
+        expect(router.url).toEqual('/dashboard');
+    });
+
+    it('should remain on login page if access token does not exist', (done) => {
+        router.navigate(['login']);
+        localStorage.setItem('access_token', null);
+        authenticationService.checkCredentials();
+        expect(router.url).toEqual('/login');
+    });
+
+    it('should clear out user data and navigate to login page upon logout', (done) => {
+        router.navigate(['dashboard']);
+        authenticationService.logout();
+        expect(router.url).toEqual('/login');
+        // expect(localStorage.length()).toEqual(0);
     });
 });

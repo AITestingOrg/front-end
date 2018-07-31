@@ -33,7 +33,7 @@ export class AuthenticationService {
             requestOptions
         ).subscribe(
             data => this.storeUserData(data),
-            err => console.log(err)
+            err => alert('Invalid credentials')
         );
     }
 
