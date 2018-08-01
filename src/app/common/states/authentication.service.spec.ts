@@ -23,6 +23,7 @@ describe('AuthenticationService', () => {
         authenticationService = TestBed.get(AuthenticationService);
         httpMock = TestBed.get(HttpTestingController);
         router = TestBed.get(Router);
+        router.initialNavigation();
 
         let store = {};
         const mockLocalStorage = {
@@ -39,6 +40,11 @@ describe('AuthenticationService', () => {
                 store = {};
             }
         };
+        Object.defineProperty(localStorage, 'length', {
+            get: function() {
+                return Object.keys(store).length;
+            }
+        });
         spyOn(localStorage, 'getItem')
             .and.callFake(mockLocalStorage.getItem);
         spyOn(localStorage, 'setItem')
@@ -49,6 +55,7 @@ describe('AuthenticationService', () => {
             .and.callFake(mockLocalStorage.clear);
 
         spyOn(window, 'alert');
+        spyOn(router, 'navigate');
     });
 
     it('should be created', () => {
@@ -112,24 +119,25 @@ describe('AuthenticationService', () => {
         expect(window.alert).toHaveBeenCalledWith(error.error_description);
     });
 
-    // it('should navigate to the dashboard if access token exists', (done) => {
-    //     router.navigate(['login']);
-    //     localStorage.setItem('access_token', 'HappyAccessToken');
-    //     authenticationService.checkCredentials();
-    //     expect(router.url).toEqual('/dashboard');
-    // });
+    it('should navigate to the dashboard if access token exists', () => {
+        localStorage.setItem('accessToken', 'HappyAccessToken');
+        authenticationService.checkCredentials();
+        expect(router.navigate).toHaveBeenCalledWith(['/dashboard']);
+    });
 
-    // it('should remain on login page if access token does not exist', (done) => {
-    //     router.navigate(['login']);
-    //     localStorage.setItem('access_token', null);
-    //     authenticationService.checkCredentials();
-    //     expect(router.url).toEqual('/login');
-    // });
+    it('should remain on login page if access token does not exist', () => {
+        authenticationService.checkCredentials();
+        expect(router.navigate).not.toHaveBeenCalledWith(['/dashboard']);
+    });
 
-    // it('should clear out user data and navigate to login page upon logout', fakeAsync(() => {
-    //     router.navigate(['dashboard']);
-    //     authenticationService.logout();
-    //     expect(location.path()).toBe('/login');
-    //     // expect(localStorage.length()).toEqual(0);
-    // }));
+    it('should clear out user data and navigate to login page upon logout', () => {
+        authenticationService.logout();
+        expect(router.navigate).toHaveBeenCalledWith(['/login']);
+        expect(localStorage.length).toEqual(0);
+    });
+
+    afterEach(() => {
+        localStorage.clear();
+        httpMock.verify();
+    });
 });

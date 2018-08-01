@@ -31,7 +31,7 @@ const routes: Routes = [
 
 @NgModule({
   declarations: [
-    AppComponent, TripPlannerComponent, PlacesAutocompleteComponent
+    AppComponent, TripPlannerComponent, PlacesAutocompleteComponent, LoginComponent
   ],
   imports: [
     BrowserModule,

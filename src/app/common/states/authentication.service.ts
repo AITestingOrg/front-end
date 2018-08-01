@@ -39,7 +39,7 @@ export class AuthenticationService {
 
     checkCredentials() {
         const token = localStorage.getItem('accessToken');
-        if (token != null) {
+        if (token !== null) {
             this.router.navigate(['/dashboard']);
         }
     }
