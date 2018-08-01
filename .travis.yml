@@ -2,32 +2,27 @@ sudo: required
 dist: trusty
 language: node_js
 node_js:
-  - '10'
-
-addons:
+- '10'
+addons: 
 apt:
   sources:
-    - google-chrome
+  - google-chrome
   packages:
-    - google-chrome-stable
-    - google-chrome-beta
-
+  - google-chrome-stable
+  - google-chrome-beta
 before_install:
-  - export CHROME_BIN=chromium-browser
-  - export DISPLAY=:99.0
-  - sh -e /etc/init.d/xvfb start
-
+- export CHROME_BIN=chromium-browser
+- export DISPLAY=:99.0
+- sh -e /etc/init.d/xvfb start
 before_script:
 - npm install -g @angular/cli
 - npm install -g karma
 - npm install
 - ng build
-
 script: ng test --karma-config karma.conf.js --watch=false
-
-notification:
+notifications:
   slack:
-    rooms: 
-      - secure: aitestingorg:feQV5k1HbdHHzXT3EKm+z0CwscGc6vilXcC6sa6/9+yFZuWSSVbqnUArKB+xow0HdL9/Zv4wK9D3y/33fAvZGipz+U9FP8lGcQUAPBQzAsF4a1CGhBrtVtlBxAEYCwk2f9vRVOrZ0H93YAlIFoI0AOvKlfXtoe6WWIwuDHoyf6HzdXSaWLIQp6TIr13LV7Vba+PxZQqatXe7r9X4YbmxLXdXXh8PtK5qARpnlK/T0pUuSTP2rbp6IwZWcnYqfmnTQx5/xtnkJS9cgcOApouusCut2AOIlHjjUAhGYRPwxPNZ4WBH4rJMeYjTgZ5L+ULwbVtx/9iBCi8Fe5ZnjmPBoKaApoJ2Rx2ckv+uFLLzA+OgNgDcCi9yIXRuyCmJxCfuXyRAoogZgYvBua++hXLtZs9ePMo+Y+UNQrdO2ktIJHVvhredBXsxZx4sniBL6wvbmSWrgq4yFjWWcnXkZGCwDMTmiOJWoRSvNSAxOoSo4sD8uaRhEZnDTSVS7s2xl43uSBNXkZGSIyquuQIj2U0hIJPrO8nme54JhE8FEaCIAHW6kZPFSDGx8oqOypkzr3H7gNmPV4ffSYPDJRmpe3IPSiusaNclP/YZ9dbYSsnObNzIZrLVTlPugVvSpnffJL9mXsmNIep7L4Uk4ckHjNwDHKvepP8WSCLBudPUV12aExw=
+    rooms:
+      - secure: QVGAwGmoCLqqFHBwzoSmbRYR7z3sO8l8qGpZOx5LUYfxYmlPfokxfW95pV0RlhaghzOLgjkwDdOaY2byDYLErC/kMcIKTz+mbIN2wyidNro3j4F1O/mF2J4LU0cUijej8wmlADec4+5q29tQKhngNfcPVLCPa1FWsvfvDT7pt4+HgQtngdl8FhaRrsCnMVjV8ye5c3DUXzrcRbwQXnKtqTVZF35G5Zsm4bgkgpZm38JtXusFU0hejMbCBkAkRz77J1ITkwV/YJZ6Lu0FFEUcRvZSCQhIJJD5xhkoDG7eBYIbyeHHVqFrRsdImg3Rkcz9IwJlwWSXQlbxvhvbWI7QdWfvtZcqsTyKcSqsNdiRGa2Ne4o9pfoMgHxcSWw3DBWq5EWJ2hEFdn+bNi2+M0z7t4ka+WJ2eXczaPUpDI419wRvyEOHLAKOaFuNQZg5txcVK1mMIxslZaULImCNEjL6W3BLSLSqpKJJykW804J3AlVlPvaOBNSHMpeA/R7snxeeZ1YIcJu7iqfPRdVtvsUiq3D6AuJ6avairBVghQO6oVWv9fpC9IuLpeNiSDQMQpl9o6w6hBdkUhL8RLI0zBcOLmA+DgQ9DBK3XGsk+c7+0yX4XTxGPaw4ozTQalCHG6hSXK/4qkKKcL22/RsVeoXw09wQL9L3CGWRWdyxDqO2+nI=
     on_success: never
     on_failure: always
