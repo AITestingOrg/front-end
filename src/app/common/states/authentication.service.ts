@@ -33,13 +33,13 @@ export class AuthenticationService {
             requestOptions
         ).subscribe(
             data => this.storeUserData(data),
-            err => alert('Invalid credentials')
+            err => this.handleError(err)
         );
     }
 
     checkCredentials() {
         const token = localStorage.getItem('accessToken');
-        if (token != null) {
+        if (token !== null) {
             this.router.navigate(['/dashboard']);
         }
     }
@@ -53,6 +53,11 @@ export class AuthenticationService {
         const token = (data as any).access_token;
         localStorage.setItem('accessToken', token);
         localStorage.setItem('userId', this.decodeUserId(token));
+    }
+
+    private handleError(err) {
+        const error = (err as any).error;
+        window.alert((error as any).error_description);
     }
 
     private decodeUserId(accessToken) {
