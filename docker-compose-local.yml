@@ -35,7 +35,7 @@ services:
       MYSQL_DATABASE: 'user_service'
 
   userservice:
-    image: aista/authentication-service
+    image: aista/user-service
     depends_on:
       - discoveryservice
       - mysqlserver
