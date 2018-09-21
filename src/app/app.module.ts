@@ -17,7 +17,8 @@ import {HttpClientModule} from '@angular/common/http';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {reducers} from './action-reducer-map';
 import {StoreDevtoolsModule} from '@ngrx/store-devtools';
-
+import {FormsModule} from '@angular/forms';
+import { AuthenticationService } from './common/states/authentication.service';
 
 const routes: Routes = [
   {path: '', redirectTo: 'login', pathMatch: 'full'},
@@ -27,15 +28,16 @@ const routes: Routes = [
 
 @NgModule({
   declarations: [
-    AppComponent, TripPlannerComponent, PlacesAutocompleteComponent
+    AppComponent, TripPlannerComponent, PlacesAutocompleteComponent, LoginComponent
   ],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
     FeCommonModule,
+    FormsModule,
     RouterModule.forRoot(routes),
     AgmCoreModule.forRoot({
-      apiKey: 'AIzaSyDPs_IyBxZNsYKEh8JplMe8a91URajuqic',
+      apiKey: 'AIzaSyA-A_VJjmiAKM-xwZpv7RdxDKkV5hzMh4Y',
       libraries: ['places']
     }),
     StoreModule.forRoot(reducers),
@@ -49,7 +51,7 @@ const routes: Routes = [
     BrowserAnimationsModule
   ],
   providers: [
-    GoogleMapsAPIWrapper, GMapsDirectionsService, NotificationService, EventSourceService
+    GoogleMapsAPIWrapper, GMapsDirectionsService, NotificationService, EventSourceService, AuthenticationService
   ],
   bootstrap: [AppComponent]
 })

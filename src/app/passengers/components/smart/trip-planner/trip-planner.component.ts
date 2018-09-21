@@ -240,7 +240,6 @@ export class TripPlannerComponent implements OnInit {
     const lat = $event.coords.lat;
     const lng = $event.coords.lng;
     const latlng = {lat: lat, lng: lng};
-
     const geocoder = new google.maps.Geocoder;
 
     geocoder.geocode({'location': latlng}, (res, status) => {
@@ -250,7 +249,7 @@ export class TripPlannerComponent implements OnInit {
           this.callback(res[0]);
         }
     });
-}
+  }
 
   callback(result: google.maps.GeocoderResult) {
     this.ngZone.run(() => {
@@ -292,7 +291,7 @@ export class TripPlannerComponent implements OnInit {
       this.updateInteractionState(SERVER_ERROR);
       console.warn(`Failed to communicate with the user service. Err: ${JSON.stringify(err)}`);
     });
-  }
+ }
 
 // Request to communicate with calculation service via JWT token
   postToCalculationService() {
@@ -303,14 +302,13 @@ export class TripPlannerComponent implements OnInit {
       responseType: 'text' as 'text'
     };
 
-
     const inputElem = JSON.stringify({
       'origin': this.pickupInputElementRef.nativeElement.value,
       'destination': this.pickupOutputElementRef.nativeElement.value,
-      'userId': '560c62f4-8612-11e8-adc0-fa7ae01bbebc'
+      'userId': localStorage.getItem('userId')
     });
 
-    this.http.post('http://localhost:8080/api/calculationservice/api/v1/cost', inputElem, resOptions).subscribe(() => {}, err => {
+    this.http.post('http://edgeservice:8080/api/calculationservice/api/v1/cost', inputElem, resOptions).subscribe(() => {}, err => {
       this.updateInteractionState(SERVER_ERROR);
       console.warn(`Failed to communicate with edge service. Err: ${JSON.stringify(err)}`);
     });

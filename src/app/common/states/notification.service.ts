@@ -41,7 +41,8 @@ export class NotificationService {
 
   onInit(): void {
     const currNotificationService = this;
-    this.bindToNotificationEventSource(this.eventSourceService.forUrl(`http://localhost:32700/events?stream=${this.userId()}`,
+    const userId = localStorage.getItem('userId');
+    this.bindToNotificationEventSource(this.eventSourceService.forUrl(`http://localhost:32700/events?stream=${userId}`,
         eventSource => this.bindToNotificationEventSource.call(currNotificationService, eventSource)));
     this.listenForRouteUpdates();
   }
@@ -72,13 +73,8 @@ export class NotificationService {
 
   listenForRouteUpdates() {
     this._subscription = this.newObservableForKey(NotificationService.ESTIMATED_PRICE).subscribe(next => {
-      // console.log(next);
       this.passengerStore.dispatch(new UpdatePlannedRoute(next as Route));
     });
-  }
-
-  private userId() {
-      return '560c62f4-8612-11e8-adc0-fa7ae01bbebc';
   }
 }
 

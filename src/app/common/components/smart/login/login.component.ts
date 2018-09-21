@@ -1,37 +1,23 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { Routes, RouterModule, Router } from '@angular/router';
+import { Component, Input } from '@angular/core';
+import { AuthenticationService } from '../../../../common/states/authentication.service';
 
 @Component({
   selector: 'app-login',
+  providers: [AuthenticationService],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent {
 
-  constructor(private router: Router) { }
+  loginData = {username: '', password: '', rememberUser: false};
 
-   @Input() private disabled: string;
+  constructor(private service: AuthenticationService) {}
 
-  ngOnInit() {
+  login() {
+    this.service.login(this.loginData.username, this.loginData.password);
+    this.service.checkCredentials();
   }
 
-  signIn(event) {
-    this.router.navigateByUrl('/dashboard');
-  }
+  register() {}
 
-  register(event) {
-    console.log('Registered: ' + event);
-  }
-
-  rememberUser(event, checkboxValue) {
-    if (checkboxValue) {
-    console.log('Will remember.');
-    } else {
-      console.log('Will not remember.');
-    }
-  }
-
-  rememberUserValue = true;
-  usernameValue = '';
-  passwordValue = '';
 }
