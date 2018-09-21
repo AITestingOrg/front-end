@@ -236,22 +236,10 @@ export class TripPlannerComponent implements OnInit {
     this.store.dispatch(new MapActions.AddLocation(map));
   }
 
-<<<<<<< HEAD
-  getTripEstimate(event) {
-    this.updateInteractionState(CALCULATING_PRICE);
-    this.postToCalculationService();
-  }
-
-=======
->>>>>>> f250b11444550038776a8fd990e7671d7c8ee9ac
   getGeoCode($event) {
     const lat = $event.coords.lat;
     const lng = $event.coords.lng;
     const latlng = {lat: lat, lng: lng};
-<<<<<<< HEAD
-=======
-
->>>>>>> f250b11444550038776a8fd990e7671d7c8ee9ac
     const geocoder = new google.maps.Geocoder;
 
     geocoder.geocode({'location': latlng}, (res, status) => {
@@ -274,8 +262,6 @@ export class TripPlannerComponent implements OnInit {
         this.updateLocations('dest', result);
         this.isFirstClick = true;
       }
-<<<<<<< HEAD
-=======
     });
 }
 
@@ -304,7 +290,6 @@ export class TripPlannerComponent implements OnInit {
     }, err => {
       this.updateInteractionState(SERVER_ERROR);
       console.warn(`Failed to communicate with the user service. Err: ${JSON.stringify(err)}`);
->>>>>>> f250b11444550038776a8fd990e7671d7c8ee9ac
     });
  }
 
@@ -316,10 +301,6 @@ export class TripPlannerComponent implements OnInit {
       withCredentials: true,
       responseType: 'text' as 'text'
     };
-<<<<<<< HEAD
-=======
-
->>>>>>> f250b11444550038776a8fd990e7671d7c8ee9ac
 
     const inputElem = JSON.stringify({
       'origin': this.pickupInputElementRef.nativeElement.value,

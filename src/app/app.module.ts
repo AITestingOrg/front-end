@@ -17,13 +17,9 @@ import {HttpClientModule} from '@angular/common/http';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {reducers} from './action-reducer-map';
 import {StoreDevtoolsModule} from '@ngrx/store-devtools';
-<<<<<<< HEAD
 import {FormsModule} from '@angular/forms';
 import 'rxjs/add/operator/map';
 import { AuthenticationService } from './common/states/authentication.service';
-=======
-
->>>>>>> f250b11444550038776a8fd990e7671d7c8ee9ac
 
 const routes: Routes = [
   {path: '', redirectTo: 'login', pathMatch: 'full'},
