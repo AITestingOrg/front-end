@@ -1,0 +1,84 @@
+version: '3'
+
+services:
+
+  discoveryservice:
+    image: aista/eureka
+    ports:
+      - "8761:8761"
+
+  rabbitmq:
+    image: rabbitmq:management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+
+  edgeservice:
+    image: aista/edge-service
+    ports:
+      - "8080:8080"
+    depends_on:
+      - discoveryservice
+
+  mysqlserver:
+    image: mysql:5.7
+    volumes:
+      - mysql-data:/var/lib/mysql:rw
+    restart: always
+    ports:
+      - '3306:3306'
+    environment:
+      MYSQL_USER:
+      MYSQL_PASSWORD:
+      MYSQL_ROOT_PASSWORD: 'root'
+      MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+      MYSQL_DATABASE: 'user_service'
+
+  userservice:
+    image: aista/authentication-service
+    depends_on:
+      - discoveryservice
+      - mysqlserver
+    ports:
+      - '8080'
+    environment:
+       - RABBIT_HOST=rabbitmq
+
+  calculationservice:
+    image: aista/calculation-service
+    depends_on:
+      - discoveryservice
+      - rabbitmq
+    command: ["go", "run", "main.go"]
+    ports:
+      - "8080"
+    environment:
+      - RABBIT_HOST=rabbitmq
+      - EUREKA_SERVER=discoveryservice
+
+  gmapsadapter:
+    image: aista/gmaps-adapter
+    depends_on:
+      - discoveryservice
+      - rabbitmq
+    ports:
+      - "8080"
+    environment:
+      - RABBIT_HOST=rabbitmq
+      - EUREKA_SERVER=discoveryservice
+
+  notificationservice:
+    image: aista/notification-service
+    depends_on:
+      - discoveryservice
+      - rabbitmq
+    command: notification-service
+    ports:
+      - "32700:32700"
+    environment:
+      - RABBIT_HOST=rabbitmq
+      - EUREKA_SERVER=discoveryservice
+
+volumes:
+  mongo:
+  mysql-data:

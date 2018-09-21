@@ -11,18 +11,25 @@ apt:
   - google-chrome-stable
   - google-chrome-beta
 before_install:
+- docker-compose -f docker-compose-local.yml up --build -d
 - export CHROME_BIN=chromium-browser
 - export DISPLAY=:99.0
 - sh -e /etc/init.d/xvfb start
 before_script:
-- npm install -g @angular/cli
 - npm install -g karma
 - npm install
 - ng build
-script: ng test --karma-config karma.conf.js --watch=false
+script:
+- ng test --karma-config karma.conf.js --watch=false
 notifications:
   slack:
     rooms:
       secure: MIWvzLzwSljNV65MXIEJQA6S78vGFnmongE4Gt97hwHTv89/ONKpgCAZVUBbu9//45PNz8/e3oil109GGUsTPtNwils0kugD5R13P6V6X1oDonl/9WZlF2jfRMgymM/SixC/Bv8oIKDaioKTt/cyEqO/rSWcvcJKsN7+cSrD+Qm5cxyTtIZ9RurJiATVXmRGqnhrYya8OMQQC1GCYmM9pSlKczp084qi7ODCeDa1l29Ajw79Bwkjx6veHUlfjhRph64wfrbJj2/omRAE4jrSPSW7FMNq8Vhsfh407Z7C0EU0HHcC3x/R4r3RdjfIhzSskGldmJtffVuOHRFRjUALEkJUqWrcBamYR+8WX+R/s/SQOlRuQCb2nFUr+JH5fE8hf/ut6dDAGegtKyaT7wvvRHwM4GtghUwavaOx9B4b0Lji0+k9FT9e6Dftfmyi2xuzOkfNYd21vkjh3XTkEg64g3tOp3Tj21yn/EQdAIOAEES8+kt2NvJ6EXxPOanggLUMUPp887etgxm1HUmJl3FAHtpHb7uWeAODzowl11vnA2dpDCMDJLcOYRB7/RbTvN3y3JWqnZSIwK+eH+NjnI8DrDO1jXhYPOYOm0lMavb+BSxdrP3BacQdiS6/q4KezBF4E11AOo6n6D3MWcud7/D8CmO8C9GP7hdBun7xqAa+XBQ=
     on_success: always
     on_failure: always
+env:
+  global:
+  - EDGE_SERVICE: "localhost"
+  - EDGE_PORT: "8080"
+  - AUTH_SERVICE: "localhost"
+  - CALCULATION_SERVICE: "localhost"

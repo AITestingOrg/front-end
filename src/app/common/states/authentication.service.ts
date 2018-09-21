@@ -6,7 +6,7 @@ import { JwtHelper } from 'angular2-jwt';
 @Injectable()
 export class AuthenticationService {
 
-    edgeServiceUrl = `http://edgeservice:8080/api/userservice/auth/oauth/token`;
+    edgeServiceUrl = `http://localhost:8080/api/userservice/auth/oauth/token`;
 
     constructor(private router: Router, private http: HttpClient) {}
 
