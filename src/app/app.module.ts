@@ -18,7 +18,6 @@ import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {reducers} from './action-reducer-map';
 import {StoreDevtoolsModule} from '@ngrx/store-devtools';
 import {FormsModule} from '@angular/forms';
-import 'rxjs/add/operator/map';
 import { AuthenticationService } from './common/states/authentication.service';
 
 const routes: Routes = [

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpHeaders, HttpClient, HttpParams } from '@angular/common/http';
-import { JwtHelper } from 'angular2-jwt';
+import { JwtHelperService } from '@auth0/angular-jwt';
 
 @Injectable()
 export class AuthenticationService {
@@ -61,7 +61,7 @@ export class AuthenticationService {
     }
 
     private decodeUserId(accessToken) {
-        const helper = new JwtHelper();
+        const helper = new JwtHelperService();
         const decodedToken = helper.decodeToken(accessToken);
         return (decodedToken as any).userId;
     }
