@@ -1,13 +1,13 @@
 import {Injectable, NgZone} from '@angular/core';
-import {Observable} from 'rxjs/Observable';
-import 'rxjs/add/operator/filter';
+import {Observable,  BehaviorSubject } from 'rxjs';
+
 import * as EventSource from 'eventsource';
 import { EventSourceService } from './event-source.service';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import {Store} from '@ngrx/store';
 import {UpdatePlannedRoute} from './actions/notification.action';
 import {State} from '../../action-reducer-map';
 import {Route} from '../models/route';
+import { map, filter } from 'rxjs/operators';
 
 @Injectable()
 export class NotificationService {
@@ -64,15 +64,19 @@ export class NotificationService {
   private newObservableForKey(key: string): Observable<any> {
     console.log(`Registering key: ${key}`);
     const routingKey = NotificationService.regexpForRoutingKey(key);
-    return this.subject.asObservable().filter(value => {
+    return this.subject.asObservable().pipe(filter(value => {
       return routingKey.test(value['RoutingKey']);
-    }).map(value => {
+    })).pipe(map(value => {
       return value['Body'];
-    });
+    }));
   }
 
   listenForRouteUpdates() {
     this._subscription = this.newObservableForKey(NotificationService.ESTIMATED_PRICE).subscribe(next => {
+<<<<<<< HEAD
+=======
+      // console.log(next);
+>>>>>>> f250b11444550038776a8fd990e7671d7c8ee9ac
       this.passengerStore.dispatch(new UpdatePlannedRoute(next as Route));
     });
   }

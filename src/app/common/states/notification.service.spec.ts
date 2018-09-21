@@ -17,7 +17,7 @@ describe('NotificationService', () => {
 
     TestBed.configureTestingModule({
       imports: [
-        StoreModule.forRoot({reducers})
+        StoreModule.forRoot(reducers)
       ],
       providers: [NotificationService, EventSourceService]
     });
@@ -54,7 +54,7 @@ describe('NotificationService', () => {
     const service = TestBed.get(NotificationService);
     const eventSourceService = TestBed.get(EventSourceService);
     spyOn(service, 'bindToNotificationEventSource').and.callThrough();
-    //spyOn(eventSourceService, 'forUrl');
+    // spyOn(eventSourceService, 'forUrl');
 
     service.onInit();
     sources[uri].emitError(new Event(null, null));
@@ -69,7 +69,7 @@ describe('NotificationService', () => {
     const service = TestBed.get(NotificationService);
     const source = sources[uri];
     const expectedCost = 1234.56;
-    let body = {
+    const body = {
       cost: expectedCost,
       origin: null,
       destination: null,

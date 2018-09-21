@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { Route } from 'app/common/models/route';
 import { Store } from '@ngrx/store';
 import * as RouteObj from 'app/common/states/actions/map.action';

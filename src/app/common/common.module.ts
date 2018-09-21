@@ -15,7 +15,6 @@ import {
   MatToolbarModule,
   MatCheckboxModule,
   MatButtonModule,
-  MatFormFieldModule,
   MatInputModule,
   MatIconModule,
   MatCardModule,
@@ -31,7 +30,6 @@ import { GetEstimateButtonComponent } from './components/presentation/get-estima
     MatToolbarModule,
     MatCheckboxModule,
     MatButtonModule,
-    MatFormFieldModule,
     MatInputModule,
     MatIconModule,
     MatCardModule,
@@ -56,6 +54,7 @@ import { GetEstimateButtonComponent } from './components/presentation/get-estima
   ],
   exports: [
     ToolbarComponent,
+    MatInputModule,
     MatCardModule,
     GetEstimateButtonComponent,
     RaisedButtonComponent,

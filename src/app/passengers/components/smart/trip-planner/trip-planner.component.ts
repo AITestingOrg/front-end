@@ -4,7 +4,8 @@ import {FormControl} from '@angular/forms';
 import {} from '@types/googlemaps';
 import {GoogleMapsAPIWrapper, MapsAPILoader} from '@agm/core';
 import {GMapsDirectionsService} from 'app/common/states/gmaps.service';
-import {Observable} from 'rxjs/Observable';
+import {Observable} from 'rxjs';
+import { map, filter } from 'rxjs/operators';
 import {Store} from '@ngrx/store';
 import * as MapActions from 'app/common/states/actions/map.action';
 import * as MapReducer from 'app/common/states/reducers/map.reducer';
@@ -14,7 +15,6 @@ import {Location} from 'app/common/models/location';
 import {NotificationService} from '../../../../common/states/notification.service';
 import {isNullOrUndefined} from 'util';
 import {HttpHeaders, HttpClient} from '@angular/common/http';
-import 'rxjs/add/operator/toPromise';
 // noinspection ES6UnusedImports
 import {} from '@types/googlemaps';
 import {
@@ -25,7 +25,7 @@ import {
   TripPlannerState,
   USER_LOCATION_INPUT_REQUIRED
 } from '../../../actions/trip-planner.action';
-import {last} from 'rxjs/operator/last';
+
 
 interface AppState {
   tripPlannerState: TripPlannerState;
@@ -49,8 +49,8 @@ export class TripPlannerComponent implements OnInit {
   @Input() private destinationInput: FormControl;
   @Input() private destinationOutput: FormControl;
   private isFirstClick = true;
-  private address : string;
-  private geocoder : any;
+  private address: string;
+  private geocoder: any;
   private estimatedTime: Observable<number>;
   private estimatedDistance: Observable<number>;
   estimatedPrice: Observable<string>;
@@ -91,9 +91,9 @@ export class TripPlannerComponent implements OnInit {
     this.interactionState = this.passengerStore.select('tripPlannerState');
     this.currentRoutePlan = this.passengerStore.select('routePlan');
 
-    this.currentRoutePlan.map(val => {
+    this.currentRoutePlan.pipe(map(val => {
       console.log(val.cost);
-    });
+    }));
 
     // Set Default Map View
     this.setInitialCords().then((cords) => {
@@ -236,15 +236,22 @@ export class TripPlannerComponent implements OnInit {
     this.store.dispatch(new MapActions.AddLocation(map));
   }
 
+<<<<<<< HEAD
   getTripEstimate(event) {
     this.updateInteractionState(CALCULATING_PRICE);
     this.postToCalculationService();
   }
 
+=======
+>>>>>>> f250b11444550038776a8fd990e7671d7c8ee9ac
   getGeoCode($event) {
     const lat = $event.coords.lat;
     const lng = $event.coords.lng;
     const latlng = {lat: lat, lng: lng};
+<<<<<<< HEAD
+=======
+
+>>>>>>> f250b11444550038776a8fd990e7671d7c8ee9ac
     const geocoder = new google.maps.Geocoder;
 
     geocoder.geocode({'location': latlng}, (res, status) => {
@@ -267,6 +274,37 @@ export class TripPlannerComponent implements OnInit {
         this.updateLocations('dest', result);
         this.isFirstClick = true;
       }
+<<<<<<< HEAD
+=======
+    });
+}
+
+
+  getTripEstimate(event) {
+    // authPort is in reference to the port that user-service is running on
+    // Until user-service is configured we will have to hit directly user service to get JWT token to contact edge-service
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/x-www-form-urlencoded',
+      'Authorization': 'Basic ' + btoa('front-end:front-end')
+    });
+
+    const data = 'grant_type=password&scope=webclient&username=passenger&password=password';
+
+    const options = {
+      headers,
+      withCredentials: true
+    };
+
+    this.updateInteractionState(CALCULATING_PRICE);
+    this.http.post(`http://localhost:8080/api/userservice/auth/oauth/token`, data, options).subscribe(res => {
+      if (res) {
+        localStorage.setItem('accessToken', (res as any).access_token);
+        this.postToCalculationService();
+      }
+    }, err => {
+      this.updateInteractionState(SERVER_ERROR);
+      console.warn(`Failed to communicate with the user service. Err: ${JSON.stringify(err)}`);
+>>>>>>> f250b11444550038776a8fd990e7671d7c8ee9ac
     });
  }
 
@@ -278,6 +316,10 @@ export class TripPlannerComponent implements OnInit {
       withCredentials: true,
       responseType: 'text' as 'text'
     };
+<<<<<<< HEAD
+=======
+
+>>>>>>> f250b11444550038776a8fd990e7671d7c8ee9ac
 
     const inputElem = JSON.stringify({
       'origin': this.pickupInputElementRef.nativeElement.value,
@@ -301,27 +343,29 @@ export class TripPlannerComponent implements OnInit {
 
   isTripEstimateButtonDisabled$(): Observable<boolean> {
     return this.interactionState
-      .map(state => state !== PRICE_CALCULATION_REQUIRED && state !== SERVER_ERROR)
-      .filter(val => {
-        this.tripEstimateButtonDisabled = val;
-        return val;
-      });
+      .pipe(map(state => state !== PRICE_CALCULATION_REQUIRED && state !== SERVER_ERROR)).pipe(
+        filter(val => {
+          this.tripEstimateButtonDisabled = val;
+          return val;
+        })
+      );
   }
 
   isFindYourRideButtonDisabled$(): Observable<boolean> {
     return this.interactionState
-      .map(state => state !== FINDING_RIDE_REQUIRED)
-      .filter(val => {
-        this.findYourRideButtonDisabled = val;
-        return val;
-      });
+      .pipe(map(state => state !== FINDING_RIDE_REQUIRED)).pipe(
+        filter(val => {
+          this.findYourRideButtonDisabled = val;
+          return val;
+        })
+      );
   }
 
   private getCurrentPriceEstimate$() {
-    return this.currentRoutePlan.map(val => val.cost.toLocaleString('en-US', { style: 'currency', currency: 'USD' }));
+    return this.currentRoutePlan.pipe(map(val => val.cost.toLocaleString('en-US', { style: 'currency', currency: 'USD' })));
   }
 
   private getCurrentTimeEstimate$() {
-    return this.currentRoutePlan.map(route => route.duration);
+    return this.currentRoutePlan.pipe(map(route => route.duration));
   }
 }
