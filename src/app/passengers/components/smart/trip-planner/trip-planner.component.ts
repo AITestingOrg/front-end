@@ -285,7 +285,7 @@ export class TripPlannerComponent implements OnInit {
       'userId': localStorage.getItem('userId')
     });
 
-    this.http.post('http://localhost:8080/api/calculationservice/api/v1/cost', inputElem, resOptions).subscribe(() => {}, err => {
+    this.http.post('http://edgeservice:8080/api/calculationservice/api/v1/cost', inputElem, resOptions).subscribe(() => {}, err => {
       this.updateInteractionState(SERVER_ERROR);
       console.warn(`Failed to communicate with edge service. Err: ${JSON.stringify(err)}`);
     });

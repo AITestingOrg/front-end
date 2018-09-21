@@ -40,7 +40,7 @@ const routes: Routes = [
     FormsModule,
     RouterModule.forRoot(routes),
     AgmCoreModule.forRoot({
-      apiKey: 'AIzaSyDPs_IyBxZNsYKEh8JplMe8a91URajuqic',
+      apiKey: 'AIzaSyA-A_VJjmiAKM-xwZpv7RdxDKkV5hzMh4Y',
       libraries: ['places']
     }),
     StoreModule.forRoot(reducers),
